@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#155c39">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Meal Planner">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23155c39'/><text x='50' y='68' font-size='52' text-anchor='middle'>🛒</text></svg>">
+<title>Highe Family Meal Planner — Weekly Shop</title>
+<style>
+  :root{
+    --green:#1f7a4d; --green-dark:#155c39; --green-deep:#0d3d25; --green-pale:#e8f5ee;
+    --lime:#7ac74f; --teal:#2e9e8e;
+    --amber:#c47f17; --amber-pale:#fdf3e3; --red:#b3402e;
+    --ink:#22302a; --muted:#5c6b63; --line:#dde6e0;
+    --card:#ffffff; --bg:#f2f7f3;
+    --shadow:0 1px 3px rgba(13,61,37,.08),0 6px 18px rgba(13,61,37,.06);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    background-image:radial-gradient(circle at 15% 0%,rgba(122,199,79,.10),transparent 40%),radial-gradient(circle at 90% 10%,rgba(46,158,142,.10),transparent 45%);
+    background-attachment:fixed;color:var(--ink);line-height:1.45}
+  .wrap{max-width:1000px;margin:0 auto;padding:18px 16px 90px}
+  header{background:linear-gradient(130deg,var(--green-deep),var(--green-dark) 30%,var(--green) 55%,var(--teal) 80%,var(--green-dark));
+    background-size:250% 250%;animation:heroShift 16s ease-in-out infinite;
+    color:#fff;border-radius:20px;padding:clamp(24px,5vw,38px) clamp(20px,4vw,32px);position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(13,61,37,.25)}
+  @keyframes heroShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  header::before{content:"";position:absolute;right:-40px;top:-70px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.08)}
+  header::after{content:"";position:absolute;right:70px;bottom:-90px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+  header h1{margin:0 0 8px;font-size:clamp(1.4rem,4.5vw,2.1rem);letter-spacing:-.025em;position:relative;z-index:1;
+    text-shadow:0 1px 3px rgba(0,0,0,.18)}
+  header h1 .cart{display:inline-block;transform:translateY(2px);margin-right:8px;animation:cartBob 3.5s ease-in-out infinite}
+  @keyframes cartBob{0%,100%{transform:translateY(2px)}50%{transform:translateY(-2px)}}
+  header p{margin:0;color:rgba(255,255,255,.88);font-size:.96rem;position:relative;z-index:1;max-width:560px}
+  .stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:1}
+  .chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
+    font-size:.78rem;font-weight:600;padding:6px 13px;border-radius:20px;backdrop-filter:blur(4px)}
+  .options{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;margin:16px 0 2px}
+  .seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:13px;padding:4px;box-shadow:var(--shadow);flex-wrap:wrap;gap:2px}
+  .segbtn{background:none;border:0;border-radius:10px;padding:10px 14px;font-size:.85rem;font-weight:600;color:var(--muted);transition:all .15s ease}
+  .segbtn:hover{color:var(--green-dark)}
+  .segbtn.active{background:linear-gradient(120deg,var(--green-dark),var(--green));color:#fff;box-shadow:0 2px 8px rgba(31,122,77,.35)}
+  .treats{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:13px;
+    padding:10px 16px;font-size:.87rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow);user-select:none;transition:all .2s ease}
+  .treats:hover{border-color:#d88bc0}
+  .treats input{display:none}
+  .treats .plus{font-size:.75rem;font-weight:800;background:var(--green-pale);color:var(--green-dark);border-radius:10px;padding:2px 8px}
+  .treats.on{background:linear-gradient(120deg,#8e3fa8,#d4549b);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(180,60,150,.4)}
+  .treats.on .plus{background:rgba(255,255,255,.25);color:#fff}
+  .treatb{font-style:normal;font-size:.68rem;color:#a0447e;background:#fbeaf4;border-radius:10px;padding:1px 7px;margin-left:6px;white-space:nowrap}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 20px;align-items:center;
+    position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg) 85%,transparent);padding:12px 0 14px}
+  button{cursor:pointer;border:0;border-radius:10px;font-size:.95rem;font-weight:600;padding:12px 18px;font-family:inherit}
+  .btn-primary{background:linear-gradient(120deg,var(--green-dark),var(--green));color:#fff;box-shadow:0 3px 10px rgba(31,122,77,.35)}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-primary:active{transform:translateY(1px)}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink);box-shadow:var(--shadow)}
+  .btn-ghost:hover{background:var(--green-pale)}
+  .btn-store{display:inline-flex;align-items:center;gap:9px;color:#fff}
+  .btn-store:hover{filter:brightness(1.1)}
+  .btn-store:active{transform:translateY(1px)}
+  .btn-aldi{background:linear-gradient(120deg,#00437a,#0071ce);box-shadow:0 3px 10px rgba(0,85,159,.35)}
+  .btn-lidl{background:linear-gradient(120deg,#003d82,#0050aa);box-shadow:0 3px 10px rgba(0,80,170,.35)}
+  .logo{display:inline-flex;flex:none}
+  .logo svg{width:22px;height:22px;display:block}
+  .storelogo{display:inline-flex;vertical-align:-4px;margin-right:8px}
+  .storelogo svg{width:22px;height:22px}
+  .budget{margin-left:auto;text-align:right}
+  .budget .total{font-size:1.4rem;font-weight:800;letter-spacing:-.02em}
+  .budget .total.over{color:var(--red)}
+  .budget .total.ok{color:var(--green)}
+  .bar{width:180px;height:9px;background:#dfe8e2;border-radius:5px;overflow:hidden;margin-top:4px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--lime),var(--green));transition:width .5s ease}
+  .bar i.over{background:linear-gradient(90deg,var(--amber),var(--red))}
+  h2{font-size:1.2rem;margin:32px 0 12px;display:flex;align-items:center;gap:8px}
+  h2::after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--green),transparent);border-radius:2px}
+  .week{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px 12px;position:relative;
+    box-shadow:var(--shadow);overflow:hidden;animation:fadeUp .35s ease both;transition:transform .18s ease,box-shadow .18s ease}
+  .day:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(13,61,37,.14)}
+  .day::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--lime),var(--green))}
+  .week .day:nth-child(2n)::before{background:linear-gradient(180deg,var(--teal),var(--green-dark))}
+  .week .day:nth-child(3n)::before{background:linear-gradient(180deg,#e8b33f,var(--amber))}
+  .day:nth-child(1){animation-delay:.02s}.day:nth-child(2){animation-delay:.06s}.day:nth-child(3){animation-delay:.10s}
+  .day:nth-child(4){animation-delay:.14s}.day:nth-child(5){animation-delay:.18s}.day:nth-child(6){animation-delay:.22s}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .day .dow{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green)}
+  .day h3{margin:2px 26px 4px 0;font-size:1.04rem;letter-spacing:-.01em}
+  .day .emoji{position:absolute;right:12px;bottom:8px;font-size:1.7rem;opacity:.9}
+  .day .meta{font-size:.8rem;color:var(--muted);padding-right:34px}
+  .pill{display:inline-block;font-size:.7rem;font-weight:700;border-radius:20px;padding:3px 10px;margin:6px 6px 0 0}
+  .pill.lunch{background:var(--green-pale);color:var(--green-dark)}
+  .pill.fresh{background:var(--amber-pale);color:var(--amber)}
+  .pill.cuisine{background:#eef1f9;color:#3d4c7a}
+  .swap{position:absolute;top:10px;right:10px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:.72rem;padding:5px 10px;color:var(--muted);font-weight:600}
+  .swap:hover{background:var(--green-pale);color:var(--green-dark)}
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;box-shadow:var(--shadow)}
+  summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:10px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--green);font-weight:700;font-size:1.1rem;line-height:1}
+  details[open] summary::after{content:"–"}
+  .recipe-body{padding:0 16px 16px;font-size:.93rem}
+  .recipe-body p{margin:8px 0}
+  .tnote{background:var(--green-pale);border-radius:10px;padding:10px 12px;font-size:.86rem}
+  .tnote::before{content:"👦 ";}
+  .listhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:32px}
+  .listhead h2{margin:0;flex:1;min-width:200px}
+  .copybtn{white-space:nowrap}
+  .shop section{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .shop h3{margin:0;padding:12px 16px;background:linear-gradient(90deg,var(--green-pale),#f3faf6);color:var(--green-dark);font-size:.92rem}
+  .shop ul{list-style:none;margin:0;padding:4px 0}
+  .shop li{display:flex;align-items:center;gap:11px;padding:10px 16px;font-size:.93rem;border-bottom:1px solid #f0f4f1}
+  .shop li:last-child{border-bottom:0}
+  .shop li .price{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .shop input[type=checkbox]{width:20px;height:20px;accent-color:var(--green);flex:none}
+  .shop li.done label{text-decoration:line-through;color:var(--muted)}
+  .shop li.skipped label{text-decoration:line-through;color:#a9b5ae}
+  .shop label{min-width:0}
+  .skipbtn{background:none;border:1px solid var(--line);border-radius:8px;font-size:.72rem;padding:6px 10px;color:var(--muted);font-weight:600;margin-left:4px;flex:none}
+  .skipbtn:hover{background:var(--green-pale);color:var(--green-dark)}
+  .cupb{font-style:normal;font-size:.68rem;color:var(--amber);background:var(--amber-pale);border-radius:10px;padding:1px 7px;margin-left:6px;white-space:nowrap}
+  .hint{font-size:.85rem;color:var(--muted);margin:0 0 10px}
+  .lunchplan{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 16px;font-size:.93rem;box-shadow:var(--shadow)}
+  .lunchplan div{padding:9px 0;border-bottom:1px solid #f0f4f1;display:flex;gap:10px}
+  .lunchplan div:last-child{border-bottom:0}
+  .lunchplan b{min-width:44px;color:var(--green-dark)}
+  .note{font-size:.82rem;color:var(--muted);margin-top:16px}
+  .empty{text-align:center;padding:70px 20px;color:var(--muted);font-size:1rem}
+  .empty .big{font-size:2.4rem;display:block;margin-bottom:10px}
+  .grand{display:flex;justify-content:space-between;gap:10px;padding:14px 16px;font-weight:700;background:linear-gradient(120deg,var(--green-dark),var(--green));color:#fff;border-radius:12px;box-shadow:var(--shadow)}
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--green-deep);color:#fff;
+    padding:12px 20px;border-radius:12px;font-size:.9rem;font-weight:600;opacity:0;pointer-events:none;transition:all .3s ease;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:90vw;text-align:center}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media (max-width:640px){
+    .wrap{padding:12px 10px 80px}
+    header{border-radius:16px}
+    header p{font-size:.85rem}
+    .chip{font-size:.72rem;padding:5px 10px}
+    .options{gap:8px}
+    .seg{width:100%;justify-content:space-between}
+    .segbtn{flex:1;padding:10px 6px;font-size:.76rem}
+    .treats{width:100%;justify-content:center}
+    .toolbar{gap:8px}
+    .toolbar button{flex:1 1 auto;padding:12px 10px;font-size:.9rem}
+    .budget{margin-left:0;width:100%;display:flex;align-items:baseline;gap:10px;text-align:left}
+    .budget .total{font-size:1.25rem}
+    .bar{flex:1;margin-top:0;align-self:center}
+    .week{grid-template-columns:1fr}
+    .day h3{font-size:1rem}
+    .shop li{padding:11px 12px;font-size:.9rem;flex-wrap:nowrap}
+    .shop li .price{font-size:.85rem}
+    .cupb{display:none}
+    summary{padding:13px 14px;font-size:.92rem}
+    .grand{font-size:.95rem}
+  }
+  @media print{
+    .toolbar,.options,.swap,.skipbtn,.copybtn,header::before,header::after,#toast{display:none}
+    body{background:#fff}
+    header{background:#fff;color:var(--ink);box-shadow:none;border:1px solid var(--line)}
+    header p{color:var(--muted)}
+    details{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="cart">🛒</span>Highe Family Meal Planner</h1>
+    <p>Healthy teatimes, leftover lunches and a shopping list in store order — Aldi or Lidl, on budget.</p>
+    <div class="stats">
+      <span class="chip">🍛 50 meals</span>
+      <span class="chip">🌍 24 cuisines</span>
+      <span class="chip">🥪 4 leftover lunches</span>
+      <span class="chip">👦 kid-approved</span>
+    </div>
+  </header>
+
+  <div class="options">
+    <div class="seg" id="hhSeg"></div>
+    <label class="treats" id="treatsLbl">
+      <input type="checkbox" id="treatsChk" onchange="setTreats(this.checked)">
+      🍰 Sweet treats <span class="plus">+£10</span>
+    </label>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn-store btn-aldi" onclick="generate('aldi')"><span class="logo" data-logo="aldi"></span>Generate Aldi shop</button>
+    <button class="btn-store btn-lidl" onclick="generate('lidl')"><span class="logo" data-logo="lidl"></span>Generate Lidl shop</button>
+    <button class="btn-ghost" onclick="window.print()">Print</button>
+    <div class="budget" id="budgetBox"></div>
+  </div>
+
+  <div id="content"><div class="empty"><span class="big">🍽️</span>Hit <b>Generate Aldi shop</b> or <b>Generate Lidl shop</b> to build this week's plan.</div></div>
+  <div id="toast"></div>
+
+  <p class="note">Prices are estimates (mid-2026 own-brand, near-identical at Aldi and Lidl) — expect ±10–20p per item. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£42 / £50 / £58 / £80, +£10 with sweet treats on); quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders: Aldi starts at produce; Lidl starts at the in-store bakery — individual stores can vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Logos are simplified marks for personal use.</p>
+</div>
+
+<script>
+"use strict";
+/* ---------- INGREDIENT CATALOGUE ---------- */
+/* p = price £, s = store section. Meals use fractions of a pack (u); packs are merged then rounded up. */
+const ING = {
+  // produce
+  onion:{n:"Onions 1kg",p:0.89,s:"produce"},
+  garlic:{n:"Garlic 4-pack",p:0.69,s:"produce"},
+  ginger:{n:"Root ginger",p:0.65,s:"produce"},
+  carrots:{n:"Carrots 1kg",p:0.50,s:"produce"},
+  celery:{n:"Celery",p:0.69,s:"produce"},
+  peppers:{n:"Peppers 3-pack",p:1.49,s:"produce"},
+  mushrooms:{n:"Mushrooms 250g",p:0.99,s:"produce"},
+  potatoes:{n:"Potatoes 2.5kg",p:1.49,s:"produce"},
+  sweetPotato:{n:"Sweet potatoes 1kg",p:1.29,s:"produce"},
+  broccoli:{n:"Broccoli",p:0.79,s:"produce"},
+  courgette:{n:"Courgettes (pack)",p:0.99,s:"produce"},
+  cucumber:{n:"Cucumber",p:0.69,s:"produce"},
+  tomatoes:{n:"Tomatoes 6-pack",p:0.99,s:"produce"},
+  lettuce:{n:"Little gem lettuce 2-pack",p:0.85,s:"produce"},
+  spinach:{n:"Baby spinach 240g",p:0.99,s:"produce"},
+  springOnions:{n:"Spring onions",p:0.45,s:"produce"},
+  lemon:{n:"Lemons 4-pack",p:0.99,s:"produce"},
+  lime:{n:"Limes 5-pack",p:0.89,s:"produce"},
+  bananas:{n:"Bananas 5-pack",p:0.78,s:"produce"},
+  apples:{n:"Apples 6-pack",p:1.19,s:"produce"},
+  grapes:{n:"Grapes 500g (halve for the little one)",p:1.85,s:"produce"},
+  // bakery
+  wraps:{n:"Tortilla wraps 8-pack",p:0.85,s:"bakery"},
+  pitta:{n:"Wholemeal pitta 6-pack",p:0.45,s:"bakery"},
+  loaf:{n:"Wholemeal loaf",p:0.79,s:"bakery"},
+  rolls:{n:"Wholemeal rolls 6-pack",p:0.85,s:"bakery"},
+  // meat & chilled
+  mince5:{n:"5% lean beef mince 500g",p:2.85,s:"meat"},
+  turkeyMince:{n:"Turkey mince 500g",p:2.45,s:"meat"},
+  porkMince:{n:"Pork mince 500g",p:1.99,s:"meat"},
+  chickenBreast:{n:"Chicken breast fillets 1kg",p:5.29,s:"meat"},
+  chickenThigh:{n:"Chicken thigh fillets 1kg",p:4.49,s:"meat"},
+  porkLoin:{n:"Pork loin steaks 4-pack",p:2.65,s:"meat"},
+  sausages:{n:"Reduced-fat pork sausages 8-pack",p:1.79,s:"meat"},
+  chorizo:{n:"Chorizo ring 225g",p:1.59,s:"meat"},
+  ham:{n:"Cooked ham 125g",p:1.09,s:"meat"},
+  // dairy
+  milk:{n:"Milk 4pt",p:1.45,s:"dairy"},
+  butter:{n:"Butter/spread",p:1.29,s:"dairy"},
+  eggs:{n:"Eggs (6)",p:1.25,s:"dairy"},
+  cheddar:{n:"Mature cheddar 400g",p:2.49,s:"dairy"},
+  greekYog:{n:"Greek-style yoghurt 500g",p:0.99,s:"dairy"},
+  feta:{n:"Feta-style cheese",p:0.85,s:"dairy"},
+  mozzarella:{n:"Mozzarella ball",p:0.49,s:"dairy"},
+  halloumi:{n:"Halloumi 225g",p:2.29,s:"dairy"},
+  kidsYog:{n:"Kids' yoghurt 6-pack",p:1.29,s:"dairy"},
+  // food aisles
+  wwSpag:{n:"Wholewheat spaghetti 500g",p:0.75,s:"aisles"},
+  wwPenne:{n:"Wholewheat penne 500g",p:0.75,s:"aisles"},
+  basmati:{n:"Basmati rice 1kg",p:1.09,s:"aisles"},
+  brownRice:{n:"Brown rice 1kg",p:1.19,s:"aisles"},
+  riceNoodles:{n:"Rice noodles",p:0.89,s:"aisles"},
+  eggNoodles:{n:"Egg noodles",p:0.65,s:"aisles"},
+  couscous:{n:"Couscous 500g",p:0.79,s:"aisles"},
+  chopToms:{n:"Chopped tomatoes tin",p:0.47,s:"aisles"},
+  passata:{n:"Passata 500g",p:0.49,s:"aisles"},
+  chickpeas:{n:"Chickpeas tin",p:0.49,s:"aisles"},
+  kidneyBeans:{n:"Kidney beans tin",p:0.47,s:"aisles"},
+  blackBeans:{n:"Black beans tin",p:0.55,s:"aisles"},
+  cannellini:{n:"Cannellini beans tin",p:0.55,s:"aisles"},
+  lentils:{n:"Red lentils 500g",p:0.75,s:"aisles"},
+  coconutMilk:{n:"Light coconut milk tin",p:0.95,s:"aisles"},
+  sweetcornTin:{n:"Sweetcorn tin",p:0.55,s:"aisles"},
+  pineappleTin:{n:"Pineapple chunks tin",p:0.65,s:"aisles"},
+  soy:{n:"Soy sauce",p:0.69,s:"aisles",long:true},
+  hoisin:{n:"Hoisin sauce",p:0.99,s:"aisles",long:true},
+  sweetChilli:{n:"Sweet chilli sauce",p:0.85,s:"aisles",long:true},
+  honey:{n:"Honey",p:1.35,s:"aisles",long:true},
+  peanutButter:{n:"Peanut butter",p:1.19,s:"aisles",long:true},
+  thaiGreen:{n:"Thai green curry paste",p:0.99,s:"aisles",long:true},
+  tikkaPaste:{n:"Tikka curry paste",p:1.19,s:"aisles",long:true},
+  curryPowder:{n:"Mild curry powder",p:0.55,s:"aisles",long:true},
+  cumin:{n:"Ground cumin",p:0.55,s:"aisles",long:true},
+  paprika:{n:"Smoked paprika",p:0.55,s:"aisles",long:true},
+  cajun:{n:"Cajun seasoning",p:0.55,s:"aisles",long:true},
+  piri:{n:"Piri-piri seasoning",p:0.69,s:"aisles",long:true},
+  jerk:{n:"Jerk seasoning",p:0.69,s:"aisles",long:true},
+  fajita:{n:"Fajita seasoning",p:0.55,s:"aisles",long:true},
+  fiveSpice:{n:"Chinese five spice",p:0.55,s:"aisles",long:true},
+  stock:{n:"Reduced-salt stock cubes",p:0.49,s:"aisles",long:true},
+  breadcrumbs:{n:"Golden breadcrumbs",p:0.65,s:"aisles",long:true},
+  puree:{n:"Tomato purée",p:0.55,s:"aisles",long:true},
+  // snacks
+  crisps:{n:"Crisps multipack (Snackrite)",p:0.89,s:"snacks"},
+  bearCrisps:{n:"Baked bear-type crisps",p:1.19,s:"snacks"},
+  breadsticks:{n:"Breadsticks",p:0.55,s:"snacks"},
+  raisins:{n:"Raisin mini-boxes 6-pack",p:0.99,s:"snacks"},
+  ricecakes:{n:"Kids' rice cakes",p:0.69,s:"snacks"},
+  // sweet treats (optional +£10 pot)
+  chocDigestives:{n:"Chocolate digestives",p:0.79,s:"snacks",treat:true},
+  jaffa:{n:"Jaffa cakes",p:0.85,s:"snacks",treat:true},
+  cakeBars:{n:"Chocolate cake bars 5-pack",p:1.09,s:"snacks",treat:true},
+  sweets:{n:"Wine gums / jelly sweets",p:0.89,s:"snacks",treat:true},
+  chocolate:{n:"Chocolate sharing bar",p:1.99,s:"snacks",treat:true},
+  painAuChoc:{n:"Pain au chocolat 6-pack",p:1.19,s:"bakery",treat:true},
+  custard:{n:"Custard 500g",p:0.75,s:"aisles",treat:true},
+  icecream:{n:"Vanilla ice cream tub",p:1.99,s:"frozen",treat:true},
+  // frozen
+  peas:{n:"Frozen garden peas 900g",p:0.99,s:"frozen"},
+  prawns:{n:"Frozen cooked prawns 225g",p:2.79,s:"frozen"}
+};
+
+/* ---------- FIXED WEEKLY BASICS (lunches, breakfasts, toddler snacks) ---------- */
+const BASICS = [
+  ["milk",1],["loaf",1],["butter",1],["cheddar",1],["kidsYog",1],["ham",1],["wraps",1],
+  ["bananas",1],["apples",1],["grapes",1],["cucumber",0.5],
+  ["crisps",1],["breadsticks",1],["raisins",1]
+];
+
+/* ---------- MEAL POOL ---------- */
+/* tag: primary protein. reheat: safe/nice as next-day lunch. All portions: 2 adults + toddler with leftovers. */
+const MEALS = [
+ {id:"bulgogi",name:"Beef bulgogi-style rice bowls",cuisine:"Korean",tag:"beef",reheat:true,
+  ing:[["mince5",1],["soy",0.3],["honey",0.15],["garlic",0.2],["ginger",0.3],["carrots",0.3],["springOnions",1],["basmati",0.35],["broccoli",1]],
+  method:"Fry the mince hard until browned and a little crispy. Add crushed garlic, grated ginger and carrot ribbons for 2 min, then 3 tbsp soy + 1 tbsp honey; bubble until sticky. Serve over rice with steamed broccoli and spring onions.",
+  tnote:"Naturally mild and sweet — his portion straight from the pan."},
+ {id:"shawarma",name:"Chicken shawarma wraps",cuisine:"Middle Eastern",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.7],["greekYog",0.5],["cumin",0.2],["paprika",0.2],["garlic",0.2],["lemon",0.3],["wraps",1],["lettuce",0.5],["tomatoes",0.5],["cucumber",0.3]],
+  method:"Coat thigh fillets in 2 tbsp yoghurt, 1 tsp each cumin and paprika, crushed garlic and lemon juice. Roast at 210°C for 22–25 min, slice. Load into warm wraps with salad and a garlicky yoghurt drizzle. Leftover chicken makes tomorrow's lunch wraps.",
+  tnote:"Shred his chicken small; go easy on the spice coating for a couple of pieces."},
+ {id:"turkeychilli",name:"Turkey chilli with brown rice",cuisine:"Mexican",tag:"turkey",reheat:true,
+  ing:[["turkeyMince",1],["onion",0.3],["garlic",0.2],["peppers",0.7],["chopToms",1],["blackBeans",1],["cumin",0.15],["paprika",0.1],["stock",0.1],["brownRice",0.35]],
+  method:"Soften onion and peppers, add garlic then turkey mince and brown. Stir in cumin, paprika, tomatoes, drained black beans and a crumbled stock cube with half a tin of water. Simmer 25 min; serve with brown rice.",
+  tnote:"Leave chilli heat out entirely — it's plenty tasty smoky. He'll treat it like a mild bolognese."},
+ {id:"satay",name:"Chicken satay with rice & broccoli",cuisine:"Thai",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["peanutButter",0.4],["coconutMilk",0.6],["soy",0.2],["lime",0.4],["basmati",0.35],["broccoli",1],["carrots",0.2]],
+  method:"Fry diced chicken until golden. Whisk 3 tbsp peanut butter with 250ml coconut milk, 1 tbsp soy and juice of 1 lime; pour over and simmer 8–10 min until thick. Rice and steamed broccoli on the side.",
+  tnote:"Toddlers usually love satay. Skip if nursery has a nut policy on packed-lunch days."},
+ {id:"tagine",name:"Moroccan chicken & chickpea tagine",cuisine:"Moroccan",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.6],["onion",0.3],["garlic",0.2],["chopToms",1],["chickpeas",1],["cumin",0.2],["paprika",0.1],["honey",0.1],["carrots",0.3],["lemon",0.2],["couscous",0.5]],
+  method:"Brown chunks of thigh with onion. Add garlic, 1 tsp cumin, ½ tsp paprika, tomatoes, drained chickpeas, sliced carrots, 1 tsp honey and a squeeze of lemon. Simmer 30 min until rich; serve over couscous.",
+  tnote:"Soft, sweet and mild — mash a few chickpeas into his portion."},
+ {id:"thaigreen",name:"Mild Thai green chicken curry",cuisine:"Thai",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["thaiGreen",0.7],["coconutMilk",1],["broccoli",1],["peppers",0.3],["basmati",0.35],["lime",0.3]],
+  method:"Fry 2 tbsp paste for 1 min, add coconut milk and simmer. Add diced chicken, cook 10 min; add broccoli florets and pepper for the last 5. Lime juice at the end, rice on the side.",
+  tnote:"Take his portion out before adding the full amount of paste — 1 tsp in, rest after."},
+ {id:"prawnstir",name:"Prawn & veg noodle stir-fry",cuisine:"Chinese",tag:"prawn",reheat:false,
+  ing:[["prawns",1],["eggNoodles",0.7],["soy",0.3],["sweetChilli",0.4],["peppers",0.7],["carrots",0.3],["springOnions",1],["garlic",0.2],["ginger",0.3]],
+  method:"Stir-fry sliced peppers, carrot batons, garlic and ginger 3–4 min on high. Add defrosted prawns and cooked noodles, then 2 tbsp soy + 2 tbsp sweet chilli. Toss 2 min and serve with spring onions.",
+  tnote:"Chop prawns in half for him. Eat fresh — prawns don't want reheating, so it's a sandwich-lunch day."},
+ {id:"gyros",name:"Greek chicken gyros bowls",cuisine:"Greek",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.7],["greekYog",0.6],["garlic",0.3],["lemon",0.4],["pitta",1],["tomatoes",0.5],["cucumber",0.5],["lettuce",0.5],["feta",0.5]],
+  method:"Marinate thigh strips in yoghurt, lemon, garlic and oregano (30 min if you can). Griddle or roast at 210°C ~20 min. Serve over salad with toasted pitta, crumbled feta and tzatziki (yoghurt + grated cucumber + garlic).",
+  tnote:"Deconstruct his: chicken bits, cucumber sticks, pitta fingers, yoghurt dip."},
+ {id:"meatballs",name:"Turkey meatballs & wholewheat spaghetti",cuisine:"Italian",tag:"turkey",reheat:true,
+  ing:[["turkeyMince",1],["breadcrumbs",0.3],["eggs",0.2],["passata",1],["puree",0.2],["garlic",0.2],["onion",0.3],["wwSpag",0.75],["spinach",0.5]],
+  method:"Mix mince, 3 tbsp breadcrumbs and 1 egg; roll ~16 balls, brown in a pan. Make a quick sauce with onion, garlic, passata and purée; simmer meatballs in it 15 min, wilt in spinach. Serve with spaghetti.",
+  tnote:"Quarter his meatballs; snip his spaghetti."},
+ {id:"cajuntray",name:"Cajun chicken & sweet potato traybake",cuisine:"Cajun",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.7],["sweetPotato",1],["peppers",0.7],["onion",0.3],["cajun",0.3],["broccoli",1]],
+  method:"Toss thighs, sweet potato wedges, peppers and onion wedges in oil + 1 tbsp Cajun seasoning. One tray, 200°C, 35 min, turning once. Steam broccoli to serve.",
+  tnote:"Dust his pieces lightly — Cajun mixes vary in heat. Sweet potato is usually a toddler win."},
+ {id:"spanishrice",name:"Spanish chicken & chorizo rice",cuisine:"Spanish",tag:"chicken",reheat:false,
+  ing:[["chickenThigh",0.5],["chorizo",0.5],["basmati",0.4],["peppers",0.7],["onion",0.3],["garlic",0.2],["paprika",0.2],["chopToms",1],["peas",0.2],["stock",0.1]],
+  method:"Brown chicken chunks and sliced chorizo; set aside. Soften onion, pepper and garlic in the paprika-red oil, stir in rice, tomatoes and 500ml stock. Return meat, simmer ~18 min lidded, stir peas through at the end.",
+  tnote:"Chorizo is smoky not spicy at Aldi — fine for him in small slices. Best eaten fresh."},
+ {id:"keema",name:"Beef keema curry with peas",cuisine:"Indian",tag:"beef",reheat:true,
+  ing:[["mince5",1],["onion",0.4],["garlic",0.2],["ginger",0.3],["curryPowder",0.3],["chopToms",1],["peas",0.3],["basmati",0.35],["spinach",0.5]],
+  method:"Soften onion, add garlic, ginger and 1½ tbsp mild curry powder. Brown the mince, add tomatoes and a splash of water; simmer 20 min. Peas and spinach in for the last 5. Rice to serve.",
+  tnote:"Mild curry powder keeps it toddler-friendly — it's basically spiced bolognese."},
+ {id:"vietpork",name:"Vietnamese-style pork noodle bowls",cuisine:"Vietnamese",tag:"pork",reheat:false,
+  ing:[["porkMince",1],["riceNoodles",1],["soy",0.3],["honey",0.1],["lime",0.4],["garlic",0.2],["carrots",0.3],["cucumber",0.5],["lettuce",0.5],["springOnions",1]],
+  method:"Fry pork mince hard with garlic until caramelised; glaze with 2 tbsp soy + 1 tsp honey + juice of a lime. Pile onto rice noodles with ribboned carrot, cucumber, lettuce and spring onion.",
+  tnote:"Serve his noodles snipped short with the pork and cucumber — skip the lime on his."},
+ {id:"hoisin",name:"Sticky hoisin chicken noodles",cuisine:"Chinese",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["hoisin",0.7],["soy",0.2],["eggNoodles",0.7],["broccoli",1],["peppers",0.3],["springOnions",1],["garlic",0.2]],
+  method:"Stir-fry chicken strips until golden, add garlic, broccoli florets and pepper for 4 min. Add cooked noodles with 3 tbsp hoisin + 1 tbsp soy + splash of water; toss until glossy.",
+  tnote:"Sweet and sticky — usually a guaranteed clean plate."},
+ {id:"burrito",name:"Beef burrito bowls",cuisine:"Mexican",tag:"beef",reheat:true,
+  ing:[["mince5",1],["fajita",0.5],["brownRice",0.35],["blackBeans",1],["sweetcornTin",1],["tomatoes",0.5],["lettuce",0.5],["cheddar",0.15],["lime",0.3]],
+  method:"Brown the mince with fajita seasoning and a splash of water. Build bowls: brown rice, mince, warmed black beans, sweetcorn, chopped tomato, lettuce, grated cheddar and lime.",
+  tnote:"He gets the same bowl, just skip any hot sauce. Corn + cheese does the selling."},
+ {id:"chickpeacurry",name:"Chickpea & spinach curry",cuisine:"Indian",tag:"veggie",reheat:true,
+  ing:[["chickpeas",2],["onion",0.4],["garlic",0.3],["ginger",0.3],["curryPowder",0.3],["chopToms",1],["coconutMilk",1],["spinach",1],["basmati",0.35]],
+  method:"Soften onion; add garlic, ginger and 1½ tbsp mild curry powder. Tip in tomatoes, coconut milk and 2 tins of chickpeas; simmer 20 min. Wilt in the spinach. Serve with rice. Cheapest meal in the pool and one of the best.",
+  tnote:"Mash his chickpeas roughly. Mild, creamy, sneaky greens."},
+ {id:"lentilragu",name:"Lentil ragu with wholewheat pasta",cuisine:"Italian",tag:"veggie",reheat:true,
+  ing:[["lentils",0.5],["onion",0.4],["carrots",0.4],["celery",0.5],["garlic",0.2],["chopToms",2],["puree",0.3],["stock",0.2],["wwPenne",0.75]],
+  method:"Soften onion, carrot and celery 8 min. Add garlic, purée, 250g red lentils, 2 tins tomatoes and 400ml stock. Simmer 25 min until thick and savoury. Serve with penne and a grating of cheddar.",
+  tnote:"Looks and tastes like bolognese — he won't clock the difference."},
+ {id:"piri",name:"Piri-piri chicken, rice & corn",cuisine:"Portuguese",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.7],["piri",0.4],["basmati",0.35],["sweetcornTin",1],["broccoli",1],["lemon",0.2]],
+  method:"Rub thighs with piri-piri seasoning, oil and lemon. Roast at 210°C for 25 min. Serve with rice, warmed sweetcorn and broccoli — a fakeaway Nando's for about a fiver.",
+  tnote:"Keep 2 thighs seasoning-free for him; piri-piri has real heat."},
+ {id:"tikka",name:"Lighter chicken tikka masala",cuisine:"Indian",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["tikkaPaste",0.6],["greekYog",0.5],["chopToms",1],["onion",0.3],["garlic",0.2],["ginger",0.2],["basmati",0.35],["spinach",0.5]],
+  method:"Marinate diced chicken in 1 tbsp paste + 2 tbsp yoghurt. Fry onion, garlic, ginger and another 1 tbsp paste; add tomatoes and simmer 10 min. Add chicken, cook 12 min; stir through remaining yoghurt off the heat and wilt in spinach. Rice to serve.",
+  tnote:"Yoghurt instead of cream keeps it light and mild — his portion as-is."},
+ {id:"jerkchicken",name:"Jerk-spiced chicken, rice & beans",cuisine:"Caribbean",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.7],["jerk",0.3],["basmati",0.35],["kidneyBeans",1],["coconutMilk",0.5],["springOnions",1],["peppers",0.3]],
+  method:"Rub thighs with jerk seasoning and roast at 210°C ~25 min. Meanwhile cook rice in half coconut milk/half water with drained kidney beans and sliced spring onion. A proper plateful.",
+  tnote:"Jerk is hot — keep his thighs plain and give him extra coconut rice & beans."},
+ {id:"sweetsour",name:"Sweet & sour chicken",cuisine:"Chinese",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["pineappleTin",1],["peppers",0.7],["onion",0.3],["soy",0.2],["honey",0.2],["puree",0.2],["basmati",0.35]],
+  method:"Fry chicken chunks until golden, add pepper and onion. Sauce: pineapple juice from the tin + 1 tbsp soy + 1 tbsp honey + 2 tbsp purée; pour in with the pineapple chunks and bubble until glossy. Rice on the side.",
+  tnote:"Pineapple + chicken is toddler catnip. No battered frying — much lighter than takeaway."},
+ {id:"stuffedpeppers",name:"Mediterranean stuffed peppers",cuisine:"Greek",tag:"turkey",reheat:true,
+  ing:[["peppers",1.4],["turkeyMince",1],["couscous",0.4],["chopToms",1],["garlic",0.2],["onion",0.3],["feta",0.5],["courgette",0.5]],
+  method:"Brown turkey mince with onion, garlic and diced courgette; stir in tomatoes and cooked couscous. Stuff into halved peppers, top with feta, bake 25 min at 190°C.",
+  tnote:"Serve his as a 'deconstructed' bowl if stuffed veg gets the frown."},
+ {id:"turkishflat",name:"Turkish-style beef flatbreads",cuisine:"Turkish",tag:"beef",reheat:false,
+  ing:[["mince5",1],["wraps",1],["onion",0.3],["garlic",0.2],["cumin",0.2],["paprika",0.1],["puree",0.3],["tomatoes",0.5],["lettuce",0.5],["greekYog",0.4],["lemon",0.2]],
+  method:"Fry mince with onion, garlic, cumin, paprika and purée until rich (lahmacun vibes). Spread thinly over wraps, blast at 220°C for 6–8 min until crisp. Top with chopped salad, lemon and yoghurt.",
+  tnote:"Cut his into strips — mince pizza, effectively. Eat fresh; the mince alone reheats but the flatbread won't."},
+ {id:"halloumitray",name:"Halloumi & veg traybake with couscous",cuisine:"Mediterranean",tag:"veggie",reheat:false,
+  ing:[["halloumi",1],["courgette",1],["peppers",0.7],["sweetPotato",0.7],["onion",0.3],["couscous",0.5],["honey",0.1],["lemon",0.3]],
+  method:"Roast sweet potato chunks, courgette, peppers and onion at 200°C for 25 min; add halloumi slices with a drizzle of honey for the final 10. Pile over lemony couscous.",
+  tnote:"Halloumi is salty — a couple of small pieces for him, plenty of roast veg. Eat fresh (halloumi turns squeaky-rubber reheated)."},
+ {id:"souvlaki",name:"Pork souvlaki pittas",cuisine:"Greek",tag:"pork",reheat:false,
+  ing:[["porkLoin",1],["lemon",0.4],["garlic",0.3],["pitta",1],["greekYog",0.5],["cucumber",0.5],["tomatoes",0.5],["lettuce",0.5]],
+  method:"Cube pork loin, marinate in lemon, garlic, oregano and oil. Thread onto skewers (or just griddle) ~10 min until charred and cooked. Stuff pittas with salad, pork and tzatziki.",
+  tnote:"His pork diced small with cucumber and pitta soldiers plus yoghurt dip."},
+ {id:"katsu",name:"Baked chicken katsu curry",cuisine:"Japanese",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["breadcrumbs",0.5],["eggs",0.3],["curryPowder",0.3],["honey",0.1],["soy",0.1],["coconutMilk",0.5],["carrots",0.3],["onion",0.3],["basmati",0.35],["cucumber",0.3]],
+  method:"Dip flattened breast fillets in egg then breadcrumbs; bake at 200°C for 20–22 min (no frying). Sauce: soften onion and carrot, add 1 tbsp curry powder, coconut milk, 1 tsp each honey and soy; simmer and blitz or leave chunky. Slice over rice, sauce over the top, cucumber on the side.",
+  tnote:"It's posh chicken nuggets with gravy. He's sorted."},
+ {id:"beanchilli",name:"Smoky three-bean & sweet potato chilli",cuisine:"Mexican",tag:"veggie",reheat:true,
+  ing:[["kidneyBeans",1],["blackBeans",1],["sweetPotato",0.7],["onion",0.4],["garlic",0.3],["peppers",0.7],["chopToms",2],["cumin",0.2],["paprika",0.2],["brownRice",0.35]],
+  method:"Soften onion and pepper; add garlic, cumin and smoked paprika. Add sweet potato chunks, both tins of beans and 2 tins tomatoes; simmer 25–30 min until the sweet potato is tender. Brown rice to serve.",
+  tnote:"Smoky not spicy. Mash some beans and sweet potato into his."},
+ {id:"friedrice",name:"Chicken & egg fried rice",cuisine:"Chinese",tag:"chicken",reheat:false,
+  ing:[["chickenBreast",0.4],["basmati",0.4],["eggs",0.3],["peas",0.3],["soy",0.3],["springOnions",1],["garlic",0.2],["ginger",0.2],["broccoli",1],["fiveSpice",0.2]],
+  method:"Cook and cool the rice first (or use yesterday's). Fry diced chicken with garlic, ginger and a pinch of five spice; push aside, scramble 2 eggs in the pan. Add rice, peas and soy; fry hard 3–4 min. Broccoli steamed on the side.",
+  tnote:"Made properly hot and eaten fresh — don't re-reheat rice, so it's a sandwich-lunch day."},
+ {id:"spagbol",name:"Veg-packed spag bol (the classic)",cuisine:"Italian",tag:"beef",reheat:true,
+  ing:[["mince5",1],["onion",0.3],["carrots",0.3],["celery",0.5],["mushrooms",1],["garlic",0.2],["chopToms",1],["puree",0.3],["stock",0.1],["wwSpag",0.75]],
+  method:"The house favourite, upgraded: 5% mince, extra grated carrot and finely chopped mushrooms for hidden veg. Soften veg 8 min, brown mince, add tomatoes, purée and stock; simmer 30 min. Wholewheat spaghetti to serve.",
+  tnote:"His number one. Snip the spaghetti, no added salt before his portion's out."},
+ {id:"cottagepie",name:"Cottage pie with root-veg mash",cuisine:"British",tag:"beef",reheat:true,
+  ing:[["mince5",1],["onion",0.3],["carrots",0.5],["celery",0.5],["peas",0.3],["stock",0.2],["puree",0.3],["potatoes",0.5],["cheddar",0.1]],
+  method:"Classic base: mince, onion, carrot, celery, purée and stock, simmered 25 min with peas stirred through. Top with mash (half potato, half carrot mashed in), a little cheddar, bake 25 min at 200°C until golden.",
+  tnote:"Second-favourite in the house — soft, scoopable, perfect toddler food."},
+ {id:"chilli",name:"Proper chilli con carne",cuisine:"Mexican",tag:"beef",reheat:true,
+  ing:[["mince5",1],["onion",0.3],["garlic",0.2],["peppers",0.3],["kidneyBeans",1],["chopToms",1],["cumin",0.2],["paprika",0.1],["brownRice",0.35]],
+  method:"Brown mince with onion and garlic, add pepper, cumin and smoked paprika. Tomatoes, beans, half a tin of water; simmer low for 30–40 min. Brown rice to serve. His portion out before any chilli flakes go in.",
+  tnote:"One of his top three — keep it smoky-mild and add heat at the table for you two."},
+ {id:"paprikash",name:"Chicken paprikash with rice",cuisine:"Hungarian",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.6],["onion",0.4],["garlic",0.2],["paprika",0.3],["peppers",0.7],["greekYog",0.5],["puree",0.2],["basmati",0.35]],
+  method:"Brown thigh chunks; soften onion and peppers in the same pan. Add garlic, 1 tbsp paprika and purée, then a splash of water; simmer 20 min. Stir yoghurt through off the heat so it doesn't split. Rice to serve.",
+  tnote:"Paprika is sweet, not hot — creamy and mild as it comes."},
+ {id:"tacos",name:"Soft beef tacos",cuisine:"Tex-Mex",tag:"beef",reheat:true,
+  ing:[["mince5",1],["fajita",0.4],["wraps",1],["lettuce",0.5],["tomatoes",0.5],["cheddar",0.15],["sweetcornTin",1],["greekYog",0.3]],
+  method:"Brown the mince with fajita seasoning and a splash of water. Everyone builds their own: warm wraps, mince, corn, chopped tomato, lettuce, cheddar and a dollop of yoghurt. The mince reheats for burrito-style lunch wraps.",
+  tnote:"Build-your-own is a toddler winner — small wrap, let him load it."},
+ {id:"porkstirfry",name:"Sweet chilli pork noodles",cuisine:"Chinese",tag:"pork",reheat:true,
+  ing:[["porkLoin",1],["eggNoodles",0.7],["sweetChilli",0.4],["soy",0.2],["broccoli",1],["carrots",0.3],["garlic",0.2],["ginger",0.2]],
+  method:"Stir-fry thin pork strips on high 4–5 min; add garlic, ginger, broccoli florets and carrot batons for 4 more. Toss with cooked noodles, 2 tbsp sweet chilli and 1 tbsp soy.",
+  tnote:"Aldi sweet chilli is mild — his portion as-is, noodles snipped."},
+ {id:"chickenbake",name:"Chicken & courgette pasta bake",cuisine:"Italian",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.4],["wwPenne",0.75],["passata",1],["garlic",0.2],["onion",0.3],["courgette",0.5],["mozzarella",2],["spinach",0.5]],
+  method:"Fry diced chicken with onion, garlic and courgette; add passata and simmer 10 min. Stir through cooked penne and spinach, top with torn mozzarella, bake 20 min at 200°C until golden.",
+  tnote:"Melty cheese pasta — no notes needed. Reheats brilliantly for lunch."},
+ {id:"sausagecass",name:"Sausage & white bean casserole",cuisine:"British",tag:"pork",reheat:true,
+  ing:[["sausages",1],["onion",0.3],["garlic",0.2],["cannellini",1],["chopToms",1],["paprika",0.2],["honey",0.1],["potatoes",0.4],["peas",0.2]],
+  method:"Brown the sausages, set aside. Soften onion and garlic with paprika; add tomatoes, drained cannellini beans and 1 tsp honey. Return sausages, simmer 20 min. Mash and peas on the side.",
+  tnote:"Slice his sausage lengthways then across. Soft beans, sweet sauce — easy win."},
+ {id:"fajitatray",name:"Chicken fajita traybake",cuisine:"Tex-Mex",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["peppers",1],["onion",0.4],["fajita",0.5],["wraps",1],["greekYog",0.3],["lettuce",0.5]],
+  method:"Toss chicken strips, sliced peppers and onion in oil and fajita seasoning; one tray, 200°C, 25 min. Pile into warm wraps with lettuce and yoghurt. Leftover filling reheats for lunch wraps.",
+  tnote:"Season his corner of the tray lightly before it goes in."},
+ {id:"nasigoreng",name:"Nasi goreng-style chicken rice",cuisine:"Indonesian",tag:"chicken",reheat:false,
+  ing:[["chickenBreast",0.4],["basmati",0.4],["eggs",0.3],["soy",0.3],["honey",0.1],["springOnions",1],["garlic",0.3],["carrots",0.3],["peas",0.2],["fiveSpice",0.1]],
+  method:"Use cooked, cooled rice. Fry diced chicken with garlic and a pinch of five spice; add rice, peas and carrot, then 2 tbsp soy + 1 tsp honey (cheat's kecap manis). Fried egg on top of the grown-ups' bowls.",
+  tnote:"His egg well done and chopped in. Eat fresh — rice dish, so it's a sandwich-lunch day."},
+ {id:"padthai",name:"Chicken pad thai-ish noodles",cuisine:"Thai",tag:"chicken",reheat:false,
+  ing:[["chickenBreast",0.4],["riceNoodles",1],["eggs",0.3],["peanutButter",0.3],["sweetChilli",0.3],["soy",0.2],["lime",0.4],["springOnions",1],["carrots",0.3]],
+  method:"Fry chicken strips; push aside and scramble 2 eggs. Add soaked rice noodles, carrot ribbons and a sauce of 2 tbsp peanut butter + 2 tbsp sweet chilli + 1 tbsp soy + lime juice. Toss 2 min.",
+  tnote:"Nutty noodles usually land well — lime off his. Best eaten fresh."},
+ {id:"chowmein",name:"Beef mince chow mein",cuisine:"Chinese",tag:"beef",reheat:true,
+  ing:[["mince5",1],["eggNoodles",0.7],["soy",0.3],["hoisin",0.3],["fiveSpice",0.1],["broccoli",1],["carrots",0.3],["garlic",0.2],["springOnions",1]],
+  method:"Brown the mince hard with garlic and five spice. Add broccoli florets and carrot for 4 min, then noodles, 2 tbsp soy and 2 tbsp hoisin; toss until glossy.",
+  tnote:"Mince + noodles = his two favourite food groups in one bowl."},
+ {id:"turkeyburgers",name:"Turkey burgers, wedges & corn",cuisine:"American",tag:"turkey",reheat:false,
+  ing:[["turkeyMince",1],["rolls",1],["breadcrumbs",0.2],["eggs",0.2],["lettuce",0.5],["tomatoes",0.5],["potatoes",0.4],["sweetcornTin",1]],
+  method:"Mix mince, 2 tbsp breadcrumbs and 1 egg; shape 5 patties (one small). Pan-fry or bake ~15 min until cooked through. Serve in rolls with salad, oven wedges and corn.",
+  tnote:"His own mini burger. Leaner than beef and no one will notice."},
+ {id:"quesadillas",name:"Chicken & sweetcorn quesadillas",cuisine:"Tex-Mex",tag:"chicken",reheat:false,
+  ing:[["wraps",1],["chickenBreast",0.4],["cheddar",0.3],["peppers",0.7],["sweetcornTin",1],["springOnions",1],["greekYog",0.3]],
+  method:"Fry diced chicken with sliced pepper. Fill wraps with chicken, corn, spring onion and plenty of cheddar; fold and dry-fry 2–3 min a side until crisp and melty. Cut into wedges, yoghurt for dipping.",
+  tnote:"Cheese toastie energy — cut his into little triangles. Eat fresh."},
+ {id:"porkgoulash",name:"Pork goulash with potatoes",cuisine:"Hungarian",tag:"pork",reheat:true,
+  ing:[["porkLoin",1],["onion",0.4],["garlic",0.2],["paprika",0.4],["peppers",0.7],["chopToms",1],["potatoes",0.5],["greekYog",0.3]],
+  method:"Brown pork chunks; soften onion and peppers. Add garlic and 1½ tbsp paprika, then tomatoes and a splash of water; simmer 30 min until tender. Boiled potatoes and a swirl of yoghurt to serve.",
+  tnote:"Rich but completely mild — mash his potatoes into the sauce."},
+ {id:"koshari",name:"Egyptian-style koshari bowls",cuisine:"Middle Eastern",tag:"veggie",reheat:true,
+  ing:[["lentils",0.5],["basmati",0.3],["wwPenne",0.25],["chickpeas",1],["onion",0.5],["chopToms",1],["cumin",0.2],["garlic",0.2]],
+  method:"Cook lentils and rice together (~20 min); boil a handful of pasta. Make a quick cumin-garlic tomato sauce. Layer it all up and top with plenty of slow-fried crispy onions. Sounds odd, tastes brilliant, costs pennies.",
+  tnote:"Carbs on carbs with mild tomato sauce — toddler heaven, honestly."},
+ {id:"shakshuka",name:"Shakshuka with feta & pitta",cuisine:"Middle Eastern",tag:"veggie",reheat:false,
+  ing:[["eggs",1],["peppers",0.7],["onion",0.4],["garlic",0.2],["chopToms",2],["cumin",0.2],["paprika",0.2],["feta",0.5],["pitta",1],["spinach",0.5]],
+  method:"Soften onion and peppers; add garlic, cumin and paprika, then 2 tins of tomatoes. Simmer 10 min, wilt in spinach, crack in 4–5 eggs, lid on ~6 min until just set. Feta over the top, toasted pitta for dunking.",
+  tnote:"Cook his egg through fully. Dipping pitta soldiers sells it."},
+ {id:"pineapplepork",name:"Pineapple pork fried rice",cuisine:"Caribbean",tag:"pork",reheat:false,
+  ing:[["porkMince",1],["pineappleTin",1],["basmati",0.4],["peppers",0.7],["soy",0.3],["ginger",0.2],["garlic",0.2],["springOnions",1],["eggs",0.3]],
+  method:"Fry pork mince hard with garlic and ginger; scramble in an egg. Add cooked cooled rice, pepper and pineapple chunks with 2 tbsp soy and a splash of the pineapple juice; fry 3–4 min.",
+  tnote:"Sweet, savoury, bits of pineapple to hunt for. Rice dish — eat fresh."},
+ {id:"minestrone",name:"Chunky minestrone & crusty bread",cuisine:"Italian",tag:"veggie",reheat:true,
+  ing:[["onion",0.4],["carrots",0.4],["celery",0.5],["courgette",0.5],["garlic",0.2],["chopToms",1],["cannellini",1],["wwPenne",0.25],["stock",0.2],["spinach",0.5],["loaf",0.3]],
+  method:"Soften onion, carrot and celery 8 min; add garlic, courgette, tomatoes, beans and 750ml stock. Simmer 15 min, add a handful of pasta for the last 10, wilt in spinach. Warm bread on the side. Superb flask/lunch soup.",
+  tnote:"Chop his veg small and it's basically pasta soup. Sneaks in five veg."},
+ {id:"stroganoff",name:"Beef stroganoff-style mince",cuisine:"Russian",tag:"beef",reheat:true,
+  ing:[["mince5",1],["mushrooms",1],["onion",0.4],["garlic",0.2],["paprika",0.2],["greekYog",0.5],["puree",0.2],["stock",0.1],["basmati",0.35]],
+  method:"Brown mince with onion; add garlic, sliced mushrooms, paprika and purée. Splash of stock, simmer 15 min; stir yoghurt through off the heat. Serve over rice.",
+  tnote:"Creamy mushroom mince — mild and spoonable."},
+ {id:"tortillasoup",name:"Mexican chicken tortilla soup",cuisine:"Mexican",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.4],["chopToms",1],["blackBeans",1],["sweetcornTin",1],["onion",0.3],["garlic",0.2],["cumin",0.2],["paprika",0.1],["stock",0.2],["wraps",0.5],["lime",0.2]],
+  method:"Soften onion and garlic with cumin and paprika; add tomatoes, 600ml stock, diced chicken, beans and corn. Simmer 15 min. Top with crispy tortilla strips (slice a wrap, 5 min in the oven) and lime.",
+  tnote:"Serve his less brothy with extra beans and corn fished out; tortilla strips for dunking."},
+ {id:"bangbang",name:"Bang bang chicken rice bowls",cuisine:"Sichuan-style",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["basmati",0.35],["sweetChilli",0.4],["peanutButter",0.3],["soy",0.2],["cucumber",0.5],["carrots",0.3],["lettuce",0.5],["springOnions",1]],
+  method:"Poach or fry chicken and slice. Whisk 2 tbsp peanut butter, 2 tbsp sweet chilli, 1 tbsp soy and warm water into a drizzle. Build bowls: rice, chicken, ribboned cucumber and carrot, lettuce, sauce, spring onion.",
+  tnote:"Mild nutty sauce — his chicken diced with cucumber on the side."}
+];
+
+/* ---------- GENERATOR ---------- */
+const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat"];
+
+/* Household options: scale multiplies recipe quantities (baseline = 2 adults + 1 child, with leftovers);
+   kids drives the kids'-snack quantities; budget flexes with mouths to feed. */
+const HOUSEHOLDS = [
+  {key:"2a", label:"2 adults",       scale:0.8, kids:0, budget:42},
+  {key:"2a1c",label:"2A + 1 child",  scale:1.0, kids:1, budget:50},
+  {key:"2a2c",label:"2A + 2 children",scale:1.2,kids:2, budget:58},
+  {key:"2a3c",label:"2A + 3 children",scale:1.4,kids:3, budget:80}
+];
+/* You can stretch a pack ~25% before buying another (smaller kids' portions) — keeps pack-rounding honest without doubling costs. */
+const STRETCH = 0.25;
+const KID_FACTOR = [0, 1, 1.7, 2.4];  // snack scaling by number of kids
+const KID_ITEMS = new Set(["kidsYog","crisps","breadsticks","raisins"]);
+const TREATS = ["chocDigestives","jaffa","cakeBars","sweets","chocolate","painAuChoc","custard","icecream"];
+
+let hh = "2a1c", treats = false;
+try{
+  hh = localStorage.getItem("hh")||"2a1c";
+  if(!HOUSEHOLDS.some(h=>h.key===hh)) hh="2a1c";
+  treats = localStorage.getItem("treats")==="1";
+}catch(e){}
+function HH(){return HOUSEHOLDS.find(h=>h.key===hh);}
+function currentBudget(){return HH().budget + (treats?10:0);}
+
+function setHH(k){
+  hh=k;try{localStorage.setItem("hh",k);}catch(e){}
+  buildControls();
+  if(plan)render();
+}
+function setTreats(on){
+  treats=!!on;try{localStorage.setItem("treats",treats?"1":"0");}catch(e){}
+  buildControls();
+  if(plan)render();
+}
+function buildControls(){
+  const seg=document.getElementById("hhSeg");
+  if(seg)seg.innerHTML=HOUSEHOLDS.map(h=>
+    '<button class="segbtn'+(h.key===hh?' active':'')+'" onclick="setHH(\''+h.key+'\')">'+h.label+'</button>').join("");
+  const lbl=document.getElementById("treatsLbl"),chk=document.getElementById("treatsChk");
+  if(lbl)lbl.classList.toggle("on",treats);
+  if(chk)chk.checked=treats;
+}
+
+/* Simplified inline brand marks (kept local so the page works offline) */
+const LOGOS = {
+  aldi:'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Aldi">'+
+    '<rect width="24" height="24" rx="5" fill="#fff" stroke="#00559f" stroke-width="1.4"/>'+
+    '<path d="M5.6 19.3 L12 3.8 L18.4 19.3" fill="none" stroke="#25b8eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '<path d="M7.9 19.3 L12 8.8 L16.1 19.3" fill="none" stroke="#f39200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '<path d="M10.1 19.3 L12 13.9 L13.9 19.3" fill="none" stroke="#d70f16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  lidl:'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Lidl">'+
+    '<rect width="24" height="24" rx="5" fill="#0050aa"/>'+
+    '<circle cx="12" cy="12" r="8.4" fill="#fff000" stroke="#e60a14" stroke-width="1.8"/>'+
+    '<text x="12" y="14.8" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" font-weight="bold" fill="#0050aa">Lidl</text></svg>'
+};
+
+/* Same meals & prices for both (own-brand ranges are price-matched to pennies) — what changes is the walk-through order. */
+const STORES = {
+  aldi:{name:"Aldi",layout:["produce","bakery","meat","dairy","aisles","snacks","frozen"],
+    labels:{produce:"1 · 🥬 Fruit & Veg (entrance)",bakery:"2 · 🍞 Bakery",meat:"3 · 🥩 Fresh meat & chilled",
+      dairy:"4 · 🧀 Dairy",aisles:"5 · 🥫 Food aisles (tins, jars, dry, world food)",
+      snacks:"6 · 🍿 Snacks (for the lad)",frozen:"7 · 🧊 Frozen (before the tills)"}},
+  lidl:{name:"Lidl",layout:["bakery","produce","meat","dairy","aisles","snacks","frozen"],
+    labels:{bakery:"1 · 🍞 In-store bakery (entrance)",produce:"2 · 🥬 Fruit & Veg",meat:"3 · 🥩 Fresh meat & chilled",
+      dairy:"4 · 🧀 Dairy",aisles:"5 · 🥫 Food aisles (tins, jars, dry, world food)",
+      snacks:"6 · 🍿 Snacks (for the lad)",frozen:"7 · 🧊 Frozen (before the tills)"}}
+};
+let store = "aldi";
+try{store=localStorage.getItem("store")||"aldi";if(!STORES[store])store="aldi";}catch(e){}
+let plan = null;
+let SKIPS = new Set();
+try{SKIPS=new Set(JSON.parse(localStorage.getItem("pantry_skips")||"[]"));}catch(e){}
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function mergeList(meals){
+  const H=HH(), kidF=KID_FACTOR[H.kids];
+  const need = {};
+  BASICS.forEach(([k,u])=>{
+    const v=u*(KID_ITEMS.has(k)?kidF:H.scale);
+    if(v>1e-6)need[k]=(need[k]||0)+v;
+  });
+  meals.forEach(m=>m.ing.forEach(([k,u])=>{need[k]=(need[k]||0)+u*H.scale;}));
+  if(treats)TREATS.forEach(k=>{need[k]=(need[k]||0)+1;});
+  const lines = [];
+  let total = 0;
+  for(const k in need){
+    const ing = ING[k];
+    const packs = Math.max(1,Math.ceil(need[k]-STRETCH));
+    const cost = packs*ing.p;
+    const skipped = SKIPS.has(k);
+    if(!skipped) total += cost;
+    lines.push({k,name:ing.n,packs,cost,section:ing.s,skipped,long:!!ing.long,treat:!!ing.treat});
+  }
+  return {lines,total:Math.round(total*100)/100};
+}
+
+function toggleSkip(k){
+  if(SKIPS.has(k))SKIPS.delete(k);else SKIPS.add(k);
+  try{localStorage.setItem("pantry_skips",JSON.stringify([...SKIPS]));}catch(e){}
+  if(plan)render();
+}
+
+const CUISINE_EMOJI={Korean:"🍚","Middle Eastern":"🧆",Mexican:"🌮","Tex-Mex":"🌯",Thai:"🍛",Chinese:"🥡",Greek:"🥗",
+  Italian:"🍝",Cajun:"🍗",Spanish:"🥘",Indian:"🍛",Vietnamese:"🍜",Portuguese:"🔥",Caribbean:"🍍",Japanese:"🍱",
+  Turkish:"🫓",British:"🥧",Mediterranean:"🫒",Hungarian:"🥘",American:"🍔",Indonesian:"🍳",Russian:"🍄",
+  Moroccan:"🏺","Sichuan-style":"🥜"};
+
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+/* Copy the (unskipped) list as plain lines — pasting multi-line text into Apple Reminders
+   creates one reminder per line, straight into the shared Shopping List. */
+function copyList(){
+  if(!plan)return;
+  const {lines}=mergeList(plan.days);
+  const items=[];
+  STORES[store].layout.forEach(sec=>{
+    lines.filter(l=>l.section===sec&&!l.skipped)
+      .sort((a,b)=>a.name.localeCompare(b.name))
+      .forEach(l=>items.push(l.name.replace(/\s*\(.*?\)/,"")+(l.packs>1?" x"+l.packs:"")));
+  });
+  const txt=items.join("\n");
+  const ok=()=>toast("Copied "+items.length+" items — paste into your Reminders shopping list");
+  const fail=()=>toast("Couldn't copy automatically — select and copy the list manually");
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(ok).catch(()=>legacyCopy(txt)?ok():fail());
+  }else{
+    legacyCopy(txt)?ok():fail();
+  }
+}
+function legacyCopy(txt){
+  try{
+    const ta=document.createElement("textarea");
+    ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.focus();ta.select();
+    const done=document.execCommand("copy");
+    document.body.removeChild(ta);
+    return done;
+  }catch(e){return false;}
+}
+
+function validSet(meals){
+  const tagCount={},cuiCount={};
+  let reheat=0,beefMince=0;
+  for(const m of meals){
+    tagCount[m.tag]=(tagCount[m.tag]||0)+1;
+    cuiCount[m.cuisine]=(cuiCount[m.cuisine]||0)+1;
+    if(m.reheat)reheat++;
+    if(m.tag==="beef")beefMince++;
+  }
+  if(reheat<4)return false;
+  if(beefMince<1)return false;
+  if((tagCount.prawn||0)>1)return false;
+  if((tagCount.veggie||0)>2)return false;
+  if((tagCount.chicken||0)>3)return false;
+  for(const t of ["beef","turkey","pork"])if((tagCount[t]||0)>2)return false;
+  for(const c in cuiCount)if(cuiCount[c]>2)return false;
+  return true;
+}
+
+function partialOk(trial){
+  const tags={},cuis={};let re=0;
+  trial.forEach(x=>{tags[x.tag]=(tags[x.tag]||0)+1;cuis[x.cuisine]=(cuis[x.cuisine]||0)+1;if(x.reheat)re++;});
+  if((tags.prawn||0)>1||(tags.veggie||0)>2||(tags.chicken||0)>3)return false;
+  if((tags.beef||0)>2||(tags.turkey||0)>2||(tags.pork||0)>2)return false;
+  for(const c in cuis)if(cuis[c]>2)return false;
+  if(re+(6-trial.length)<4)return false;                 // must still be able to hit 4 reheatables
+  if((tags.beef||0)===0&&trial.length===6)return false;  // need one beef-mince meal
+  return true;
+}
+
+/* Cost-aware greedy: each pick weighs the *marginal* cost given packs already in the basket,
+   choosing randomly among the cheapest few so weeks vary. */
+function pickSet(){
+  let best=null;const underBudget=[],all=[];
+  for(let attempt=0;attempt<60;attempt++){
+    const set=[];
+    // seed with a random beef-mince meal so the constraint always lands
+    const beefs=shuffle(MEALS.filter(m=>m.tag==="beef"));
+    set.push(beefs[0]);
+    while(set.length<6){
+      const base=mergeList(set).total;
+      const scored=[];
+      for(const m of MEALS){
+        if(set.includes(m))continue;
+        const trial=set.concat([m]);
+        if(!partialOk(trial))continue;
+        scored.push({m,mc:mergeList(trial).total-base});
+      }
+      if(!scored.length)break;
+      scored.sort((a,b)=>a.mc-b.mc);
+      const k=Math.min(scored.length,8);
+      set.push(scored[Math.floor(Math.random()*k)].m);
+    }
+    if(set.length<6||!validSet(set))continue;
+    // swap-improvement if over budget: replace priciest-marginal meal with a cheaper valid one
+    const BUDGET=currentBudget();
+    let total=mergeList(set).total,guard=0;
+    while(total>BUDGET&&guard++<12){
+      let bestSwap=null;
+      for(let i=0;i<6;i++){
+        for(const m of MEALS){
+          if(set.includes(m))continue;
+          const trial=set.slice();trial[i]=m;
+          if(!validSet(trial))continue;
+          const t=mergeList(trial).total;
+          if(t<total&&(!bestSwap||t<bestSwap.t))bestSwap={trial,t};
+        }
+      }
+      if(!bestSwap)break;
+      set.length=0;set.push(...bestSwap.trial);total=bestSwap.t;
+    }
+    all.push({set:set.slice(),total});
+    if(total<=BUDGET)underBudget.push({set:set.slice(),total});
+    if(!best||total<best.total)best={set:set.slice(),total};
+    if(underBudget.length>=10)break; // enough variety to choose from
+  }
+  if(underBudget.length)return underBudget[Math.floor(Math.random()*underBudget.length)];
+  // nothing under budget (fresh cupboard): vary among the near-cheapest rather than repeating one week
+  const near=all.filter(x=>x.total<=best.total+1);
+  if(near.length)return near[Math.floor(Math.random()*near.length)];
+  return best;
+}
+
+function orderDays(set){
+  // Reheatable meals feed the next day's lunch: prefer Mon, Tue, Thu, Fri as donors.
+  const re=shuffle(set.filter(m=>m.reheat));
+  const fresh=shuffle(set.filter(m=>!m.reheat));
+  const days=new Array(6).fill(null);
+  const donorSlots=[0,1,3,4],otherSlots=[2,5];
+  donorSlots.forEach(i=>{if(re.length)days[i]=re.shift();});
+  otherSlots.forEach(i=>{if(fresh.length)days[i]=fresh.shift();else if(re.length)days[i]=re.shift();});
+  // fill any gaps (e.g. fewer than 2 fresh meals)
+  const leftovers=re.concat(fresh);
+  for(let i=0;i<6;i++)if(!days[i])days[i]=leftovers.shift();
+  return days;
+}
+
+function generate(storeKey){
+  if(storeKey&&STORES[storeKey]){store=storeKey;try{localStorage.setItem("store",store);}catch(e){}}
+  const best=pickSet();
+  if(!best){alert("Couldn't build a valid week — try again.");return;}
+  plan={days:orderDays(best.set)};
+  try{localStorage.setItem("mealplan",JSON.stringify(plan.days.map(m=>m.id)));}catch(e){}
+  render();
+}
+
+function swapMeal(idx){
+  const current=plan.days.map(m=>m.id);
+  const candidates=shuffle(MEALS.filter(m=>!current.includes(m.id)));
+  for(const cand of candidates){
+    const trial=plan.days.slice();trial[idx]=cand;
+    if(!validSet(trial))continue;
+    plan.days=trial;
+    try{localStorage.setItem("mealplan",JSON.stringify(plan.days.map(m=>m.id)));}catch(e){}
+    render();
+    return;
+  }
+  alert("No valid swap available for that slot — regenerate the week instead.");
+}
+
+function lunchFor(idx){
+  const m=plan.days[idx];
+  const next=DAYS[idx+1]||"Sun";
+  return m.reheat
+    ? {day:next,txt:"Leftover "+m.name.toLowerCase()+" for lunch"}
+    : {day:next,txt:"Sandwiches / ham & cheese wraps (covered in basics)"};
+}
+
+function render(){
+  const {lines,total}=mergeList(plan.days);
+  // budget box
+  const BUDGET=currentBudget();
+  const pct=Math.min(100,total/BUDGET*100);
+  document.getElementById("budgetBox").innerHTML=
+    '<div class="total '+(total<=BUDGET?"ok":"over")+'">£'+total.toFixed(2)+'</div>'+
+    '<div class="bar"><i class="'+(total<=BUDGET?"":"over")+'" style="width:'+pct+'%"></i></div>'+
+    '<div style="font-size:.75rem;color:var(--muted)">of £'+BUDGET.toFixed(2)+' budget · '+HH().label+(treats?' · 🍰':'')+'</div>';
+
+  let html='<h2>This week’s teas</h2><div class="week">';
+  plan.days.forEach((m,i)=>{
+    html+='<div class="day"><button class="swap" onclick="swapMeal('+i+')">↻ swap</button>'+
+      '<div class="dow">'+DAYS[i]+'</div><h3>'+m.name+'</h3>'+
+      '<div class="meta">'+
+      '<span class="pill cuisine">'+m.cuisine+'</span>'+
+      (m.reheat?'<span class="pill lunch">→ '+ (DAYS[i+1]||"Sun") +' lunch</span>':'<span class="pill fresh">eat fresh</span>')+
+      '</div><span class="emoji">'+(CUISINE_EMOJI[m.cuisine]||"🍽️")+'</span></div>';
+  });
+  html+='</div>';
+
+  html+='<h2>Lunch plan</h2><div class="lunchplan">';
+  plan.days.forEach((m,i)=>{const l=lunchFor(i);html+='<div><b>'+l.day+'</b><span>'+l.txt+'</span></div>';});
+  html+='</div>';
+
+  html+='<h2>Recipes</h2>'+
+    '<p class="hint">Methods are written for 2 adults + 1 child — the shopping list quantities scale automatically for <b>'+HH().label+'</b>.'+(HH().scale>1?' Scale pan quantities up to match what you buy.':'')+'</p>';
+  plan.days.forEach((m,i)=>{
+    const ingNames=m.ing.map(([k])=>ING[k].n.replace(/\s*\(.*?\)/,"")).join(", ");
+    html+='<details><summary><span>'+DAYS[i]+' — '+m.name+'</span></summary><div class="recipe-body">'+
+      '<p><b>You’ll use:</b> '+ingNames+'</p><p>'+m.method+'</p>'+
+      (HH().kids>0?'<div class="tnote">'+m.tnote+'</div>':'')+
+      '</div></details>';
+  });
+
+  const st=STORES[store];
+  html+='<div class="listhead"><h2 style="margin:0"><span class="storelogo">'+LOGOS[store]+'</span>Shopping list — '+st.name+' walk-through order</h2>'+
+    '<button class="btn-ghost copybtn" onclick="copyList()">📋 Copy for Reminders</button></div>'+
+    '<p class="hint">Jars, sauces and spices last months — hit <b>skip</b> on anything already in the cupboard and the total updates (remembered week to week). Copy sends only the unskipped items, one per line, ready to paste into the shared Reminders list.</p>'+
+    '<div class="shop">';
+  st.layout.forEach(sec=>{
+    const label=st.labels[sec];
+    const items=lines.filter(l=>l.section===sec).sort((a,b)=>a.name.localeCompare(b.name));
+    if(!items.length)return;
+    html+='<section><h3>'+label+'</h3><ul>';
+    items.forEach(l=>{
+      const id='chk_'+l.k;
+      html+='<li class="'+(l.skipped?'skipped':'')+'">'+
+        '<input type="checkbox" id="'+id+'" '+(l.skipped?'disabled':'')+' onchange="this.closest(\'li\').classList.toggle(\'done\',this.checked)">'+
+        '<label for="'+id+'">'+l.name+(l.packs>1?' ×'+l.packs:'')+(l.long&&!l.skipped?' <em class="cupb">cupboard staple</em>':'')+(l.treat?' <em class="treatb">sweet treat</em>':'')+'</label>'+
+        '<span class="price">'+(l.skipped?'skipped':'£'+l.cost.toFixed(2))+'</span>'+
+        '<button class="skipbtn" onclick="toggleSkip(\''+l.k+'\')">'+(l.skipped?'add back':'skip')+'</button></li>';
+    });
+    html+='</ul></section>';
+  });
+  html+='<div class="grand"><span>Estimated total (skipped items excluded)</span><span>£'+total.toFixed(2)+'</span></div></div>';
+
+  document.getElementById("content").innerHTML=html;
+}
+
+/* inject button logos, build controls + restore last plan on load */
+(function(){
+  document.querySelectorAll("[data-logo]").forEach(el=>{el.innerHTML=LOGOS[el.getAttribute("data-logo")]||"";});
+  buildControls();
+  try{
+    const saved=JSON.parse(localStorage.getItem("mealplan")||"null");
+    if(saved&&saved.length===6){
+      const days=saved.map(id=>MEALS.find(m=>m.id===id)).filter(Boolean);
+      if(days.length===6){plan={days};render();}
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
