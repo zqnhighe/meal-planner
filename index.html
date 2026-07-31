@@ -97,6 +97,10 @@
   .pill.lunch{background:var(--green-pale);color:var(--green-dark)}
   .pill.fresh{background:var(--amber-pale);color:var(--amber)}
   .pill.cuisine{background:#eef1f9;color:#3d4c7a}
+  .pill.kcal{background:#fdeee5;color:#c05621}
+  .sumkcal{font-size:.75rem;font-weight:700;color:#c05621;background:#fdeee5;border-radius:20px;padding:3px 10px;margin-left:auto;white-space:nowrap}
+  summary .sumkcal{margin-right:8px}
+  .kcalnote{font-size:.8rem;color:var(--muted)}
   .swap{position:absolute;top:10px;right:10px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:.72rem;padding:5px 10px;color:var(--muted);font-weight:600}
   .swap:hover{background:var(--green-pale);color:var(--green-dark)}
   details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;box-shadow:var(--shadow)}
@@ -198,7 +202,7 @@
   <div id="content"><div class="empty"><span class="big">🍽️</span>Hit <b>Generate Aldi shop</b> or <b>Generate Lidl shop</b> to build this week's plan.</div></div>
   <div id="toast"></div>
 
-  <p class="note">Prices are estimates (mid-2026 own-brand, near-identical at Aldi and Lidl) — expect ±10–20p per item. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£42 / £50 / £58 / £80, +£10 with sweet treats on); quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders: Aldi starts at produce; Lidl starts at the in-store bakery — individual stores can vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Logos are simplified marks for personal use.</p>
+  <p class="note">Prices are estimates (mid-2026 own-brand, near-identical at Aldi and Lidl) — expect ±10–20p per item. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£42 / £50 / £58 / £80, +£10 with sweet treats on); quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders: Aldi starts at produce; Lidl starts at the in-store bakery — individual stores can vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included) — actual values vary with portioning and exact products. Logos are simplified marks for personal use.</p>
 </div>
 
 <script>
@@ -626,6 +630,15 @@ function toggleSkip(k){
   if(plan)render();
 }
 
+/* Estimated kcal per adult serving (incl. rice/pasta/sides as written). Kids' portions ~60%. */
+const KCAL={bulgogi:560,shawarma:520,turkeychilli:480,satay:620,tagine:540,thaigreen:590,prawnstir:450,
+  gyros:510,meatballs:560,cajuntray:500,spanishrice:570,keema:550,vietpork:530,hoisin:540,burrito:600,
+  chickpeacurry:520,lentilragu:490,piri:480,tikka:530,jerkchicken:590,sweetsour:510,stuffedpeppers:430,
+  turkishflat:540,halloumitray:560,souvlaki:480,katsu:620,beanchilli:470,friedrice:520,spagbol:570,
+  cottagepie:520,chilli:540,paprikash:510,tacos:550,porkstirfry:520,chickenbake:580,sausagecass:600,
+  fajitatray:500,nasigoreng:510,padthai:560,chowmein:580,turkeyburgers:560,quesadillas:570,porkgoulash:490,
+  koshari:520,shakshuka:430,pineapplepork:560,minestrone:380,stroganoff:540,tortillasoup:430,bangbang:550};
+
 const CUISINE_EMOJI={Korean:"🍚","Middle Eastern":"🧆",Mexican:"🌮","Tex-Mex":"🌯",Thai:"🍛",Chinese:"🥡",Greek:"🥗",
   Italian:"🍝",Cajun:"🍗",Spanish:"🥘",Indian:"🍛",Vietnamese:"🍜",Portuguese:"🔥",Caribbean:"🍍",Japanese:"🍱",
   Turkish:"🫓",British:"🥧",Mediterranean:"🫒",Hungarian:"🥘",American:"🍔",Indonesian:"🍳",Russian:"🍄",
@@ -804,7 +817,8 @@ function render(){
   document.getElementById("budgetBox").innerHTML=
     '<div class="total '+(total<=BUDGET?"ok":"over")+'">£'+total.toFixed(2)+'</div>'+
     '<div class="bar"><i class="'+(total<=BUDGET?"":"over")+'" style="width:'+pct+'%"></i></div>'+
-    '<div style="font-size:.75rem;color:var(--muted)">of £'+BUDGET.toFixed(2)+' budget · '+HH().label+(treats?' · 🍰':'')+'</div>';
+    '<div style="font-size:.75rem;color:var(--muted)">of £'+BUDGET.toFixed(2)+' budget · '+HH().label+(treats?' · 🍰':'')+
+    ' · avg '+Math.round(plan.days.reduce((s,m)=>s+(KCAL[m.id]||500),0)/plan.days.length)+' kcal/tea</div>';
 
   let html='<h2>This week’s teas</h2><div class="week">';
   plan.days.forEach((m,i)=>{
@@ -812,6 +826,7 @@ function render(){
       '<div class="dow">'+DAYS[i]+'</div><h3>'+m.name+'</h3>'+
       '<div class="meta">'+
       '<span class="pill cuisine">'+m.cuisine+'</span>'+
+      '<span class="pill kcal">🔥 '+(KCAL[m.id]||500)+' kcal</span>'+
       (m.reheat?'<span class="pill lunch">→ '+ (DAYS[i+1]||"Sun") +' lunch</span>':'<span class="pill fresh">eat fresh</span>')+
       '</div><span class="emoji">'+(CUISINE_EMOJI[m.cuisine]||"🍽️")+'</span></div>';
   });
@@ -825,8 +840,9 @@ function render(){
     '<p class="hint">Methods are written for 2 adults + 1 child — the shopping list quantities scale automatically for <b>'+HH().label+'</b>.'+(HH().scale>1?' Scale pan quantities up to match what you buy.':'')+'</p>';
   plan.days.forEach((m,i)=>{
     const ingNames=m.ing.map(([k])=>ING[k].n.replace(/\s*\(.*?\)/,"")).join(", ");
-    html+='<details><summary><span>'+DAYS[i]+' — '+m.name+'</span></summary><div class="recipe-body">'+
+    html+='<details><summary><span>'+DAYS[i]+' — '+m.name+'</span><span class="sumkcal">'+(KCAL[m.id]||500)+' kcal</span></summary><div class="recipe-body">'+
       '<p><b>You’ll use:</b> '+ingNames+'</p><p>'+m.method+'</p>'+
+      '<p class="kcalnote">~'+(KCAL[m.id]||500)+' kcal per adult serving (sides included) · child portion ~'+Math.round((KCAL[m.id]||500)*0.6)+' kcal</p>'+
       (HH().kids>0?'<div class="tnote">'+m.tnote+'</div>':'')+
       '</div></details>';
   });
