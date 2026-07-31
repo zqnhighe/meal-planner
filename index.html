@@ -101,6 +101,9 @@
   .sumkcal{font-size:.75rem;font-weight:700;color:#c05621;background:#fdeee5;border-radius:20px;padding:3px 10px;margin-left:auto;white-space:nowrap}
   summary .sumkcal{margin-right:8px}
   .kcalnote{font-size:.8rem;color:var(--muted)}
+  .prot{margin-top:9px;font-size:.78rem;color:var(--muted);position:relative;z-index:1}
+  .protsel{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.78rem;color:var(--ink);background:#fff;font-family:inherit;max-width:170px}
+  .protsel:focus{outline:2px solid var(--green);outline-offset:1px}
   .swap{position:absolute;top:10px;right:10px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:.72rem;padding:5px 10px;color:var(--muted);font-weight:600}
   .swap:hover{background:var(--green-pale);color:var(--green-dark)}
   details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;box-shadow:var(--shadow)}
@@ -639,6 +642,39 @@ const KCAL={bulgogi:560,shawarma:520,turkeychilli:480,satay:620,tagine:540,thaig
   fajitatray:500,nasigoreng:510,padthai:560,chowmein:580,turkeyburgers:560,quesadillas:570,porkgoulash:490,
   koshari:520,shakshuka:430,pineapplepork:560,minestrone:380,stroganoff:540,tortillasoup:430,bangbang:550};
 
+/* Protein substitutes — for when the shop's shelf lets you down.
+   f adjusts pack quantity (e.g. 1 bag of prawns ≈ 0.4 of a 1kg chicken pack). */
+const SUBS={
+  mince5:[{k:"turkeyMince",f:1},{k:"porkMince",f:1}],
+  turkeyMince:[{k:"mince5",f:1},{k:"porkMince",f:1}],
+  porkMince:[{k:"mince5",f:1},{k:"turkeyMince",f:1}],
+  chickenBreast:[{k:"chickenThigh",f:1}],
+  chickenThigh:[{k:"chickenBreast",f:1}],
+  porkLoin:[{k:"chickenThigh",f:0.7},{k:"chickenBreast",f:0.6}],
+  sausages:[{k:"chickenThigh",f:0.7}],
+  prawns:[{k:"chickenBreast",f:0.4}]
+};
+const PROT_LABEL={mince5:"5% beef mince",turkeyMince:"turkey mince",porkMince:"pork mince",
+  chickenBreast:"chicken breast",chickenThigh:"chicken thighs",porkLoin:"pork loin steaks",
+  sausages:"sausages",prawns:"prawns"};
+
+function protOf(m){const hit=m.ing.map(x=>x[0]).find(k=>SUBS[k]);return hit||null;}
+function effMeal(m,subKey){
+  if(!subKey)return m;
+  const pk=protOf(m);if(!pk)return m;
+  const sub=SUBS[pk].find(s=>s.k===subKey);if(!sub)return m;
+  return Object.assign({},m,{ing:m.ing.map(([k,u])=>k===pk?[sub.k,u*sub.f]:[k,u])});
+}
+function effMeals(){return plan.days.map((m,i)=>effMeal(m,plan.subs?plan.subs[i]:null));}
+function setSub(i,k){
+  plan.subs=plan.subs||[null,null,null,null,null,null];
+  plan.subs[i]=k||null;
+  savePlan();render();
+}
+function savePlan(){
+  try{localStorage.setItem("mealplan",JSON.stringify(plan.days.map((m,i)=>({id:m.id,sub:plan.subs?plan.subs[i]:null}))));}catch(e){}
+}
+
 const CUISINE_EMOJI={Korean:"🍚","Middle Eastern":"🧆",Mexican:"🌮","Tex-Mex":"🌯",Thai:"🍛",Chinese:"🥡",Greek:"🥗",
   Italian:"🍝",Cajun:"🍗",Spanish:"🥘",Indian:"🍛",Vietnamese:"🍜",Portuguese:"🔥",Caribbean:"🍍",Japanese:"🍱",
   Turkish:"🫓",British:"🥧",Mediterranean:"🫒",Hungarian:"🥘",American:"🍔",Indonesian:"🍳",Russian:"🍄",
@@ -654,7 +690,7 @@ function toast(msg){
    creates one reminder per line, straight into the shared Shopping List. */
 function copyList(){
   if(!plan)return;
-  const {lines}=mergeList(plan.days);
+  const {lines}=mergeList(effMeals());
   const items=[];
   STORES[store].layout.forEach(sec=>{
     lines.filter(l=>l.section===sec&&!l.skipped)
@@ -782,8 +818,8 @@ function generate(storeKey){
   if(storeKey&&STORES[storeKey]){store=storeKey;try{localStorage.setItem("store",store);}catch(e){}}
   const best=pickSet();
   if(!best){alert("Couldn't build a valid week — try again.");return;}
-  plan={days:orderDays(best.set)};
-  try{localStorage.setItem("mealplan",JSON.stringify(plan.days.map(m=>m.id)));}catch(e){}
+  plan={days:orderDays(best.set),subs:[null,null,null,null,null,null]};
+  savePlan();
   render();
 }
 
@@ -794,7 +830,8 @@ function swapMeal(idx){
     const trial=plan.days.slice();trial[idx]=cand;
     if(!validSet(trial))continue;
     plan.days=trial;
-    try{localStorage.setItem("mealplan",JSON.stringify(plan.days.map(m=>m.id)));}catch(e){}
+    if(plan.subs)plan.subs[idx]=null;
+    savePlan();
     render();
     return;
   }
@@ -810,7 +847,7 @@ function lunchFor(idx){
 }
 
 function render(){
-  const {lines,total}=mergeList(plan.days);
+  const {lines,total}=mergeList(effMeals());
   // budget box
   const BUDGET=currentBudget();
   const pct=Math.min(100,total/BUDGET*100);
@@ -822,13 +859,19 @@ function render(){
 
   let html='<h2>This week’s teas</h2><div class="week">';
   plan.days.forEach((m,i)=>{
+    const pk=protOf(m), cur=plan.subs?plan.subs[i]:null;
     html+='<div class="day"><button class="swap" onclick="swapMeal('+i+')">↻ swap</button>'+
       '<div class="dow">'+DAYS[i]+'</div><h3>'+m.name+'</h3>'+
       '<div class="meta">'+
       '<span class="pill cuisine">'+m.cuisine+'</span>'+
       '<span class="pill kcal">🔥 '+(KCAL[m.id]||500)+' kcal</span>'+
       (m.reheat?'<span class="pill lunch">→ '+ (DAYS[i+1]||"Sun") +' lunch</span>':'<span class="pill fresh">eat fresh</span>')+
-      '</div><span class="emoji">'+(CUISINE_EMOJI[m.cuisine]||"🍽️")+'</span></div>';
+      '</div>'+
+      (pk?'<div class="prot">🔁 <select class="protsel" onchange="setSub('+i+',this.value)">'+
+        '<option value="">'+PROT_LABEL[pk]+'</option>'+
+        SUBS[pk].map(s=>'<option value="'+s.k+'"'+(cur===s.k?' selected':'')+'>'+PROT_LABEL[s.k]+'</option>').join("")+
+        '</select></div>':'')+
+      '<span class="emoji">'+(CUISINE_EMOJI[m.cuisine]||"🍽️")+'</span></div>';
   });
   html+='</div>';
 
@@ -839,9 +882,12 @@ function render(){
   html+='<h2>Recipes</h2>'+
     '<p class="hint">Methods are written for 2 adults + 1 child — the shopping list quantities scale automatically for <b>'+HH().label+'</b>.'+(HH().scale>1?' Scale pan quantities up to match what you buy.':'')+'</p>';
   plan.days.forEach((m,i)=>{
-    const ingNames=m.ing.map(([k])=>ING[k].n.replace(/\s*\(.*?\)/,"")).join(", ");
+    const cur=plan.subs?plan.subs[i]:null;
+    const em=effMeal(m,cur);
+    const ingNames=em.ing.map(([k])=>ING[k].n.replace(/\s*\(.*?\)/,"")).join(", ");
     html+='<details><summary><span>'+DAYS[i]+' — '+m.name+'</span><span class="sumkcal">'+(KCAL[m.id]||500)+' kcal</span></summary><div class="recipe-body">'+
       '<p><b>You’ll use:</b> '+ingNames+'</p><p>'+m.method+'</p>'+
+      (cur?'<p><b>🔁 Protein swap:</b> made with '+PROT_LABEL[cur]+' instead of '+PROT_LABEL[protOf(m)]+' — same method, similar calories.</p>':'')+
       '<p class="kcalnote">~'+(KCAL[m.id]||500)+' kcal per adult serving (sides included) · child portion ~'+Math.round((KCAL[m.id]||500)*0.6)+' kcal</p>'+
       (HH().kids>0?'<div class="tnote">'+m.tnote+'</div>':'')+
       '</div></details>';
@@ -879,8 +925,9 @@ function render(){
   try{
     const saved=JSON.parse(localStorage.getItem("mealplan")||"null");
     if(saved&&saved.length===6){
-      const days=saved.map(id=>MEALS.find(m=>m.id===id)).filter(Boolean);
-      if(days.length===6){plan={days};render();}
+      const days=saved.map(x=>MEALS.find(m=>m.id===(typeof x==="string"?x:x.id))).filter(Boolean);
+      const subs=saved.map(x=>(typeof x==="object"&&x&&x.sub)?x.sub:null);
+      if(days.length===6){plan={days,subs};render();}
     }
   }catch(e){}
 })();
