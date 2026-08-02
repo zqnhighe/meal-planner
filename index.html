@@ -745,13 +745,7 @@ function toast(msg){
    creates one reminder per line, straight into the shared Shopping List. */
 function copyList(){
   if(!plan)return;
-  const {lines}=mergeList(effMeals());
-  const items=[];
-  STORES[store].layout.forEach(sec=>{
-    lines.filter(l=>l.section===sec&&!l.skipped)
-      .sort((a,b)=>a.name.localeCompare(b.name))
-      .forEach(l=>items.push(l.name.replace(/\s*\(.*?\)/,"")+(l.packs>1?" x"+l.packs:"")));
-  });
+  const items=listText();
   const txt=items.join("\n");
   const ok=()=>toast("Copied "+items.length+" items — paste into your Reminders shopping list");
   const fail=()=>toast("Couldn't copy automatically — select and copy the list manually");
@@ -759,6 +753,25 @@ function copyList(){
     navigator.clipboard.writeText(txt).then(ok).catch(()=>legacyCopy(txt)?ok():fail());
   }else{
     legacyCopy(txt)?ok():fail();
+  }
+}
+function listText(){
+  const {lines}=mergeList(effMeals());
+  const items=[];
+  STORES[store].layout.forEach(sec=>{
+    lines.filter(l=>l.section===sec&&!l.skipped)
+      .sort((a,b)=>a.name.localeCompare(b.name))
+      .forEach(l=>items.push(l.name.replace(/\s*\(.*?\)/,"")+(l.packs>1?" x"+l.packs:"")));
+  });
+  return items;
+}
+function shareList(){
+  if(!plan)return;
+  const items=listText();
+  if(navigator.share){
+    navigator.share({text:items.join("\n")}).catch(()=>{});
+  }else{
+    toast("Sharing isn't supported in this browser — use Copy instead.");
   }
 }
 function legacyCopy(txt){
@@ -989,8 +1002,9 @@ function render(){
 
   const st=STORES[store];
   html+='<div class="listhead"><h2 style="margin:0"><span class="storelogo">'+LOGOS[store]+'</span>Shopping list — '+st.name+' walk-through order</h2>'+
-    '<button class="btn-ghost copybtn" onclick="copyList()">📋 Copy for Reminders</button></div>'+
-    '<p class="hint">Jars, sauces and spices last months — hit <b>skip</b> on anything already in the cupboard and the total updates (remembered week to week). Copy sends only the unskipped items, one per line, ready to paste into the shared Reminders list.</p>'+
+    '<button class="btn-ghost copybtn" onclick="copyList()">📋 Copy list</button>'+
+    '<button class="btn-ghost copybtn" onclick="shareList()">📤 Share</button></div>'+
+    '<p class="hint">Jars, sauces and spices last months — hit <b>skip</b> on anything already in the cupboard and the total updates (remembered week to week). Copy/Share sends unskipped items one per line. On iPhone, Reminders pastes it all as one reminder — run a "Shopping to Reminders" Shortcut (Get Clipboard → Split Text by new lines → Repeat → Add New Reminder) to file each item separately; on a Mac, pasting splits automatically.</p>'+
     '<div class="shop">';
   st.layout.forEach((sec,idx)=>{
     const label=(idx+1)+' · '+SECTION_NAMES[sec]+(idx===0?' (entrance)':'');
