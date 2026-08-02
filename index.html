@@ -66,6 +66,10 @@
   .btn-store:active{transform:translateY(1px)}
   .btn-aldi{background:linear-gradient(120deg,#00437a,#0071ce);box-shadow:0 3px 10px rgba(0,85,159,.35)}
   .btn-lidl{background:linear-gradient(120deg,#003d82,#0050aa);box-shadow:0 3px 10px rgba(0,80,170,.35)}
+  .btn-morrisons{background:linear-gradient(120deg,#ffcd00,#ffe14d);color:#00532e;box-shadow:0 3px 10px rgba(255,205,0,.45)}
+  .btn-sainsburys{background:linear-gradient(120deg,#d65a00,#f06c00);box-shadow:0 3px 10px rgba(240,108,0,.4)}
+  .btn-mands{background:linear-gradient(120deg,#002417,#00402a);box-shadow:0 3px 10px rgba(0,64,42,.4)}
+  .genlabel{font-size:.85rem;font-weight:700;color:var(--muted);margin-right:2px}
   .logo{display:inline-flex;flex:none}
   .logo svg{width:22px;height:22px;display:block}
   .storelogo{display:inline-flex;vertical-align:-4px;margin-right:8px}
@@ -178,7 +182,7 @@
 <div class="wrap">
   <header>
     <h1><span class="cart">🛒</span>Highe Family Meal Planner</h1>
-    <p>Healthy teatimes, leftover lunches and a shopping list in store order — Aldi or Lidl, on budget.</p>
+    <p>Healthy teatimes, leftover lunches and a shopping list in store order — Aldi, Lidl, Morrisons, Sainsbury's or M&amp;S.</p>
     <div class="stats">
       <span class="chip">🍛 50 meals</span>
       <span class="chip">🌍 24 cuisines</span>
@@ -196,16 +200,20 @@
   </div>
 
   <div class="toolbar">
-    <button class="btn-store btn-aldi" onclick="generate('aldi')"><span class="logo" data-logo="aldi"></span>Generate Aldi shop</button>
-    <button class="btn-store btn-lidl" onclick="generate('lidl')"><span class="logo" data-logo="lidl"></span>Generate Lidl shop</button>
+    <span class="genlabel">Generate weekly shop:</span>
+    <button class="btn-store btn-aldi" onclick="generate('aldi')"><span class="logo" data-logo="aldi"></span>Aldi</button>
+    <button class="btn-store btn-lidl" onclick="generate('lidl')"><span class="logo" data-logo="lidl"></span>Lidl</button>
+    <button class="btn-store btn-morrisons" onclick="generate('morrisons')"><span class="logo" data-logo="morrisons"></span>Morrisons</button>
+    <button class="btn-store btn-sainsburys" onclick="generate('sainsburys')"><span class="logo" data-logo="sainsburys"></span>Sainsbury's</button>
+    <button class="btn-store btn-mands" onclick="generate('mands')"><span class="logo" data-logo="mands"></span>M&amp;S</button>
     <button class="btn-ghost" onclick="window.print()">Print</button>
     <div class="budget" id="budgetBox"></div>
   </div>
 
-  <div id="content"><div class="empty"><span class="big">🍽️</span>Hit <b>Generate Aldi shop</b> or <b>Generate Lidl shop</b> to build this week's plan.</div></div>
+  <div id="content"><div class="empty"><span class="big">🍽️</span>Pick a supermarket above to build this week's plan.</div></div>
   <div id="toast"></div>
 
-  <p class="note">Prices are estimates (mid-2026 own-brand, near-identical at Aldi and Lidl) — expect ±10–20p per item. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£42 / £50 / £58 / £80, +£10 with sweet treats on); quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders: Aldi starts at produce; Lidl starts at the in-store bakery — individual stores can vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included) — actual values vary with portioning and exact products. Logos are simplified marks for personal use.</p>
+  <p class="note">Prices are estimates (mid-2026 own-brand, Aldi/Lidl base) — expect ±10–20p per item. Morrisons ~+8%, Sainsbury's ~+15% and M&amp;S ~+35% on a like-for-like own-brand basket; the budget targets stay the same, so dearer stores may show over. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£42 / £50 / £58 / £80, +£10 with sweet treats on); quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders are typical for each chain (Lidl starts at the bakery, most others at produce) — individual stores vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included). Logos are simplified marks for personal use.</p>
 </div>
 
 <script>
@@ -583,20 +591,30 @@ const LOGOS = {
   lidl:'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Lidl">'+
     '<rect width="24" height="24" rx="5" fill="#0050aa"/>'+
     '<circle cx="12" cy="12" r="8.4" fill="#fff000" stroke="#e60a14" stroke-width="1.8"/>'+
-    '<text x="12" y="14.8" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" font-weight="bold" fill="#0050aa">Lidl</text></svg>'
+    '<text x="12" y="14.8" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" font-weight="bold" fill="#0050aa">Lidl</text></svg>',
+  morrisons:'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Morrisons">'+
+    '<rect width="24" height="24" rx="5" fill="#ffd400"/>'+
+    '<text x="12" y="17.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="bold" fill="#00693e">M</text></svg>',
+  sainsburys:'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Sainsburys">'+
+    '<rect width="24" height="24" rx="5" fill="#f06c00"/>'+
+    '<text x="12" y="17.5" text-anchor="middle" font-family="Georgia,serif" font-size="15" font-style="italic" font-weight="bold" fill="#fff">S</text></svg>',
+  mands:'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="M and S">'+
+    '<rect width="24" height="24" rx="5" fill="#00402a"/>'+
+    '<text x="12" y="15.7" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" font-weight="bold" fill="#fff">M&amp;S</text></svg>'
 };
 
-/* Same meals & prices for both (own-brand ranges are price-matched to pennies) — what changes is the walk-through order. */
+/* pf = price factor vs the Aldi/Lidl base catalogue (own-brand like-for-like, rough mid-2026 basket premium).
+   Layouts are typical walk-through orders for each chain — individual stores vary. */
 const STORES = {
-  aldi:{name:"Aldi",layout:["produce","bakery","meat","dairy","aisles","snacks","frozen"],
-    labels:{produce:"1 · 🥬 Fruit & Veg (entrance)",bakery:"2 · 🍞 Bakery",meat:"3 · 🥩 Fresh meat & chilled",
-      dairy:"4 · 🧀 Dairy",aisles:"5 · 🥫 Food aisles (tins, jars, dry, world food)",
-      snacks:"6 · 🍿 Snacks (for the lad)",frozen:"7 · 🧊 Frozen (before the tills)"}},
-  lidl:{name:"Lidl",layout:["bakery","produce","meat","dairy","aisles","snacks","frozen"],
-    labels:{bakery:"1 · 🍞 In-store bakery (entrance)",produce:"2 · 🥬 Fruit & Veg",meat:"3 · 🥩 Fresh meat & chilled",
-      dairy:"4 · 🧀 Dairy",aisles:"5 · 🥫 Food aisles (tins, jars, dry, world food)",
-      snacks:"6 · 🍿 Snacks (for the lad)",frozen:"7 · 🧊 Frozen (before the tills)"}}
+  aldi:      {name:"Aldi",        pf:1,    layout:["produce","bakery","meat","dairy","aisles","snacks","frozen"]},
+  lidl:      {name:"Lidl",        pf:1,    layout:["bakery","produce","meat","dairy","aisles","snacks","frozen"]},
+  morrisons: {name:"Morrisons",   pf:1.08, layout:["produce","bakery","meat","dairy","aisles","snacks","frozen"]},
+  sainsburys:{name:"Sainsbury's", pf:1.15, layout:["produce","meat","dairy","bakery","aisles","snacks","frozen"]},
+  mands:     {name:"M&S",         pf:1.35, layout:["produce","bakery","meat","dairy","aisles","snacks","frozen"]}
 };
+const SECTION_NAMES = {produce:"🥬 Fruit & Veg",bakery:"🍞 Bakery",meat:"🥩 Fresh meat & chilled",
+  dairy:"🧀 Dairy",aisles:"🥫 Food aisles (tins, jars, dry, world food)",
+  snacks:"🍿 Snacks & treats",frozen:"🧊 Frozen (before the tills)"};
 let store = "aldi";
 try{store=localStorage.getItem("store")||"aldi";if(!STORES[store])store="aldi";}catch(e){}
 let plan = null;
@@ -616,10 +634,11 @@ function mergeList(meals){
   if(treats)TREATS.forEach(k=>{need[k]=(need[k]||0)+1;});
   const lines = [];
   let total = 0;
+  const pf = STORES[store]?STORES[store].pf:1;
   for(const k in need){
     const ing = ING[k];
     const packs = Math.max(1,Math.ceil(need[k]-STRETCH));
-    const cost = packs*ing.p;
+    const cost = Math.round(packs*ing.p*pf*100)/100;
     const skipped = SKIPS.has(k);
     if(!skipped) total += cost;
     lines.push({k,name:ing.n,packs,cost,section:ing.s,skipped,long:!!ing.long,treat:!!ing.treat});
@@ -821,6 +840,12 @@ function generate(storeKey){
   plan={days:orderDays(best.set),subs:[null,null,null,null,null,null]};
   savePlan();
   render();
+  const st=STORES[store];
+  if(st.pf>1){
+    const {total}=mergeList(effMeals());
+    toast("⚠️ "+st.name+" runs ~"+Math.round((st.pf-1)*100)+"% dearer than Aldi/Lidl — "+
+      (total>currentBudget()?"this week lands at £"+total.toFixed(2)+" against the £"+currentBudget().toFixed(0)+" target.":"the £"+currentBudget().toFixed(0)+" target still holds this week."));
+  }
 }
 
 function swapMeal(idx){
@@ -898,8 +923,8 @@ function render(){
     '<button class="btn-ghost copybtn" onclick="copyList()">📋 Copy for Reminders</button></div>'+
     '<p class="hint">Jars, sauces and spices last months — hit <b>skip</b> on anything already in the cupboard and the total updates (remembered week to week). Copy sends only the unskipped items, one per line, ready to paste into the shared Reminders list.</p>'+
     '<div class="shop">';
-  st.layout.forEach(sec=>{
-    const label=st.labels[sec];
+  st.layout.forEach((sec,idx)=>{
+    const label=(idx+1)+' · '+SECTION_NAMES[sec]+(idx===0?' (entrance)':'');
     const items=lines.filter(l=>l.section===sec).sort((a,b)=>a.name.localeCompare(b.name));
     if(!items.length)return;
     html+='<section><h3>'+label+'</h3><ul>';
