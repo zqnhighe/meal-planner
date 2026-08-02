@@ -620,6 +620,8 @@ try{store=localStorage.getItem("store")||"aldi";if(!STORES[store])store="aldi";}
 let plan = null;
 let SKIPS = new Set();
 try{SKIPS=new Set(JSON.parse(localStorage.getItem("pantry_skips")||"[]"));}catch(e){}
+let RECENT = [];  // last ~2 weeks of meal ids, excluded from the next draw for variety
+try{RECENT=JSON.parse(localStorage.getItem("recent_meals")||"[]");}catch(e){}
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
@@ -766,55 +768,80 @@ function partialOk(trial){
   return true;
 }
 
-/* Cost-aware greedy: each pick weighs the *marginal* cost given packs already in the basket,
-   choosing randomly among the cheapest few so weeks vary. */
-function pickSet(){
-  let best=null;const underBudget=[],all=[];
-  for(let attempt=0;attempt<60;attempt++){
-    const set=[];
-    // seed with a random beef-mince meal so the constraint always lands
-    const beefs=shuffle(MEALS.filter(m=>m.tag==="beef"));
-    set.push(beefs[0]);
-    while(set.length<6){
-      const base=mergeList(set).total;
-      const scored=[];
-      for(const m of MEALS){
+/* Variety-first picker: build each candidate week completely at random (excluding the last
+   ~2 weeks of meals), then only nudge the cost down with random swaps while over budget.
+   Cost never drives the initial selection, so cheap meals no longer dominate. */
+/* Deterministic-ish repair: swap meals to cut cost until under budget.
+   Picks randomly among the 3 best improving swaps so repaired weeks still vary. */
+function repair(set,total,BUDGET,from){
+  let guard=0;
+  while(total>BUDGET&&guard++<12){
+    const cands=[];
+    for(let i=0;i<6;i++){
+      for(const m of from){
         if(set.includes(m))continue;
-        const trial=set.concat([m]);
-        if(!partialOk(trial))continue;
-        scored.push({m,mc:mergeList(trial).total-base});
+        const trial=set.slice();trial[i]=m;
+        if(!validSet(trial))continue;
+        const tt=mergeList(trial).total;
+        if(tt<total)cands.push({trial,tt});
       }
-      if(!scored.length)break;
-      scored.sort((a,b)=>a.mc-b.mc);
-      const k=Math.min(scored.length,8);
-      set.push(scored[Math.floor(Math.random()*k)].m);
+    }
+    if(!cands.length)break;
+    cands.sort((a,b)=>a.tt-b.tt);
+    const pick=cands[Math.floor(Math.random()*Math.min(3,cands.length))];
+    set.length=0;set.push(...pick.trial);total=pick.tt;
+  }
+  return total;
+}
+
+function pickSet(){
+  let pool=MEALS.filter(m=>!RECENT.includes(m.id));
+  if(pool.length<20||!pool.some(m=>m.tag==="beef"))pool=MEALS.filter(m=>!RECENT.slice(0,6).includes(m.id));
+  if(!pool.some(m=>m.tag==="beef"))pool=MEALS.slice();
+  const BUDGET=currentBudget();
+  let best=null;const underBudget=[],all=[];
+  for(let attempt=0;attempt<25;attempt++){
+    // fully random valid set, seeded with a random beef-mince meal
+    const set=[shuffle(pool.filter(m=>m.tag==="beef"))[0]];
+    for(const m of shuffle(pool)){
+      if(set.length===6)break;
+      if(set.includes(m))continue;
+      if(partialOk(set.concat([m])))set.push(m);
     }
     if(set.length<6||!validSet(set))continue;
-    // swap-improvement if over budget: replace priciest-marginal meal with a cheaper valid one
-    const BUDGET=currentBudget();
+    // random-repair: sample swaps, keep ones that cut cost, until under budget
     let total=mergeList(set).total,guard=0;
-    while(total>BUDGET&&guard++<12){
-      let bestSwap=null;
-      for(let i=0;i<6;i++){
-        for(const m of MEALS){
-          if(set.includes(m))continue;
-          const trial=set.slice();trial[i]=m;
-          if(!validSet(trial))continue;
-          const t=mergeList(trial).total;
-          if(t<total&&(!bestSwap||t<bestSwap.t))bestSwap={trial,t};
-        }
+    while(total>BUDGET&&guard++<10){
+      const cands=[];
+      for(let t=0;t<30;t++){
+        const i=Math.floor(Math.random()*6);
+        const m=pool[Math.floor(Math.random()*pool.length)];
+        if(set.includes(m))continue;
+        const trial=set.slice();trial[i]=m;
+        if(!validSet(trial))continue;
+        const tt=mergeList(trial).total;
+        if(tt<total)cands.push({trial,tt});
       }
-      if(!bestSwap)break;
-      set.length=0;set.push(...bestSwap.trial);total=bestSwap.t;
+      if(!cands.length)break;
+      cands.sort((a,b)=>a.tt-b.tt);
+      const pick=cands[Math.floor(Math.random()*Math.min(3,cands.length))];
+      set.length=0;set.push(...pick.trial);total=pick.tt;
+    }
+    // phase 2: thorough repair from the fresh pool (keeps recently-eaten meals out)
+    total=repair(set,total,BUDGET,pool);
+    // phase 3: still over? allow meals from a fortnight ago — but never last week's six
+    if(total>BUDGET){
+      const fallbackPool=MEALS.filter(m=>!RECENT.slice(0,6).includes(m.id));
+      total=repair(set,total,BUDGET,fallbackPool);
     }
     all.push({set:set.slice(),total});
     if(total<=BUDGET)underBudget.push({set:set.slice(),total});
     if(!best||total<best.total)best={set:set.slice(),total};
-    if(underBudget.length>=10)break; // enough variety to choose from
+    if(underBudget.length>=8)break;
   }
   if(underBudget.length)return underBudget[Math.floor(Math.random()*underBudget.length)];
-  // nothing under budget (fresh cupboard): vary among the near-cheapest rather than repeating one week
-  const near=all.filter(x=>x.total<=best.total+1);
+  // nothing under budget (premium store / fresh cupboard): vary among the near-cheapest
+  const near=all.filter(x=>x.total<=best.total+1.5);
   if(near.length)return near[Math.floor(Math.random()*near.length)];
   return best;
 }
@@ -838,13 +865,17 @@ function generate(storeKey){
   const best=pickSet();
   if(!best){alert("Couldn't build a valid week — try again.");return;}
   plan={days:orderDays(best.set),subs:[null,null,null,null,null,null]};
+  RECENT=plan.days.map(m=>m.id).concat(RECENT.filter(id=>!plan.days.some(m=>m.id===id))).slice(0,12);
+  try{localStorage.setItem("recent_meals",JSON.stringify(RECENT));}catch(e){}
   savePlan();
   render();
   const st=STORES[store];
+  const {total}=mergeList(effMeals());
   if(st.pf>1){
-    const {total}=mergeList(effMeals());
     toast("⚠️ "+st.name+" runs ~"+Math.round((st.pf-1)*100)+"% dearer than Aldi/Lidl — "+
       (total>currentBudget()?"this week lands at £"+total.toFixed(2)+" against the £"+currentBudget().toFixed(0)+" target.":"the £"+currentBudget().toFixed(0)+" target still holds this week."));
+  }else if(total>currentBudget()){
+    toast("Tight week — £"+total.toFixed(2)+" against the £"+currentBudget().toFixed(0)+" target (keeping variety up). Generate again for a different mix.");
   }
 }
 
