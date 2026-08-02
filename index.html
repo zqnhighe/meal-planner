@@ -218,7 +218,7 @@
   <div id="content"><div class="empty"><span class="big">🍽️</span>Pick a supermarket above to build this week's plan.</div></div>
   <div id="toast"></div>
 
-  <p class="note">Prices are estimates (mid-2026 own-brand, Aldi/Lidl base) — expect ±10–20p per item. Morrisons ~+8%, Sainsbury's ~+15% and M&amp;S ~+35% on a like-for-like own-brand basket; the budget targets stay the same, so dearer stores may show over. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£42 / £50 / £58 / £80, +£10 with sweet treats on); quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders are typical for each chain (Lidl starts at the bakery, most others at produce) — individual stores vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included). Logos are simplified marks for personal use.</p>
+  <p class="note">Prices calibrated against a real Aldi till receipt (Huddersfield, 2 Aug 2026) where items matched; the rest are mid-2026 own-brand estimates. Morrisons ~+8%, Sainsbury's ~+15% and M&amp;S ~+35% on a like-for-like own-brand basket; the budget targets stay the same, so dearer stores may show over. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£45 / £50 / £60 / £90, +£10 with sweet treats on); a full-price basket can run over — skipping cupboard items you already own is what brings the real spend under, exactly as at the till. Quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders are typical for each chain (Lidl starts at the bakery, most others at produce) — individual stores vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included). Logos are simplified marks for personal use.</p>
 </div>
 
 <script>
@@ -230,49 +230,49 @@ const ING = {
   onion:{n:"Onions 1kg",p:0.89,s:"produce"},
   garlic:{n:"Garlic 4-pack",p:0.69,s:"produce"},
   ginger:{n:"Root ginger",p:0.65,s:"produce"},
-  carrots:{n:"Carrots 1kg",p:0.50,s:"produce"},
-  celery:{n:"Celery",p:0.69,s:"produce"},
+  carrots:{n:"Carrots 1kg",p:0.69,s:"produce"},
+  celery:{n:"Celery",p:0.49,s:"produce"},
   peppers:{n:"Peppers 3-pack",p:1.49,s:"produce"},
   mushrooms:{n:"Mushrooms 250g",p:0.99,s:"produce"},
   potatoes:{n:"Potatoes 2.5kg",p:1.49,s:"produce"},
   sweetPotato:{n:"Sweet potatoes 1kg",p:1.29,s:"produce"},
   broccoli:{n:"Broccoli",p:0.79,s:"produce"},
   courgette:{n:"Courgettes (pack)",p:0.99,s:"produce"},
-  cucumber:{n:"Cucumber",p:0.69,s:"produce"},
+  cucumber:{n:"Cucumber",p:0.99,s:"produce"},
   tomatoes:{n:"Tomatoes 6-pack",p:0.99,s:"produce"},
   lettuce:{n:"Little gem lettuce 2-pack",p:0.85,s:"produce"},
   spinach:{n:"Baby spinach 240g",p:0.99,s:"produce"},
-  springOnions:{n:"Spring onions",p:0.45,s:"produce"},
+  springOnions:{n:"Spring onions",p:0.65,s:"produce"},
   lemon:{n:"Lemons 4-pack",p:0.99,s:"produce"},
   lime:{n:"Limes 5-pack",p:0.89,s:"produce"},
   bananas:{n:"Bananas 5-pack",p:0.78,s:"produce"},
-  apples:{n:"Apples 6-pack",p:1.19,s:"produce"},
-  grapes:{n:"Grapes 500g (halve for the little one)",p:1.85,s:"produce"},
+  apples:{n:"Mini apples pack",p:0.99,s:"produce"},
+  grapes:{n:"Grapes 500g (halve for the little one)",p:1.89,s:"produce"},
   // bakery
-  wraps:{n:"Tortilla wraps 8-pack",p:0.85,s:"bakery"},
+  wraps:{n:"Tortilla wraps 8-pack",p:0.99,s:"bakery"},
   pitta:{n:"Wholemeal pitta 6-pack",p:0.45,s:"bakery"},
-  loaf:{n:"Wholemeal loaf",p:0.79,s:"bakery"},
+  loaf:{n:"Wholemeal seeded loaf",p:0.99,s:"bakery"},
   rolls:{n:"Wholemeal rolls 6-pack",p:0.85,s:"bakery"},
   // meat & chilled
-  mince5:{n:"5% lean beef mince 500g",p:2.85,s:"meat"},
+  mince5:{n:"5% lean beef mince 500g",p:5.19,s:"meat"},
   turkeyMince:{n:"Turkey mince 500g",p:2.45,s:"meat"},
   porkMince:{n:"Pork mince 500g",p:1.99,s:"meat"},
-  chickenBreast:{n:"Chicken breast fillets 1kg",p:5.29,s:"meat"},
+  chickenBreast:{n:"Chicken breast fillets 1kg",p:6.69,s:"meat"},
   chickenThigh:{n:"Chicken thigh fillets 1kg",p:4.49,s:"meat"},
   porkLoin:{n:"Pork loin steaks 4-pack",p:2.65,s:"meat"},
   sausages:{n:"Reduced-fat pork sausages 8-pack",p:1.79,s:"meat"},
   chorizo:{n:"Chorizo ring 225g",p:1.59,s:"meat"},
-  ham:{n:"Cooked ham 125g",p:1.09,s:"meat"},
+  ham:{n:"Smoked/cooked ham",p:1.49,s:"meat"},
   // dairy
-  milk:{n:"Milk 4pt",p:1.45,s:"dairy"},
+  milk:{n:"Milk 4pt",p:1.65,s:"dairy"},
   butter:{n:"Butter/spread",p:1.29,s:"dairy"},
-  eggs:{n:"Eggs (6)",p:1.25,s:"dairy"},
+  eggs:{n:"Free range eggs (6)",p:1.69,s:"dairy"},
   cheddar:{n:"Mature cheddar 400g",p:2.49,s:"dairy"},
   greekYog:{n:"Greek-style yoghurt 500g",p:0.99,s:"dairy"},
   feta:{n:"Feta-style cheese",p:0.85,s:"dairy"},
   mozzarella:{n:"Mozzarella ball",p:0.49,s:"dairy"},
   halloumi:{n:"Halloumi 225g",p:2.29,s:"dairy"},
-  kidsYog:{n:"Kids' yoghurt 6-pack",p:1.29,s:"dairy"},
+  kidsYog:{n:"Kids' fruit yoghurt",p:0.95,s:"dairy"},
   // food aisles
   wwSpag:{n:"Wholewheat spaghetti 500g",p:0.75,s:"aisles"},
   wwPenne:{n:"Wholewheat penne 500g",p:0.75,s:"aisles"},
@@ -281,16 +281,16 @@ const ING = {
   riceNoodles:{n:"Rice noodles",p:0.89,s:"aisles"},
   eggNoodles:{n:"Egg noodles",p:0.65,s:"aisles"},
   couscous:{n:"Couscous 500g",p:0.79,s:"aisles"},
-  chopToms:{n:"Chopped tomatoes tin",p:0.47,s:"aisles"},
+  chopToms:{n:"Chopped tomatoes tin",p:0.45,s:"aisles"},
   passata:{n:"Passata 500g",p:0.49,s:"aisles"},
-  chickpeas:{n:"Chickpeas tin",p:0.49,s:"aisles"},
-  kidneyBeans:{n:"Kidney beans tin",p:0.47,s:"aisles"},
-  blackBeans:{n:"Black beans tin",p:0.55,s:"aisles"},
+  chickpeas:{n:"Chickpeas tin",p:0.41,s:"aisles"},
+  kidneyBeans:{n:"Kidney beans tin",p:0.39,s:"aisles"},
+  blackBeans:{n:"Black beans tin",p:0.45,s:"aisles"},
   cannellini:{n:"Cannellini beans tin",p:0.55,s:"aisles"},
   lentils:{n:"Red lentils 500g",p:0.75,s:"aisles"},
   coconutMilk:{n:"Light coconut milk tin",p:0.95,s:"aisles"},
   sweetcornTin:{n:"Sweetcorn tin",p:0.55,s:"aisles"},
-  pineappleTin:{n:"Pineapple chunks tin",p:0.65,s:"aisles"},
+  pineappleTin:{n:"Pineapple slices tin",p:0.99,s:"aisles"},
   soy:{n:"Soy sauce",p:0.69,s:"aisles",long:true},
   hoisin:{n:"Hoisin sauce",p:0.99,s:"aisles",long:true},
   sweetChilli:{n:"Sweet chilli sauce",p:0.85,s:"aisles",long:true},
@@ -308,16 +308,16 @@ const ING = {
   fiveSpice:{n:"Chinese five spice",p:0.55,s:"aisles",long:true},
   stock:{n:"Reduced-salt stock cubes",p:0.49,s:"aisles",long:true},
   breadcrumbs:{n:"Golden breadcrumbs",p:0.65,s:"aisles",long:true},
-  puree:{n:"Tomato purée",p:0.55,s:"aisles",long:true},
+  puree:{n:"Tomato purée",p:0.59,s:"aisles",long:true},
   // snacks
   crisps:{n:"Crisps multipack (Snackrite)",p:0.89,s:"snacks"},
   bearCrisps:{n:"Baked bear-type crisps",p:1.19,s:"snacks"},
-  breadsticks:{n:"Breadsticks",p:0.55,s:"snacks"},
+  breadsticks:{n:"Breadsticks 125g",p:0.49,s:"snacks"},
   raisins:{n:"Raisin mini-boxes 6-pack",p:0.99,s:"snacks"},
   ricecakes:{n:"Kids' rice cakes",p:0.69,s:"snacks"},
   // sweet treats (optional +£10 pot)
   chocDigestives:{n:"Chocolate digestives",p:0.79,s:"snacks",treat:true},
-  jaffa:{n:"Jaffa cakes",p:0.85,s:"snacks",treat:true},
+  jaffa:{n:"Jaffa cakes 300g",p:1.69,s:"snacks",treat:true},
   cakeBars:{n:"Chocolate cake bars 5-pack",p:1.09,s:"snacks",treat:true},
   sweets:{n:"Wine gums / jelly sweets",p:0.89,s:"snacks",treat:true},
   chocolate:{n:"Chocolate sharing bar",p:1.99,s:"snacks",treat:true},
@@ -325,7 +325,7 @@ const ING = {
   custard:{n:"Custard 500g",p:0.75,s:"aisles",treat:true},
   icecream:{n:"Vanilla ice cream tub",p:1.99,s:"frozen",treat:true},
   // frozen
-  peas:{n:"Frozen garden peas 900g",p:0.99,s:"frozen"},
+  peas:{n:"Frozen garden peas 900g",p:1.15,s:"frozen"},
   prawns:{n:"Frozen cooked prawns 225g",p:2.79,s:"frozen"}
 };
 
@@ -547,16 +547,16 @@ const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat"];
 /* Household options: scale multiplies recipe quantities (baseline = 2 adults + 1 child, with leftovers);
    kids drives the kids'-snack quantities; budget flexes with mouths to feed. */
 const HOUSEHOLDS = [
-  {key:"2a", label:"2 adults",       scale:0.8, kids:0, budget:42},
+  {key:"2a", label:"2 adults",       scale:0.8, kids:0, budget:45},
   {key:"2a1c",label:"2A + 1 child",  scale:1.0, kids:1, budget:50},
-  {key:"2a2c",label:"2A + 2 children",scale:1.2,kids:2, budget:58},
-  {key:"2a3c",label:"2A + 3 children",scale:1.4,kids:3, budget:80}
+  {key:"2a2c",label:"2A + 2 children",scale:1.2,kids:2, budget:60},
+  {key:"2a3c",label:"2A + 3 children",scale:1.4,kids:3, budget:90}
 ];
 /* You can stretch a pack ~25% before buying another (smaller kids' portions) — keeps pack-rounding honest without doubling costs. */
 const STRETCH = 0.25;
 const KID_FACTOR = [0, 1, 1.7, 2.4];  // snack scaling by number of kids
 const KID_ITEMS = new Set(["kidsYog","crisps","breadsticks","raisins"]);
-const TREATS = ["chocDigestives","jaffa","cakeBars","sweets","chocolate","painAuChoc","custard","icecream"];
+const TREATS = ["chocDigestives","jaffa","cakeBars","sweets","chocolate","painAuChoc","icecream"];  // £9.63 — custard dropped when jaffa's real price came in
 
 let hh = "2a1c", treats = false;
 try{
@@ -911,7 +911,9 @@ function generate(storeKey){
     toast("⚠️ "+st.name+" runs ~"+Math.round((st.pf-1)*100)+"% dearer than Aldi/Lidl — "+
       (total>currentBudget()?"this week lands at £"+total.toFixed(2)+" against the £"+currentBudget().toFixed(0)+" target.":"the £"+currentBudget().toFixed(0)+" target still holds this week."));
   }else if(total>currentBudget()){
-    toast("Tight week — £"+total.toFixed(2)+" against the £"+currentBudget().toFixed(0)+" target (keeping variety up). Generate again for a different mix.");
+    const staples=mergeList(effMeals()).lines.filter(l=>l.long&&!l.skipped).reduce((s,l)=>s+l.cost,0);
+    toast("£"+total.toFixed(2)+" against the £"+currentBudget().toFixed(0)+" target — "+
+      (staples>1?"£"+staples.toFixed(2)+" of that is cupboard staples: skip the ones you already own and you're under.":"generate again for a different mix."));
   }
 }
 
