@@ -105,6 +105,11 @@
   .sumkcal{font-size:.75rem;font-weight:700;color:#c05621;background:#fdeee5;border-radius:20px;padding:3px 10px;margin-left:auto;white-space:nowrap}
   summary .sumkcal{margin-right:8px}
   .kcalnote{font-size:.8rem;color:var(--muted)}
+  .histwrap{display:flex;flex-direction:column;gap:8px}
+  .histrow{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow)}
+  .histinfo{flex:1;font-size:.85rem;min-width:0}
+  .histmeals{color:var(--muted);font-size:.78rem;margin-top:3px;line-height:1.5}
+  .histbtn{white-space:nowrap;padding:8px 13px;font-size:.8rem}
   .prot{margin-top:9px;font-size:.78rem;color:var(--muted);position:relative;z-index:1}
   .protsel{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.78rem;color:var(--ink);background:#fff;font-family:inherit;max-width:170px}
   .protsel:focus{outline:2px solid var(--green);outline-offset:1px}
@@ -622,6 +627,35 @@ let SKIPS = new Set();
 try{SKIPS=new Set(JSON.parse(localStorage.getItem("pantry_skips")||"[]"));}catch(e){}
 let RECENT = [];  // last ~2 weeks of meal ids, excluded from the next draw for variety
 try{RECENT=JSON.parse(localStorage.getItem("recent_meals")||"[]");}catch(e){}
+let TICKS = new Set();  // shopping-list items already in the trolley — survives refreshes mid-shop
+try{TICKS=new Set(JSON.parse(localStorage.getItem("ticks")||"[]"));}catch(e){}
+let HISTORY = [];  // last 8 generated weeks, restorable
+try{HISTORY=JSON.parse(localStorage.getItem("week_history")||"[]");}catch(e){}
+
+function tickItem(k,on){
+  if(on)TICKS.add(k);else TICKS.delete(k);
+  try{localStorage.setItem("ticks",JSON.stringify([...TICKS]));}catch(e){}
+}
+function clearTicks(){TICKS.clear();try{localStorage.setItem("ticks","[]");}catch(e){}}
+
+function pushHistory(p){
+  const snap={ts:Date.now(),store,hh,treats,meals:p.days.map((m,i)=>({id:m.id,sub:p.subs?p.subs[i]:null}))};
+  snap.key=snap.meals.map(x=>x.id).sort().join("|");
+  if(HISTORY.length&&HISTORY[0].key===snap.key)return;
+  HISTORY.unshift(snap);HISTORY=HISTORY.slice(0,8);
+  try{localStorage.setItem("week_history",JSON.stringify(HISTORY));}catch(e){}
+}
+function restoreWeek(i){
+  const h=HISTORY[i];if(!h)return;
+  const days=h.meals.map(x=>MEALS.find(m=>m.id===x.id)).filter(Boolean);
+  if(days.length!==6){toast("Couldn't restore that week — meals no longer in the pool.");return;}
+  if(STORES[h.store]){store=h.store;try{localStorage.setItem("store",store);}catch(e){}}
+  if(HOUSEHOLDS.some(x=>x.key===h.hh)){hh=h.hh;try{localStorage.setItem("hh",hh);}catch(e){}}
+  treats=!!h.treats;try{localStorage.setItem("treats",treats?"1":"0");}catch(e){}
+  plan={days,subs:h.meals.map(x=>x.sub||null)};
+  clearTicks();buildControls();savePlan();render();
+  toast("Restored the week from "+new Date(h.ts).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"}));
+}
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
@@ -864,6 +898,8 @@ function generate(storeKey){
   if(storeKey&&STORES[storeKey]){store=storeKey;try{localStorage.setItem("store",store);}catch(e){}}
   const best=pickSet();
   if(!best){alert("Couldn't build a valid week — try again.");return;}
+  if(plan&&plan.days)pushHistory(plan);  // archive the outgoing week before overwriting
+  clearTicks();
   plan={days:orderDays(best.set),subs:[null,null,null,null,null,null]};
   RECENT=plan.days.map(m=>m.id).concat(RECENT.filter(id=>!plan.days.some(m=>m.id===id))).slice(0,12);
   try{localStorage.setItem("recent_meals",JSON.stringify(RECENT));}catch(e){}
@@ -961,8 +997,10 @@ function render(){
     html+='<section><h3>'+label+'</h3><ul>';
     items.forEach(l=>{
       const id='chk_'+l.k;
-      html+='<li class="'+(l.skipped?'skipped':'')+'">'+
-        '<input type="checkbox" id="'+id+'" '+(l.skipped?'disabled':'')+' onchange="this.closest(\'li\').classList.toggle(\'done\',this.checked)">'+
+      const ticked=TICKS.has(l.k)&&!l.skipped;
+      html+='<li class="'+(l.skipped?'skipped':'')+(ticked?' done':'')+'">'+
+        '<input type="checkbox" id="'+id+'" '+(l.skipped?'disabled':'')+(ticked?' checked':'')+
+        ' onchange="tickItem(\''+l.k+'\',this.checked);this.closest(\'li\').classList.toggle(\'done\',this.checked)">'+
         '<label for="'+id+'">'+l.name+(l.packs>1?' ×'+l.packs:'')+(l.long&&!l.skipped?' <em class="cupb">cupboard staple</em>':'')+(l.treat?' <em class="treatb">sweet treat</em>':'')+'</label>'+
         '<span class="price">'+(l.skipped?'skipped':'£'+l.cost.toFixed(2))+'</span>'+
         '<button class="skipbtn" onclick="toggleSkip(\''+l.k+'\')">'+(l.skipped?'add back':'skip')+'</button></li>';
@@ -970,6 +1008,19 @@ function render(){
     html+='</ul></section>';
   });
   html+='<div class="grand"><span>Estimated total (skipped items excluded)</span><span>£'+total.toFixed(2)+'</span></div></div>';
+
+  if(HISTORY.length){
+    html+='<h2>Previous weeks</h2><div class="histwrap">';
+    HISTORY.forEach((h,i)=>{
+      const d=new Date(h.ts).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+      const names=h.meals.map(x=>{const m=MEALS.find(mm=>mm.id===x.id);return m?m.name:x.id;}).join(" · ");
+      const hhLabel=(HOUSEHOLDS.find(x=>x.key===h.hh)||{label:h.hh}).label;
+      html+='<div class="histrow"><div class="histinfo"><b>'+d+'</b> · '+(STORES[h.store]?STORES[h.store].name:h.store)+' · '+hhLabel+(h.treats?' · 🍰':'')+
+        '<div class="histmeals">'+names+'</div></div>'+
+        '<button class="btn-ghost histbtn" onclick="restoreWeek('+i+')">↩ Restore</button></div>';
+    });
+    html+='</div>';
+  }
 
   document.getElementById("content").innerHTML=html;
 }
