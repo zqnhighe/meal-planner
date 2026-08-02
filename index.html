@@ -52,6 +52,7 @@
   .treats .plus{font-size:.75rem;font-weight:800;background:var(--green-pale);color:var(--green-dark);border-radius:10px;padding:2px 8px}
   .treats.on{background:linear-gradient(120deg,#8e3fa8,#d4549b);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(180,60,150,.4)}
   .treats.on .plus{background:rgba(255,255,255,.25);color:#fff}
+  .plainlbl.on{background:linear-gradient(120deg,#5b4a3f,#8a6f5c);box-shadow:0 3px 12px rgba(90,74,63,.4)}
   .treatb{font-style:normal;font-size:.68rem;color:#a0447e;background:#fbeaf4;border-radius:10px;padding:1px 7px;margin-left:6px;white-space:nowrap}
   .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 20px;align-items:center;
     position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg) 85%,transparent);padding:12px 0 14px}
@@ -189,7 +190,7 @@
     <h1><span class="cart">🛒</span>Highe Family Meal Planner</h1>
     <p>Healthy teatimes, leftover lunches and a shopping list in store order — Aldi, Lidl, Morrisons, Sainsbury's or M&amp;S.</p>
     <div class="stats">
-      <span class="chip">🍛 50 meals</span>
+      <span class="chip">🍛 63 meals</span>
       <span class="chip">🌍 24 cuisines</span>
       <span class="chip">🥪 4 leftover lunches</span>
       <span class="chip">👦 kid-approved</span>
@@ -201,6 +202,10 @@
     <label class="treats" id="treatsLbl">
       <input type="checkbox" id="treatsChk" onchange="setTreats(this.checked)">
       🍰 Sweet treats <span class="plus">+£10</span>
+    </label>
+    <label class="treats plainlbl" id="plainLbl" title="Restricts the generator to plain British, Italian and American dishes">
+      <input type="checkbox" id="plainChk" onchange="setPlain(this.checked)">
+      🥔 Plain week
     </label>
   </div>
 
@@ -261,6 +266,9 @@ const ING = {
   chickenThigh:{n:"Chicken thigh fillets 1kg",p:4.49,s:"meat"},
   porkLoin:{n:"Pork loin steaks 4-pack",p:2.65,s:"meat"},
   sausages:{n:"Reduced-fat pork sausages 8-pack",p:1.79,s:"meat"},
+  wholeChicken:{n:"Whole chicken (medium)",p:3.99,s:"meat"},
+  bacon:{n:"Smoked bacon lardons 2x120g",p:2.19,s:"meat"},
+  puffPastry:{n:"Ready-rolled puff pastry",p:0.99,s:"dairy"},
   chorizo:{n:"Chorizo ring 225g",p:1.59,s:"meat"},
   ham:{n:"Smoked/cooked ham",p:1.49,s:"meat"},
   // dairy
@@ -290,6 +298,10 @@ const ING = {
   lentils:{n:"Red lentils 500g",p:0.75,s:"aisles"},
   coconutMilk:{n:"Light coconut milk tin",p:0.95,s:"aisles"},
   sweetcornTin:{n:"Sweetcorn tin",p:0.55,s:"aisles"},
+  bakedBeans:{n:"Baked beans tin",p:0.45,s:"aisles"},
+  gnocchi:{n:"Gnocchi 500g",p:0.75,s:"aisles"},
+  gravy:{n:"Gravy granules",p:0.65,s:"aisles",long:true},
+  bbq:{n:"BBQ sauce",p:0.75,s:"aisles",long:true},
   pineappleTin:{n:"Pineapple slices tin",p:0.99,s:"aisles"},
   soy:{n:"Soy sauce",p:0.69,s:"aisles",long:true},
   hoisin:{n:"Hoisin sauce",p:0.99,s:"aisles",long:true},
@@ -371,7 +383,7 @@ const MEALS = [
   ing:[["chickenThigh",0.7],["greekYog",0.6],["garlic",0.3],["lemon",0.4],["pitta",1],["tomatoes",0.5],["cucumber",0.5],["lettuce",0.5],["feta",0.5]],
   method:"Marinate thigh strips in yoghurt, lemon, garlic and oregano (30 min if you can). Griddle or roast at 210°C ~20 min. Serve over salad with toasted pitta, crumbled feta and tzatziki (yoghurt + grated cucumber + garlic).",
   tnote:"Deconstruct his: chicken bits, cucumber sticks, pitta fingers, yoghurt dip."},
- {id:"meatballs",name:"Turkey meatballs & wholewheat spaghetti",cuisine:"Italian",tag:"turkey",reheat:true,
+ {id:"meatballs",plain:true,name:"Turkey meatballs & wholewheat spaghetti",cuisine:"Italian",tag:"turkey",reheat:true,
   ing:[["turkeyMince",1],["breadcrumbs",0.3],["eggs",0.2],["passata",1],["puree",0.2],["garlic",0.2],["onion",0.3],["wwSpag",0.75],["spinach",0.5]],
   method:"Mix mince, 3 tbsp breadcrumbs and 1 egg; roll ~16 balls, brown in a pan. Make a quick sauce with onion, garlic, passata and purée; simmer meatballs in it 15 min, wilt in spinach. Serve with spaghetti.",
   tnote:"Quarter his meatballs; snip his spaghetti."},
@@ -403,7 +415,7 @@ const MEALS = [
   ing:[["chickpeas",2],["onion",0.4],["garlic",0.3],["ginger",0.3],["curryPowder",0.3],["chopToms",1],["coconutMilk",1],["spinach",1],["basmati",0.35]],
   method:"Soften onion; add garlic, ginger and 1½ tbsp mild curry powder. Tip in tomatoes, coconut milk and 2 tins of chickpeas; simmer 20 min. Wilt in the spinach. Serve with rice. Cheapest meal in the pool and one of the best.",
   tnote:"Mash his chickpeas roughly. Mild, creamy, sneaky greens."},
- {id:"lentilragu",name:"Lentil ragu with wholewheat pasta",cuisine:"Italian",tag:"veggie",reheat:true,
+ {id:"lentilragu",plain:true,name:"Lentil ragu with wholewheat pasta",cuisine:"Italian",tag:"veggie",reheat:true,
   ing:[["lentils",0.5],["onion",0.4],["carrots",0.4],["celery",0.5],["garlic",0.2],["chopToms",2],["puree",0.3],["stock",0.2],["wwPenne",0.75]],
   method:"Soften onion, carrot and celery 8 min. Add garlic, purée, 250g red lentils, 2 tins tomatoes and 400ml stock. Simmer 25 min until thick and savoury. Serve with penne and a grating of cheddar.",
   tnote:"Looks and tastes like bolognese — he won't clock the difference."},
@@ -451,11 +463,11 @@ const MEALS = [
   ing:[["chickenBreast",0.4],["basmati",0.4],["eggs",0.3],["peas",0.3],["soy",0.3],["springOnions",1],["garlic",0.2],["ginger",0.2],["broccoli",1],["fiveSpice",0.2]],
   method:"Cook and cool the rice first (or use yesterday's). Fry diced chicken with garlic, ginger and a pinch of five spice; push aside, scramble 2 eggs in the pan. Add rice, peas and soy; fry hard 3–4 min. Broccoli steamed on the side.",
   tnote:"Made properly hot and eaten fresh — don't re-reheat rice, so it's a sandwich-lunch day."},
- {id:"spagbol",name:"Veg-packed spag bol (the classic)",cuisine:"Italian",tag:"beef",reheat:true,
+ {id:"spagbol",plain:true,name:"Veg-packed spag bol (the classic)",cuisine:"Italian",tag:"beef",reheat:true,
   ing:[["mince5",1],["onion",0.3],["carrots",0.3],["celery",0.5],["mushrooms",1],["garlic",0.2],["chopToms",1],["puree",0.3],["stock",0.1],["wwSpag",0.75]],
   method:"The house favourite, upgraded: 5% mince, extra grated carrot and finely chopped mushrooms for hidden veg. Soften veg 8 min, brown mince, add tomatoes, purée and stock; simmer 30 min. Wholewheat spaghetti to serve.",
   tnote:"His number one. Snip the spaghetti, no added salt before his portion's out."},
- {id:"cottagepie",name:"Cottage pie with root-veg mash",cuisine:"British",tag:"beef",reheat:true,
+ {id:"cottagepie",plain:true,name:"Cottage pie with root-veg mash",cuisine:"British",tag:"beef",reheat:true,
   ing:[["mince5",1],["onion",0.3],["carrots",0.5],["celery",0.5],["peas",0.3],["stock",0.2],["puree",0.3],["potatoes",0.5],["cheddar",0.1]],
   method:"Classic base: mince, onion, carrot, celery, purée and stock, simmered 25 min with peas stirred through. Top with mash (half potato, half carrot mashed in), a little cheddar, bake 25 min at 200°C until golden.",
   tnote:"Second-favourite in the house — soft, scoopable, perfect toddler food."},
@@ -475,11 +487,11 @@ const MEALS = [
   ing:[["porkLoin",1],["eggNoodles",0.7],["sweetChilli",0.4],["soy",0.2],["broccoli",1],["carrots",0.3],["garlic",0.2],["ginger",0.2]],
   method:"Stir-fry thin pork strips on high 4–5 min; add garlic, ginger, broccoli florets and carrot batons for 4 more. Toss with cooked noodles, 2 tbsp sweet chilli and 1 tbsp soy.",
   tnote:"Aldi sweet chilli is mild — his portion as-is, noodles snipped."},
- {id:"chickenbake",name:"Chicken & courgette pasta bake",cuisine:"Italian",tag:"chicken",reheat:true,
+ {id:"chickenbake",plain:true,name:"Chicken & courgette pasta bake",cuisine:"Italian",tag:"chicken",reheat:true,
   ing:[["chickenBreast",0.4],["wwPenne",0.75],["passata",1],["garlic",0.2],["onion",0.3],["courgette",0.5],["mozzarella",2],["spinach",0.5]],
   method:"Fry diced chicken with onion, garlic and courgette; add passata and simmer 10 min. Stir through cooked penne and spinach, top with torn mozzarella, bake 20 min at 200°C until golden.",
   tnote:"Melty cheese pasta — no notes needed. Reheats brilliantly for lunch."},
- {id:"sausagecass",name:"Sausage & white bean casserole",cuisine:"British",tag:"pork",reheat:true,
+ {id:"sausagecass",plain:true,name:"Sausage & white bean casserole",cuisine:"British",tag:"pork",reheat:true,
   ing:[["sausages",1],["onion",0.3],["garlic",0.2],["cannellini",1],["chopToms",1],["paprika",0.2],["honey",0.1],["potatoes",0.4],["peas",0.2]],
   method:"Brown the sausages, set aside. Soften onion and garlic with paprika; add tomatoes, drained cannellini beans and 1 tsp honey. Return sausages, simmer 20 min. Mash and peas on the side.",
   tnote:"Slice his sausage lengthways then across. Soft beans, sweet sauce — easy win."},
@@ -499,7 +511,7 @@ const MEALS = [
   ing:[["mince5",1],["eggNoodles",0.7],["soy",0.3],["hoisin",0.3],["fiveSpice",0.1],["broccoli",1],["carrots",0.3],["garlic",0.2],["springOnions",1]],
   method:"Brown the mince hard with garlic and five spice. Add broccoli florets and carrot for 4 min, then noodles, 2 tbsp soy and 2 tbsp hoisin; toss until glossy.",
   tnote:"Mince + noodles = his two favourite food groups in one bowl."},
- {id:"turkeyburgers",name:"Turkey burgers, wedges & corn",cuisine:"American",tag:"turkey",reheat:false,
+ {id:"turkeyburgers",plain:true,name:"Turkey burgers, wedges & corn",cuisine:"American",tag:"turkey",reheat:false,
   ing:[["turkeyMince",1],["rolls",1],["breadcrumbs",0.2],["eggs",0.2],["lettuce",0.5],["tomatoes",0.5],["potatoes",0.4],["sweetcornTin",1]],
   method:"Mix mince, 2 tbsp breadcrumbs and 1 egg; shape 5 patties (one small). Pan-fry or bake ~15 min until cooked through. Serve in rolls with salad, oven wedges and corn.",
   tnote:"His own mini burger. Leaner than beef and no one will notice."},
@@ -523,7 +535,7 @@ const MEALS = [
   ing:[["porkMince",1],["pineappleTin",1],["basmati",0.4],["peppers",0.7],["soy",0.3],["ginger",0.2],["garlic",0.2],["springOnions",1],["eggs",0.3]],
   method:"Fry pork mince hard with garlic and ginger; scramble in an egg. Add cooked cooled rice, pepper and pineapple chunks with 2 tbsp soy and a splash of the pineapple juice; fry 3–4 min.",
   tnote:"Sweet, savoury, bits of pineapple to hunt for. Rice dish — eat fresh."},
- {id:"minestrone",name:"Chunky minestrone & crusty bread",cuisine:"Italian",tag:"veggie",reheat:true,
+ {id:"minestrone",plain:true,name:"Chunky minestrone & crusty bread",cuisine:"Italian",tag:"veggie",reheat:true,
   ing:[["onion",0.4],["carrots",0.4],["celery",0.5],["courgette",0.5],["garlic",0.2],["chopToms",1],["cannellini",1],["wwPenne",0.25],["stock",0.2],["spinach",0.5],["loaf",0.3]],
   method:"Soften onion, carrot and celery 8 min; add garlic, courgette, tomatoes, beans and 750ml stock. Simmer 15 min, add a handful of pasta for the last 10, wilt in spinach. Warm bread on the side. Superb flask/lunch soup.",
   tnote:"Chop his veg small and it's basically pasta soup. Sneaks in five veg."},
@@ -538,7 +550,59 @@ const MEALS = [
  {id:"bangbang",name:"Bang bang chicken rice bowls",cuisine:"Sichuan-style",tag:"chicken",reheat:true,
   ing:[["chickenBreast",0.5],["basmati",0.35],["sweetChilli",0.4],["peanutButter",0.3],["soy",0.2],["cucumber",0.5],["carrots",0.3],["lettuce",0.5],["springOnions",1]],
   method:"Poach or fry chicken and slice. Whisk 2 tbsp peanut butter, 2 tbsp sweet chilli, 1 tbsp soy and warm water into a drizzle. Build bowls: rice, chicken, ribboned cucumber and carrot, lettuce, sauce, spring onion.",
-  tnote:"Mild nutty sauce — his chicken diced with cucumber on the side."}
+  tnote:"Mild nutty sauce — his chicken diced with cucumber on the side."},
+ {id:"sausmash",plain:true,name:"Bangers, mash & onion gravy",cuisine:"British",tag:"pork",reheat:false,
+  ing:[["sausages",1],["potatoes",0.5],["onion",0.4],["gravy",0.3],["peas",0.3],["carrots",0.3]],
+  method:"Roast the sausages at 200°C for 25 min. Mash the potatoes with butter and a splash of milk. Slow-fry sliced onions 10 min until golden and stir into the gravy. Peas and carrots on the side.",
+  tnote:"Slice his sausage lengthways then across. Extra gravy on the mash usually seals it."},
+ {id:"roastchicken",plain:true,name:"Sunday roast chicken",cuisine:"British",tag:"chicken",reheat:true,
+  ing:[["wholeChicken",1],["potatoes",0.6],["carrots",0.5],["broccoli",1],["peas",0.2],["stock",0.2],["gravy",0.3]],
+  method:"Roast the chicken at 190°C ~1h20 (until juices run clear), roasties in around it for the last 50 min. Carrots, broccoli, peas, proper gravy from the pan juices plus granules. Strip the carcass — leftovers make Monday's lunch sandwiches.",
+  tnote:"Shred his portion off the breast, plenty of gravy. The most grandad-proof meal there is."},
+ {id:"toadhole",plain:true,name:"Toad in the hole",cuisine:"British",tag:"pork",reheat:false,
+  ing:[["sausages",1],["eggs",0.5],["onion",0.3],["gravy",0.3],["peas",0.3],["carrots",0.3]],
+  method:"Batter: 100g flour, 2 eggs, 150ml milk, rest 10 min. Brown sausages in a roasting tin with oil, get it smoking hot at 220°C, pour in the batter, 25 min without opening the door. Onion gravy, peas and carrots.",
+  tnote:"Cut his into soldiers of puffy batter with sausage in — rarely refused."},
+ {id:"chickenpie",plain:true,name:"Chicken & veg puff pie",cuisine:"British",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.6],["puffPastry",1],["onion",0.3],["carrots",0.3],["peas",0.2],["stock",0.2],["potatoes",0.4]],
+  method:"Simmer diced thighs with onion and carrots in 300ml stock ~15 min; thicken with a spoon of flour, stir in peas. Into a dish, puff pastry lid, egg-wash if you like, 25 min at 200°C. Mash on the side.",
+  tnote:"Pie + mash = soft, mild, scoopable. His pastry in little squares."},
+ {id:"hamneggs",plain:true,name:"Ham, egg & homemade chips",cuisine:"British",tag:"pork",reheat:false,
+  ing:[["ham",1],["eggs",0.5],["potatoes",0.6],["peas",0.3]],
+  method:"Cut potatoes into chunky chips, toss in oil, 200°C for 35 min turning once. Fry the eggs at the end. Thick-cut ham, peas, done. About as plain and as loved as tea gets.",
+  tnote:"His egg well done, chips cut smaller. Ketchup diplomacy at your discretion."},
+ {id:"goujons",plain:true,name:"Chicken goujons, chips & beans",cuisine:"American",tag:"chicken",reheat:false,
+  ing:[["chickenBreast",0.5],["breadcrumbs",0.5],["eggs",0.3],["potatoes",0.6],["bakedBeans",1]],
+  method:"Slice breast into strips, dip in egg then breadcrumbs, bake at 200°C for 18–20 min with the chunky chips (35 min, head start). Beans to finish. Diner classic, zero complaints.",
+  tnote:"Homemade nuggets — his favourite food group. Cut goujons smaller for him."},
+ {id:"carbonara",plain:true,name:"Creamy bacon spaghetti (carbonara-style)",cuisine:"Italian",tag:"pork",reheat:false,
+  ing:[["bacon",1],["wwSpag",0.75],["eggs",0.5],["cheddar",0.2],["garlic",0.2],["peas",0.2]],
+  method:"Crisp the lardons with a little garlic. Whisk 3 eggs with a big handful of cheese. Toss hot drained spaghetti with the bacon off the heat, then the egg mix and a splash of pasta water until silky (not scrambled). Peas in if you like.",
+  tnote:"Mild, creamy, bacon-y. Snip his spaghetti; make sure it's tossed hot enough to cook the egg through."},
+ {id:"milanese",plain:true,name:"Chicken milanese & spaghetti",cuisine:"Italian",tag:"chicken",reheat:true,
+  ing:[["chickenBreast",0.5],["breadcrumbs",0.5],["eggs",0.3],["wwSpag",0.5],["passata",1],["garlic",0.2],["broccoli",1]],
+  method:"Flatten breasts, egg then breadcrumbs, bake 20 min at 200°C. Quick garlic-passata sauce for the spaghetti. Crispy chicken on top, broccoli alongside.",
+  tnote:"Posh nuggets with pasta — cut his into strips."},
+ {id:"cheatslasagne",plain:true,name:"Cheat's lasagne bake",cuisine:"Italian",tag:"beef",reheat:true,
+  ing:[["mince5",1],["onion",0.3],["garlic",0.2],["passata",1],["chopToms",1],["wwPenne",0.75],["cheddar",0.3]],
+  method:"Make the classic mince-tomato ragu (25 min). Make a quick white sauce (flour, butter, milk). Layer ragu, cooked penne and white sauce lasagne-style, top with cheddar, bake 25 min at 200°C until bubbling. All the lasagne comfort, no sheet-boiling.",
+  tnote:"Soft pasta, mild ragu, melted cheese — a guaranteed clean plate at both ends of the age range."},
+ {id:"gnocchibake",plain:true,name:"Cheesy tomato gnocchi bake",cuisine:"Italian",tag:"veggie",reheat:true,
+  ing:[["gnocchi",1.5],["passata",1],["garlic",0.2],["mozzarella",2],["cheddar",0.1],["broccoli",1]],
+  method:"Simmer gnocchi 2 min, drain. Stir through garlicky passata, top with torn mozzarella and a little cheddar, bake 20 min at 200°C until golden. Broccoli on the side. Ten minutes of effort, tastes like far more.",
+  tnote:"Little potato pillows in mild tomato sauce — toddler and grandad aligned for once."},
+ {id:"maccheese",plain:true,name:"Macaroni cheese with crispy crumb",cuisine:"American",tag:"veggie",reheat:true,
+  ing:[["wwPenne",0.8],["cheddar",0.5],["butter",0.2],["breadcrumbs",0.2],["broccoli",1]],
+  method:"White sauce: butter, flour, ~500ml milk; melt in most of the cheddar with a tsp of mustard if you have it. Stir through cooked pasta, top with breadcrumbs and remaining cheese, bake 20 min at 200°C. Broccoli cuts through the richness.",
+  tnote:"It's cheese pasta. There will be no notes from either of them."},
+ {id:"meatloaf",plain:true,name:"Mini meatloaves, mash & peas",cuisine:"American",tag:"beef",reheat:true,
+  ing:[["mince5",1],["onion",0.3],["breadcrumbs",0.3],["eggs",0.2],["potatoes",0.5],["peas",0.3],["gravy",0.2]],
+  method:"Mix mince, finely chopped onion, 3 tbsp breadcrumbs and an egg; press into 4 mini loaves, glaze with a little ketchup, bake 25 min at 200°C. Mash, peas and gravy.",
+  tnote:"His own mini loaf, sliced. Basically a big soft burger with gravy."},
+ {id:"bbqchicken",plain:true,name:"Sticky BBQ chicken, wedges & corn",cuisine:"American",tag:"chicken",reheat:true,
+  ing:[["chickenThigh",0.7],["bbq",0.4],["potatoes",0.6],["sweetcornTin",1],["lettuce",0.5],["cucumber",0.3]],
+  method:"Roast thighs 20 min at 200°C alongside the wedges (35 min), then brush chicken generously with BBQ sauce and give it 8 more until sticky. Warm corn and a simple salad.",
+  tnote:"Sweet and sticky, not spicy — glaze a couple lightly for him."}
 ];
 
 /* ---------- GENERATOR ---------- */
@@ -558,12 +622,18 @@ const KID_FACTOR = [0, 1, 1.7, 2.4];  // snack scaling by number of kids
 const KID_ITEMS = new Set(["kidsYog","crisps","breadsticks","raisins"]);
 const TREATS = ["chocDigestives","jaffa","cakeBars","sweets","chocolate","painAuChoc","icecream"];  // £9.63 — custard dropped when jaffa's real price came in
 
-let hh = "2a1c", treats = false;
+let hh = "2a1c", treats = false, plainMode = false;
 try{
   hh = localStorage.getItem("hh")||"2a1c";
   if(!HOUSEHOLDS.some(h=>h.key===hh)) hh="2a1c";
   treats = localStorage.getItem("treats")==="1";
+  plainMode = localStorage.getItem("plain")==="1";
 }catch(e){}
+function baseMeals(){return plainMode?MEALS.filter(m=>m.plain):MEALS;}
+function setPlain(on){
+  plainMode=!!on;try{localStorage.setItem("plain",plainMode?"1":"0");}catch(e){}
+  buildControls();
+}
 function HH(){return HOUSEHOLDS.find(h=>h.key===hh);}
 function currentBudget(){return HH().budget + (treats?10:0);}
 
@@ -584,6 +654,9 @@ function buildControls(){
   const lbl=document.getElementById("treatsLbl"),chk=document.getElementById("treatsChk");
   if(lbl)lbl.classList.toggle("on",treats);
   if(chk)chk.checked=treats;
+  const plbl=document.getElementById("plainLbl"),pchk=document.getElementById("plainChk");
+  if(plbl)plbl.classList.toggle("on",plainMode);
+  if(pchk)pchk.checked=plainMode;
 }
 
 /* Simplified inline brand marks (kept local so the page works offline) */
@@ -695,7 +768,9 @@ const KCAL={bulgogi:560,shawarma:520,turkeychilli:480,satay:620,tagine:540,thaig
   turkishflat:540,halloumitray:560,souvlaki:480,katsu:620,beanchilli:470,friedrice:520,spagbol:570,
   cottagepie:520,chilli:540,paprikash:510,tacos:550,porkstirfry:520,chickenbake:580,sausagecass:600,
   fajitatray:500,nasigoreng:510,padthai:560,chowmein:580,turkeyburgers:560,quesadillas:570,porkgoulash:490,
-  koshari:520,shakshuka:430,pineapplepork:560,minestrone:380,stroganoff:540,tortillasoup:430,bangbang:550};
+  koshari:520,shakshuka:430,pineapplepork:560,minestrone:380,stroganoff:540,tortillasoup:430,bangbang:550,
+  sausmash:640,roastchicken:560,toadhole:600,chickenpie:620,hamneggs:520,goujons:590,carbonara:650,
+  milanese:600,cheatslasagne:620,gnocchibake:540,maccheese:610,meatloaf:580,bbqchicken:560};
 
 /* Protein substitutes — for when the shop's shelf lets you down.
    f adjusts pack quantity (e.g. 1 bag of prawns ≈ 0.4 of a 1kg chicken pack). */
@@ -842,9 +917,10 @@ function repair(set,total,BUDGET,from){
 }
 
 function pickSet(){
-  let pool=MEALS.filter(m=>!RECENT.includes(m.id));
-  if(pool.length<20||!pool.some(m=>m.tag==="beef"))pool=MEALS.filter(m=>!RECENT.slice(0,6).includes(m.id));
-  if(!pool.some(m=>m.tag==="beef"))pool=MEALS.slice();
+  const BASE=baseMeals();
+  let pool=BASE.filter(m=>!RECENT.includes(m.id));
+  if(pool.length<20||!pool.some(m=>m.tag==="beef"))pool=BASE.filter(m=>!RECENT.slice(0,6).includes(m.id));
+  if(!pool.some(m=>m.tag==="beef"))pool=BASE.slice();
   const BUDGET=currentBudget();
   let best=null;const underBudget=[],all=[];
   for(let attempt=0;attempt<25;attempt++){
@@ -878,7 +954,7 @@ function pickSet(){
     total=repair(set,total,BUDGET,pool);
     // phase 3: still over? allow meals from a fortnight ago — but never last week's six
     if(total>BUDGET){
-      const fallbackPool=MEALS.filter(m=>!RECENT.slice(0,6).includes(m.id));
+      const fallbackPool=BASE.filter(m=>!RECENT.slice(0,6).includes(m.id));
       total=repair(set,total,BUDGET,fallbackPool);
     }
     all.push({set:set.slice(),total});
@@ -932,7 +1008,7 @@ function generate(storeKey){
 
 function swapMeal(idx){
   const current=plan.days.map(m=>m.id);
-  const candidates=shuffle(MEALS.filter(m=>!current.includes(m.id)));
+  const candidates=shuffle(baseMeals().filter(m=>!current.includes(m.id)));
   for(const cand of candidates){
     const trial=plan.days.slice();trial[idx]=cand;
     if(!validSet(trial))continue;
