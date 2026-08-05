@@ -207,6 +207,36 @@
   .brandimg{height:20px;max-width:92px;width:auto;display:block}
   .storelogo .brandimg{height:20px}
   .themebtn{font-size:1rem;padding:11px 13px}
+  /* ===== SECTIONED LAYOUT ===== */
+  .sect{margin:18px 0 0}
+  .sectlabel{font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 2px 8px}
+  .grid{display:grid;gap:10px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2 .segbtn{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 10px;
+    font-size:.92rem;box-shadow:var(--shadow);color:var(--muted);width:100%}
+  .g2 .segbtn.active{background:linear-gradient(120deg,var(--green-dark),var(--green));color:#fff;border-color:transparent}
+  .tile{width:100%;justify-content:center;padding:15px 10px;border-radius:14px}
+  .fridgetile{font-weight:700;cursor:pointer;font-family:inherit;font-size:.87rem;color:var(--ink)}
+  .fridgetile .plus{min-width:22px;text-align:center}
+  .fridgetile.on{background:linear-gradient(120deg,#155a86,#1d7ab0);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(29,122,176,.4)}
+  .fridgetile.on .plus{background:rgba(255,255,255,.25);color:#fff}
+  .fridgetile.open{outline:2px solid #1d7ab0;outline-offset:1px}
+  .fridgebox{margin-top:10px}
+  .g3 .btn-store{justify-content:center;height:58px;width:100%}
+  .btn-store.soon{opacity:.5;cursor:default;flex-direction:column;gap:2px}
+  .btn-store.soon:hover{transform:none;box-shadow:var(--shadow)}
+  .soonname{font-weight:800;letter-spacing:.06em;color:#00539f;font-size:1rem}
+  .soontag{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .sect .budget{margin:12px 2px 0;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+  .actrow .actbtn{padding:15px 10px;font-size:.95rem;width:100%}
+  header .themebtn{position:absolute;top:14px;right:14px;z-index:3;background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(4px);box-shadow:none}
+  @media (max-width:640px){
+    .g3{grid-template-columns:repeat(2,1fr)}
+    .g2 .segbtn,.tile{padding:13px 8px;font-size:.82rem}
+    .sect .budget{width:100%}
+  }
   /* ===== DARK MODE ===== */
   html.dark{
     --bg:#0e1512; --card:#18211c; --ink:#e7efe9; --muted:#9ab0a4; --line:#2a3830;
@@ -241,6 +271,7 @@
 <body>
 <div class="wrap">
   <header>
+    <button class="btn-ghost themebtn" id="themeBtn" title="Toggle light/dark" onclick="toggleTheme()">🌗</button>
     <h1><span class="cart">🛒</span>Highe Family Meal Planner</h1>
     <p>Healthy teatimes, leftover lunches and a shopping list in store order — Aldi, Lidl, Morrisons, Sainsbury's or M&amp;S.</p>
     <div class="stats">
@@ -251,40 +282,49 @@
     </div>
   </header>
 
-  <div class="options">
-    <div class="seg" id="hhSeg"></div>
-    <label class="treats" id="treatsLbl">
-      <input type="checkbox" id="treatsChk" onchange="setTreats(this.checked)">
-      🍰 Sweet treats <span class="plus">+£10</span>
-    </label>
-    <label class="treats plainlbl" id="plainLbl" title="Restricts the generator to plain British, Italian and American dishes">
-      <input type="checkbox" id="plainChk" onchange="setPlain(this.checked)">
-      🥔 Plain week
-    </label>
-    <label class="treats sunlbl" id="sunLbl" title="Adds a 7th roast-dinner slot on Sunday (+£12 budget)">
-      <input type="checkbox" id="sunChk" onchange="setSunday(this.checked)">
-      🍗 Sunday lunch <span class="plus">+£12</span>
-    </label>
-  </div>
+  <section class="sect">
+    <div class="sectlabel">Who's eating</div>
+    <div class="grid g2" id="hhSeg"></div>
+  </section>
 
-  <details class="fridgebox" id="fridgeBox">
-    <summary>🧊 Use up what's in the fridge <span class="fcount" id="fridgeCount"></span></summary>
-    <p class="hint" style="padding:0 16px">Tick what you already have — the generator favours meals that use it, and those items drop off the shopping list.</p>
-    <div class="fridgegrid" id="fridgeGrid"></div>
-  </details>
+  <section class="sect">
+    <div class="sectlabel">Extras</div>
+    <div class="grid g2">
+      <label class="treats tile" id="treatsLbl">
+        <input type="checkbox" id="treatsChk" onchange="setTreats(this.checked)">
+        🍰 Sweet treats <span class="plus">+£10</span>
+      </label>
+      <label class="treats tile plainlbl" id="plainLbl" title="Restricts the generator to plain British, Italian and American dishes">
+        <input type="checkbox" id="plainChk" onchange="setPlain(this.checked)">
+        🥔 Plain week
+      </label>
+      <label class="treats tile sunlbl" id="sunLbl" title="Adds a 7th roast-dinner slot on Sunday (+£12 budget)">
+        <input type="checkbox" id="sunChk" onchange="setSunday(this.checked)">
+        🍗 Sunday lunch <span class="plus">+£12</span>
+      </label>
+      <button class="treats tile fridgetile" id="fridgeTile" onclick="toggleFridgePanel()">
+        🧊 Use up the fridge <span class="plus" id="fridgeCount">0</span>
+      </button>
+    </div>
+    <details class="fridgebox" id="fridgeBox">
+      <summary style="display:none"></summary>
+      <p class="hint" style="padding:12px 16px 0">Tick what you already have — the generator favours meals that use it, and those items drop off the shopping list.</p>
+      <div class="fridgegrid" id="fridgeGrid"></div>
+    </details>
+  </section>
 
-  <div class="toolbar">
-    <span class="genlabel">Generate weekly shop:</span>
-    <button class="btn-store" title="Generate Aldi shop" aria-label="Generate Aldi shop" onclick="generate('aldi')"><span class="logo" data-logo="aldi"></span></button>
-    <button class="btn-store" title="Generate Lidl shop" aria-label="Generate Lidl shop" onclick="generate('lidl')"><span class="logo" data-logo="lidl"></span></button>
-    <button class="btn-store" title="Generate Morrisons shop" aria-label="Generate Morrisons shop" onclick="generate('morrisons')"><span class="logo" data-logo="morrisons"></span></button>
-    <button class="btn-store" title="Generate Sainsbury's shop" aria-label="Generate Sainsbury's shop" onclick="generate('sainsburys')"><span class="logo" data-logo="sainsburys"></span></button>
-    <button class="btn-store" title="Generate M&amp;S shop" aria-label="Generate M&amp;S shop" onclick="generate('mands')"><span class="logo" data-logo="mands"></span></button>
-    <button class="btn-ghost" onclick="window.print()">Print</button>
-    <button class="btn-ghost" onclick="downloadIcs()">📅 Calendar</button>
-    <button class="btn-ghost themebtn" id="themeBtn" title="Toggle light/dark" onclick="toggleTheme()">🌗</button>
+  <section class="sect">
+    <div class="sectlabel">Generate weekly shop — cheapest first</div>
+    <div class="grid g3">
+      <button class="btn-store" title="Generate Aldi shop" aria-label="Generate Aldi shop" onclick="generate('aldi')"><span class="logo" data-logo="aldi"></span></button>
+      <button class="btn-store" title="Generate Lidl shop" aria-label="Generate Lidl shop" onclick="generate('lidl')"><span class="logo" data-logo="lidl"></span></button>
+      <button class="btn-store" title="Generate Morrisons shop" aria-label="Generate Morrisons shop" onclick="generate('morrisons')"><span class="logo" data-logo="morrisons"></span></button>
+      <button class="btn-store" title="Generate Sainsbury's shop" aria-label="Generate Sainsbury's shop" onclick="generate('sainsburys')"><span class="logo" data-logo="sainsburys"></span></button>
+      <button class="btn-store" title="Generate M&amp;S shop" aria-label="Generate M&amp;S shop" onclick="generate('mands')"><span class="logo" data-logo="mands"></span></button>
+      <button class="btn-store soon" disabled title="Tesco — coming soon"><span class="soonname">TESCO</span><span class="soontag">coming soon</span></button>
+    </div>
     <div class="budget" id="budgetBox"></div>
-  </div>
+  </section>
 
   <div id="content"><div class="empty"><span class="big">🍽️</span>Pick a supermarket above to build this week's plan.</div></div>
   <div id="toast"></div>
@@ -896,6 +936,12 @@ function toggleTheme(){
 }
 if(window.matchMedia)try{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(theme==="auto")applyTheme();});}catch(e){}
 
+function toggleFridgePanel(){
+  const d=document.getElementById("fridgeBox");
+  if(d)d.open=!d.open;
+  const t=document.getElementById("fridgeTile");
+  if(t&&d)t.classList.toggle("open",d.open);
+}
 function toggleFridge(k){
   if(FRIDGE.has(k))FRIDGE.delete(k);else FRIDGE.add(k);
   try{localStorage.setItem("fridge",JSON.stringify([...FRIDGE]));}catch(e){}
@@ -961,7 +1007,9 @@ function buildControls(){
     const on=FRIDGE.has(k);
     return '<label class="fitem'+(on?' on':'')+'"><input type="checkbox"'+(on?' checked':'')+' onchange="toggleFridge(\''+k+'\')">'+ING[k].n.replace(/\s*\(.*?\)/,"").replace(/\s*\d+(\.\d+)?(kg|g|pt)?(\s*2?x?\d*g?)?$/,"")+'</label>';
   }).join("");
-  if(fc)fc.textContent=FRIDGE.size?("· "+FRIDGE.size+" ticked"):"";
+  if(fc)fc.textContent=String(FRIDGE.size);
+  const ft=document.getElementById("fridgeTile");
+  if(ft)ft.classList.toggle("on",FRIDGE.size>0);
   const pp=document.getElementById("pricePanel");
   if(pp&&!pp.innerHTML){
     const conf=[],est=[];
@@ -1491,6 +1539,11 @@ function render(){
       (HH().kids>0?'<div class="tnote">'+m.tnote+'</div>':'')+
       '</div></details>';
   });
+
+  html+='<div class="sect"><div class="grid g2 actrow">'+
+    '<button class="btn-ghost actbtn" onclick="window.print()">🖨 Print the week</button>'+
+    '<button class="btn-ghost actbtn" onclick="downloadIcs()">📅 Add week to calendar</button>'+
+    '</div></div>';
 
   const st=STORES[store];
   html+='<div class="listhead"><h2 style="margin:0"><span class="storelogo">'+(REAL_LOGOS[store]?logoHtml(store,st.name):LOGOS[store])+'</span>Shopping list — '+st.name+' walk-through order</h2>'+
