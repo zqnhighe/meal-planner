@@ -53,6 +53,24 @@
   .treats.on{background:linear-gradient(120deg,#8e3fa8,#d4549b);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(180,60,150,.4)}
   .treats.on .plus{background:rgba(255,255,255,.25);color:#fff}
   .plainlbl.on{background:linear-gradient(120deg,#5b4a3f,#8a6f5c);box-shadow:0 3px 12px rgba(90,74,63,.4)}
+  .sunlbl.on{background:linear-gradient(120deg,#a4531b,#d98324);box-shadow:0 3px 12px rgba(200,120,40,.4)}
+  .pinbtn{position:absolute;top:10px;right:74px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:.75rem;padding:4px 8px;cursor:pointer;filter:grayscale(1);opacity:.6}
+  .pinbtn.on{filter:none;opacity:1;background:var(--amber-pale);border-color:var(--amber)}
+  .day.pinned{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber),var(--shadow)}
+  .day.pinned .pinbtn{right:10px}
+  .fridgebox{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:10px 0 0;box-shadow:var(--shadow)}
+  .fridgebox summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none}
+  .fridgebox summary::-webkit-details-marker{display:none}
+  .fcount{font-size:.78rem;color:var(--green-dark);font-weight:700}
+  .fridgegrid{display:flex;flex-wrap:wrap;gap:7px;padding:4px 16px 16px}
+  .fitem{font-size:.8rem;border:1px solid var(--line);border-radius:20px;padding:6px 12px;cursor:pointer;user-select:none;color:var(--muted)}
+  .fitem input{display:none}
+  .fitem.on{background:var(--green-pale);border-color:var(--green);color:var(--green-dark);font-weight:600}
+  .fridgeb{font-style:normal;font-size:.68rem;color:#1d6fa5;background:#e5f2fb;border-radius:10px;padding:1px 7px;margin-left:6px;white-space:nowrap}
+  .pricerev{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-top:16px;box-shadow:var(--shadow)}
+  .pricerev summary{cursor:pointer;padding:12px 16px;font-weight:600;font-size:.88rem;list-style:none}
+  .pricerev summary::-webkit-details-marker{display:none}
+  .prbody{padding:0 16px 14px;font-size:.8rem;color:var(--muted)}
   .treatb{font-style:normal;font-size:.68rem;color:#a0447e;background:#fbeaf4;border-radius:10px;padding:1px 7px;margin-left:6px;white-space:nowrap}
   .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 20px;align-items:center;
     position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg) 85%,transparent);padding:12px 0 14px}
@@ -175,6 +193,42 @@
     summary{padding:13px 14px;font-size:.92rem}
     .grand{font-size:.95rem}
   }
+  /* ===== MODERN PASS ===== */
+  :root{--r:16px}
+  .day,.lunchplan,details,.shop section,.histrow,.fridgebox,.pricerev{border-radius:var(--r)}
+  header{border-radius:22px}
+  .toolbar{background:transparent;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-radius:14px;padding:10px 10px 12px;margin-left:-10px;margin-right:-10px;
+    box-shadow:0 1px 0 var(--line)}
+  button{transition:transform .12s ease,box-shadow .12s ease,filter .12s ease}
+  .btn-ghost,.seg,.treats,.protsel,.swap,.pinbtn,.fitem,.skipbtn{background:var(--card)}
+  .btn-store{background:var(--logo-chip);border:1px solid var(--line);color:var(--ink);box-shadow:var(--shadow);padding:10px 16px}
+  .btn-store:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(13,61,37,.15)}
+  .brandimg{height:20px;max-width:92px;width:auto;display:block}
+  .storelogo .brandimg{height:20px}
+  .themebtn{font-size:1rem;padding:11px 13px}
+  /* ===== DARK MODE ===== */
+  html.dark{
+    --bg:#0e1512; --card:#18211c; --ink:#e7efe9; --muted:#9ab0a4; --line:#2a3830;
+    --green-pale:#1b3327; --amber-pale:#3a2d16; --logo-chip:#f4f6f4;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);
+  }
+  html:not(.dark){--logo-chip:#fff}
+  html.dark body{background:var(--bg);background-image:radial-gradient(circle at 15% 0%,rgba(46,158,110,.08),transparent 40%),radial-gradient(circle at 90% 10%,rgba(46,158,142,.07),transparent 45%)}
+  html.dark .toolbar{box-shadow:0 1px 0 var(--line)}
+  html.dark .bar{background:#26332c}
+  html.dark .pill.cuisine{background:#232c42;color:#a8b8e8}
+  html.dark .pill.kcal,html.dark .sumkcal{background:#3a2618;color:#e8a06a}
+  html.dark .pill.fresh{background:var(--amber-pale);color:#e0aa50}
+  html.dark .cupb{background:var(--amber-pale);color:#e0aa50}
+  html.dark .treatb{background:#3a1f31;color:#e08ec0}
+  html.dark .fridgeb{background:#16293a;color:#7ab8e8}
+  html.dark .shop li,html.dark .lunchplan div{border-bottom-color:var(--line)}
+  html.dark .shop h3{background:linear-gradient(90deg,var(--green-pale),#1a2a21);color:#8fd4ae}
+  html.dark .segbtn.active{background:var(--green)}
+  html.dark .empty{color:var(--muted)}
+  html.dark #toast{background:#0a241755;background:#06301d;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+  html.dark .hint,html.dark .note{color:var(--muted)}
   @media print{
     .toolbar,.options,.swap,.skipbtn,.copybtn,header::before,header::after,#toast{display:none}
     body{background:#fff}
@@ -207,23 +261,36 @@
       <input type="checkbox" id="plainChk" onchange="setPlain(this.checked)">
       🥔 Plain week
     </label>
+    <label class="treats sunlbl" id="sunLbl" title="Adds a 7th roast-dinner slot on Sunday (+£12 budget)">
+      <input type="checkbox" id="sunChk" onchange="setSunday(this.checked)">
+      🍗 Sunday lunch <span class="plus">+£12</span>
+    </label>
   </div>
+
+  <details class="fridgebox" id="fridgeBox">
+    <summary>🧊 Use up what's in the fridge <span class="fcount" id="fridgeCount"></span></summary>
+    <p class="hint" style="padding:0 16px">Tick what you already have — the generator favours meals that use it, and those items drop off the shopping list.</p>
+    <div class="fridgegrid" id="fridgeGrid"></div>
+  </details>
 
   <div class="toolbar">
     <span class="genlabel">Generate weekly shop:</span>
-    <button class="btn-store btn-aldi" onclick="generate('aldi')"><span class="logo" data-logo="aldi"></span>Aldi</button>
-    <button class="btn-store btn-lidl" onclick="generate('lidl')"><span class="logo" data-logo="lidl"></span>Lidl</button>
-    <button class="btn-store btn-morrisons" onclick="generate('morrisons')"><span class="logo" data-logo="morrisons"></span>Morrisons</button>
-    <button class="btn-store btn-sainsburys" onclick="generate('sainsburys')"><span class="logo" data-logo="sainsburys"></span>Sainsbury's</button>
-    <button class="btn-store btn-mands" onclick="generate('mands')"><span class="logo" data-logo="mands"></span>M&amp;S</button>
+    <button class="btn-store" title="Generate Aldi shop" aria-label="Generate Aldi shop" onclick="generate('aldi')"><span class="logo" data-logo="aldi"></span></button>
+    <button class="btn-store" title="Generate Lidl shop" aria-label="Generate Lidl shop" onclick="generate('lidl')"><span class="logo" data-logo="lidl"></span></button>
+    <button class="btn-store" title="Generate Morrisons shop" aria-label="Generate Morrisons shop" onclick="generate('morrisons')"><span class="logo" data-logo="morrisons"></span></button>
+    <button class="btn-store" title="Generate Sainsbury's shop" aria-label="Generate Sainsbury's shop" onclick="generate('sainsburys')"><span class="logo" data-logo="sainsburys"></span></button>
+    <button class="btn-store" title="Generate M&amp;S shop" aria-label="Generate M&amp;S shop" onclick="generate('mands')"><span class="logo" data-logo="mands"></span></button>
     <button class="btn-ghost" onclick="window.print()">Print</button>
+    <button class="btn-ghost" onclick="downloadIcs()">📅 Calendar</button>
+    <button class="btn-ghost themebtn" id="themeBtn" title="Toggle light/dark" onclick="toggleTheme()">🌗</button>
     <div class="budget" id="budgetBox"></div>
   </div>
 
   <div id="content"><div class="empty"><span class="big">🍽️</span>Pick a supermarket above to build this week's plan.</div></div>
   <div id="toast"></div>
 
-  <p class="note">Prices calibrated against a real Aldi till receipt (Huddersfield, 2 Aug 2026) where items matched; the rest are mid-2026 own-brand estimates. Morrisons ~+8%, Sainsbury's ~+15% and M&amp;S ~+35% on a like-for-like own-brand basket; the budget targets stay the same, so dearer stores may show over. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£45 / £50 / £60 / £90, +£10 with sweet treats on); a full-price basket can run over — skipping cupboard items you already own is what brings the real spend under, exactly as at the till. Quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders are typical for each chain (Lidl starts at the bakery, most others at produce) — individual stores vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included). Logos are simplified marks for personal use.</p>
+  <div id="pricePanel"></div>
+  <p class="note">Prices calibrated against a real Aldi till receipt (Huddersfield, 2 Aug 2026) where items matched; the rest are mid-2026 own-brand estimates. Morrisons ~+8%, Sainsbury's ~+15% and M&amp;S ~+35% on a like-for-like own-brand basket; the budget targets stay the same, so dearer stores may show over. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£45 / £50 / £60 / £90, +£10 with sweet treats on); a full-price basket can run over — skipping cupboard items you already own is what brings the real spend under, exactly as at the till. Quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders are typical for each chain (Lidl starts at the bakery, most others at produce) — individual stores vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included). Logos are the supermarkets' own marks (via Wikimedia Commons), used here to identify stores in a personal tool — trademarks belong to their owners; simplified fallback marks display offline.</p>
 </div>
 
 <script>
@@ -767,7 +834,21 @@ const MEALS = [
 ];
 
 /* ---------- GENERATOR ---------- */
-const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat"];
+const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+/* Roast-dinner candidates for the optional Sunday slot */
+const SUNDAY_IDS = ["roastchicken","porkroast","beefstew","chickenpie","toadhole","gammon"];
+
+/* Perishables offered in the "use up the fridge" panel */
+const FRIDGE_ITEMS = ["mince5","turkeyMince","porkMince","chickenBreast","chickenThigh","sausages","bacon","gammon",
+  "eggs","cheddar","mozzarella","halloumi","feta","creamCheese","greekYog",
+  "peppers","mushrooms","spinach","courgette","broccoli","carrots","potatoes","sweetPotato","leeks","cabbage",
+  "greenBeans","tomatoes","cucumber","lettuce","springOnions","celery","onion"];
+
+/* Prices confirmed against a real till receipt (2 Aug 2026) — everything else is an estimate */
+const CONFIRMED = new Set(["milk","loaf","wraps","eggs","kidsYog","ham","mince5","chickenBreast","chopToms","puree",
+  "chickpeas","kidneyBeans","pineappleTin","peas","breadsticks","jaffa","carrots","celery","cucumber","grapes",
+  "apples","springOnions","bananas","broccoli","cheddar","ginger"]);
 
 /* Household options: scale multiplies recipe quantities (baseline = 2 adults + 1 child, with leftovers);
    kids drives the kids'-snack quantities; budget flexes with mouths to feed. */
@@ -783,20 +864,74 @@ const KID_FACTOR = [0, 1, 1.7, 2.4];  // snack scaling by number of kids
 const KID_ITEMS = new Set(["kidsYog","crisps","breadsticks","raisins"]);
 const TREATS = ["chocDigestives","jaffa","cakeBars","sweets","chocolate","painAuChoc","icecream"];  // £9.63 — custard dropped when jaffa's real price came in
 
-let hh = "2a1c", treats = false, plainMode = false;
+let hh = "2a1c", treats = false, plainMode = false, sundayMode = false;
+let FRIDGE = new Set();
 try{
   hh = localStorage.getItem("hh")||"2a1c";
   if(!HOUSEHOLDS.some(h=>h.key===hh)) hh="2a1c";
   treats = localStorage.getItem("treats")==="1";
   plainMode = localStorage.getItem("plain")==="1";
+  sundayMode = localStorage.getItem("sunday")==="1";
+  FRIDGE = new Set(JSON.parse(localStorage.getItem("fridge")||"[]"));
 }catch(e){}
+/* Theme: follows the system by default; the toggle overrides and remembers */
+let theme="auto";
+try{theme=localStorage.getItem("theme")||"auto";}catch(e){}
+function isDark(){
+  if(theme==="dark")return true;
+  if(theme==="light")return false;
+  return window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function applyTheme(){
+  document.documentElement.classList.toggle("dark",isDark());
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute("content",isDark()?"#0e1512":"#155c39");
+  const b=document.getElementById("themeBtn");
+  if(b)b.textContent=isDark()?"☀️":"🌙";
+}
+function toggleTheme(){
+  theme=isDark()?"light":"dark";
+  try{localStorage.setItem("theme",theme);}catch(e){}
+  applyTheme();
+}
+if(window.matchMedia)try{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(theme==="auto")applyTheme();});}catch(e){}
+
+function toggleFridge(k){
+  if(FRIDGE.has(k))FRIDGE.delete(k);else FRIDGE.add(k);
+  try{localStorage.setItem("fridge",JSON.stringify([...FRIDGE]));}catch(e){}
+  buildControls();
+  if(plan)render();
+}
+function addSunday(){
+  const used=plan.days.map(m=>m.id);
+  let cands=SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!used.includes(m.id)&&!RECENT.slice(0,6).includes(m.id));
+  if(!cands.length)cands=SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!used.includes(m.id));
+  const pick=shuffle(cands)[0];
+  if(pick){plan.days.push(pick);plan.subs.push(null);if(plan.pins)plan.pins.push(false);}
+}
+function setSunday(on){
+  sundayMode=!!on;try{localStorage.setItem("sunday",sundayMode?"1":"0");}catch(e){}
+  buildControls();
+  if(plan){
+    if(sundayMode&&plan.days.length===6){addSunday();savePlan();render();}
+    else if(!sundayMode&&plan.days.length===7){plan.days.pop();plan.subs.pop();if(plan.pins)plan.pins.pop();savePlan();render();}
+  }
+}
+function togglePin(i){
+  if(!plan)return;
+  plan.pins=plan.pins||new Array(plan.days.length).fill(false);
+  plan.pins[i]=!plan.pins[i];
+  savePlan();render();
+}
 function baseMeals(){return plainMode?MEALS.filter(m=>m.plain):MEALS;}
 function setPlain(on){
   plainMode=!!on;try{localStorage.setItem("plain",plainMode?"1":"0");}catch(e){}
   buildControls();
 }
 function HH(){return HOUSEHOLDS.find(h=>h.key===hh);}
-function currentBudget(){return HH().budget + (treats?10:0);}
+function currentBudget(){return HH().budget + (treats?10:0) + (sundayMode?12:0);}
+let SUNDAY_EXTRA=[];  // pre-picked Sunday roast, costed during week optimisation
+function costOf(set){return mergeList(set.concat(SUNDAY_EXTRA)).total;}
 
 function setHH(k){
   hh=k;try{localStorage.setItem("hh",k);}catch(e){}
@@ -818,6 +953,38 @@ function buildControls(){
   const plbl=document.getElementById("plainLbl"),pchk=document.getElementById("plainChk");
   if(plbl)plbl.classList.toggle("on",plainMode);
   if(pchk)pchk.checked=plainMode;
+  const slbl=document.getElementById("sunLbl"),schk=document.getElementById("sunChk");
+  if(slbl)slbl.classList.toggle("on",sundayMode);
+  if(schk)schk.checked=sundayMode;
+  const grid=document.getElementById("fridgeGrid"),fc=document.getElementById("fridgeCount");
+  if(grid)grid.innerHTML=FRIDGE_ITEMS.map(k=>{
+    const on=FRIDGE.has(k);
+    return '<label class="fitem'+(on?' on':'')+'"><input type="checkbox"'+(on?' checked':'')+' onchange="toggleFridge(\''+k+'\')">'+ING[k].n.replace(/\s*\(.*?\)/,"").replace(/\s*\d+(\.\d+)?(kg|g|pt)?(\s*2?x?\d*g?)?$/,"")+'</label>';
+  }).join("");
+  if(fc)fc.textContent=FRIDGE.size?("· "+FRIDGE.size+" ticked"):"";
+  const pp=document.getElementById("pricePanel");
+  if(pp&&!pp.innerHTML){
+    const conf=[],est=[];
+    for(const k in ING)(CONFIRMED.has(k)?conf:est).push(ING[k].n.replace(/\s*\(.*?\)/,""));
+    pp.innerHTML='<details class="pricerev"><summary>💷 Price confidence — '+conf.length+' till-verified · '+est.length+' estimates</summary>'+
+      '<div class="prbody"><p><b>Verified against a real Aldi receipt (2 Aug 2026):</b> '+conf.sort().join(", ")+'.</p>'+
+      '<p><b>Still estimates</b> (send a receipt with these on and they\'ll get calibrated too): '+est.sort().join(", ")+'.</p></div></details>';
+  }
+}
+
+/* Official brand SVGs (hotlinked from Wikimedia Commons; trademarks belong to their owners).
+   The hand-drawn marks below remain as the offline fallback. */
+const REAL_LOGOS = {
+  aldi:"https://upload.wikimedia.org/wikipedia/commons/e/e5/Aldi_S%C3%BCd_2017_logo.svg",
+  lidl:"https://upload.wikimedia.org/wikipedia/commons/9/91/Lidl-Logo.svg",
+  morrisons:"https://upload.wikimedia.org/wikipedia/commons/5/53/Morrisons_2007_logo.svg",
+  sainsburys:"https://upload.wikimedia.org/wikipedia/commons/d/d7/Sainsbury%27s_Logo.svg",
+  mands:"https://upload.wikimedia.org/wikipedia/commons/3/37/MARKS_%26_Spencer_logo.svg"
+};
+function logoHtml(key,alt){
+  return '<img class="brandimg" src="'+REAL_LOGOS[key]+'" alt="'+alt+'" '+
+    'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline-flex\'">'+
+    '<span style="display:none">'+LOGOS[key]+'</span>';
 }
 
 /* Simplified inline brand marks (kept local so the page works offline) */
@@ -909,9 +1076,10 @@ function mergeList(meals){
     const ing = ING[k];
     const packs = Math.max(1,Math.ceil(need[k]-STRETCH));
     const cost = Math.round(packs*ing.p*pf*100)/100;
-    const skipped = SKIPS.has(k);
+    const fridge = FRIDGE.has(k);
+    const skipped = SKIPS.has(k)||fridge;
     if(!skipped) total += cost;
-    lines.push({k,name:ing.n,packs,cost,section:ing.s,skipped,long:!!ing.long,treat:!!ing.treat});
+    lines.push({k,name:ing.n,packs,cost,section:ing.s,skipped,fridge,long:!!ing.long,treat:!!ing.treat});
   }
   return {lines,total:Math.round(total*100)/100};
 }
@@ -969,7 +1137,7 @@ function setSub(i,k){
   savePlan();render();
 }
 function savePlan(){
-  try{localStorage.setItem("mealplan",JSON.stringify(plan.days.map((m,i)=>({id:m.id,sub:plan.subs?plan.subs[i]:null}))));}catch(e){}
+  try{localStorage.setItem("mealplan",JSON.stringify(plan.days.map((m,i)=>({id:m.id,sub:plan.subs?plan.subs[i]:null,pin:!!(plan.pins&&plan.pins[i])}))));}catch(e){}
 }
 
 const CUISINE_EMOJI={Korean:"🍚","Middle Eastern":"🧆",Mexican:"🌮","Tex-Mex":"🌯",Thai:"🍛",Chinese:"🥡",Greek:"🥗",
@@ -1039,9 +1207,10 @@ function validSet(meals){
   if(reheat<4)return false;
   if(beefMince<1)return false;
   if((tagCount.prawn||0)>1)return false;
-  if((tagCount.veggie||0)>2)return false;
+  if((tagCount.veggie||0)>2||(tagCount.veggie||0)<1)return false;
   if((tagCount.chicken||0)>3)return false;
   for(const t of ["beef","turkey","pork"])if((tagCount[t]||0)>2)return false;
+  if((tagCount.beef||0)+(tagCount.pork||0)>3)return false;
   for(const c in cuiCount)if(cuiCount[c]>2)return false;
   return true;
 }
@@ -1051,9 +1220,11 @@ function partialOk(trial){
   trial.forEach(x=>{tags[x.tag]=(tags[x.tag]||0)+1;cuis[x.cuisine]=(cuis[x.cuisine]||0)+1;if(x.reheat)re++;});
   if((tags.prawn||0)>1||(tags.veggie||0)>2||(tags.chicken||0)>3)return false;
   if((tags.beef||0)>2||(tags.turkey||0)>2||(tags.pork||0)>2)return false;
+  if((tags.beef||0)+(tags.pork||0)>3)return false;       // nutrition: max 3 red-meat nights
   for(const c in cuis)if(cuis[c]>2)return false;
   if(re+(6-trial.length)<4)return false;                 // must still be able to hit 4 reheatables
-  if((tags.beef||0)===0&&trial.length===6)return false;  // need one beef-mince meal
+  if(trial.length===6&&(tags.beef||0)===0)return false;  // need one beef-mince meal
+  if(trial.length===6&&(tags.veggie||0)<1)return false;  // nutrition: at least one veggie night
   return true;
 }
 
@@ -1062,16 +1233,16 @@ function partialOk(trial){
    Cost never drives the initial selection, so cheap meals no longer dominate. */
 /* Deterministic-ish repair: swap meals to cut cost until under budget.
    Picks randomly among the 3 best improving swaps so repaired weeks still vary. */
-function repair(set,total,BUDGET,from){
-  let guard=0;
+function repair(set,total,BUDGET,from,startIdx){
+  let guard=0;startIdx=startIdx||0;
   while(total>BUDGET&&guard++<12){
     const cands=[];
-    for(let i=0;i<6;i++){
+    for(let i=startIdx;i<6;i++){
       for(const m of from){
         if(set.includes(m))continue;
         const trial=set.slice();trial[i]=m;
         if(!validSet(trial))continue;
-        const tt=mergeList(trial).total;
+        const tt=costOf(trial);
         if(tt<total)cands.push({trial,tt});
       }
     }
@@ -1083,33 +1254,41 @@ function repair(set,total,BUDGET,from){
   return total;
 }
 
-function pickSet(){
+function fridgeCover(set){
+  let c=0;set.forEach(m=>m.ing.forEach(([k])=>{if(FRIDGE.has(k))c++;}));return c;
+}
+function pickSet(locked){
+  locked=(locked||[]).slice(0,5);
   const BASE=baseMeals();
-  let pool=BASE.filter(m=>!RECENT.includes(m.id));
-  if(pool.length<20||!pool.some(m=>m.tag==="beef"))pool=BASE.filter(m=>!RECENT.slice(0,6).includes(m.id));
-  if(!pool.some(m=>m.tag==="beef"))pool=BASE.slice();
+  const notLocked=m=>!locked.some(l=>l.id===m.id);
+  let pool=BASE.filter(m=>!RECENT.includes(m.id)&&notLocked(m));
+  if(pool.length<20||![...pool,...locked].some(m=>m.tag==="beef"))pool=BASE.filter(m=>!RECENT.slice(0,6).includes(m.id)&&notLocked(m));
+  if(![...pool,...locked].some(m=>m.tag==="beef"))pool=BASE.filter(notLocked);
   const BUDGET=currentBudget();
+  // fridge bias: meals that use up ticked fridge items get first refusal
+  const fridgey=pool.filter(m=>m.ing.some(([k])=>FRIDGE.has(k)));
+  const plainPool=pool.filter(m=>!fridgey.includes(m));
   let best=null;const underBudget=[],all=[];
   for(let attempt=0;attempt<25;attempt++){
-    // fully random valid set, seeded with a random beef-mince meal
-    const set=[shuffle(pool.filter(m=>m.tag==="beef"))[0]];
-    for(const m of shuffle(pool)){
+    const set=locked.slice();
+    if(!set.some(m=>m.tag==="beef")){const b=shuffle(pool.filter(m=>m.tag==="beef"))[0];if(b)set.push(b);}
+    for(const m of shuffle(fridgey).concat(shuffle(plainPool))){
       if(set.length===6)break;
       if(set.includes(m))continue;
       if(partialOk(set.concat([m])))set.push(m);
     }
     if(set.length<6||!validSet(set))continue;
-    // random-repair: sample swaps, keep ones that cut cost, until under budget
-    let total=mergeList(set).total,guard=0;
+    // random-repair: sample swaps (never touching locked slots), keep ones that cut cost
+    let total=costOf(set),guard=0;
     while(total>BUDGET&&guard++<10){
       const cands=[];
       for(let t=0;t<30;t++){
-        const i=Math.floor(Math.random()*6);
+        const i=locked.length+Math.floor(Math.random()*(6-locked.length));
         const m=pool[Math.floor(Math.random()*pool.length)];
-        if(set.includes(m))continue;
+        if(!m||set.includes(m))continue;
         const trial=set.slice();trial[i]=m;
         if(!validSet(trial))continue;
-        const tt=mergeList(trial).total;
+        const tt=costOf(trial);
         if(tt<total)cands.push({trial,tt});
       }
       if(!cands.length)break;
@@ -1118,21 +1297,29 @@ function pickSet(){
       set.length=0;set.push(...pick.trial);total=pick.tt;
     }
     // phase 2: thorough repair from the fresh pool (keeps recently-eaten meals out)
-    total=repair(set,total,BUDGET,pool);
+    total=repair(set,total,BUDGET,pool,locked.length);
     // phase 3: still over? allow meals from a fortnight ago — but never last week's six
     if(total>BUDGET){
-      const fallbackPool=BASE.filter(m=>!RECENT.slice(0,6).includes(m.id));
-      total=repair(set,total,BUDGET,fallbackPool);
+      const fallbackPool=BASE.filter(m=>!RECENT.slice(0,6).includes(m.id)&&notLocked(m));
+      total=repair(set,total,BUDGET,fallbackPool,locked.length);
     }
-    all.push({set:set.slice(),total});
-    if(total<=BUDGET)underBudget.push({set:set.slice(),total});
+    all.push({set:set.slice(),total,cover:fridgeCover(set)});
+    if(total<=BUDGET)underBudget.push({set:set.slice(),total,cover:fridgeCover(set)});
     if(!best||total<best.total)best={set:set.slice(),total};
     if(underBudget.length>=8)break;
   }
-  if(underBudget.length)return underBudget[Math.floor(Math.random()*underBudget.length)];
+  if(underBudget.length){
+    underBudget.sort((a,b)=>b.cover-a.cover||a.total-b.total);
+    const k=FRIDGE.size?Math.min(2,underBudget.length):underBudget.length;
+    return underBudget[Math.floor(Math.random()*k)];
+  }
   // nothing under budget (premium store / fresh cupboard): vary among the near-cheapest
   const near=all.filter(x=>x.total<=best.total+1.5);
-  if(near.length)return near[Math.floor(Math.random()*near.length)];
+  if(near.length){
+    near.sort((a,b)=>b.cover-a.cover||a.total-b.total);
+    const k=FRIDGE.size?Math.min(2,near.length):near.length;
+    return near[Math.floor(Math.random()*k)];
+  }
   return best;
 }
 
@@ -1152,11 +1339,38 @@ function orderDays(set){
 
 function generate(storeKey){
   if(storeKey&&STORES[storeKey]){store=storeKey;try{localStorage.setItem("store",store);}catch(e){}}
-  const best=pickSet();
-  if(!best){alert("Couldn't build a valid week — try again.");return;}
-  if(plan&&plan.days)pushHistory(plan);  // archive the outgoing week before overwriting
+  // pinned meals survive the reroll in their slots
+  const prevPlan=plan;
+  const locked=[],lockedSlots=[];
+  if(plan&&plan.pins)plan.days.forEach((m,i)=>{if(plan.pins[i]&&i<6){locked.push(m);lockedSlots.push(i);}});
+  // pre-pick the Sunday roast so its cost is optimised against, not bolted on after
+  SUNDAY_EXTRA=[];
+  if(sundayMode){
+    let sc=SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!locked.some(l=>l.id===m.id)&&!RECENT.slice(0,6).includes(m.id));
+    if(!sc.length)sc=SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!locked.some(l=>l.id===m.id));
+    const s=shuffle(sc)[0];if(s)SUNDAY_EXTRA=[s];
+  }
+  const best=pickSet(locked);
+  if(!best){SUNDAY_EXTRA=[];alert("Couldn't build a valid week — try again.");return;}
+  if(prevPlan&&prevPlan.days)pushHistory(prevPlan);  // archive the outgoing week before overwriting
   clearTicks();
-  plan={days:orderDays(best.set),subs:[null,null,null,null,null,null]};
+  const newDays=new Array(6).fill(null),newSubs=new Array(6).fill(null),newPins=new Array(6).fill(false);
+  lockedSlots.forEach((slot,j)=>{
+    newDays[slot]=locked[j];newPins[slot]=true;
+    newSubs[slot]=(prevPlan&&prevPlan.subs)?prevPlan.subs[slot]:null;
+  });
+  const remaining=best.set.filter(m=>!locked.includes(m));
+  const re=shuffle(remaining.filter(m=>m.reheat)),fresh=shuffle(remaining.filter(m=>!m.reheat));
+  [0,1,3,4].forEach(i=>{if(newDays[i]===null&&re.length)newDays[i]=re.shift();});
+  [2,5].forEach(i=>{if(newDays[i]===null)newDays[i]=fresh.shift()||re.shift()||null;});
+  for(let i=0;i<6;i++)if(newDays[i]===null)newDays[i]=re.shift()||fresh.shift();
+  plan={days:newDays,subs:newSubs,pins:newPins};
+  if(sundayMode){
+    if(SUNDAY_EXTRA.length&&!plan.days.some(m=>m.id===SUNDAY_EXTRA[0].id)){
+      plan.days.push(SUNDAY_EXTRA[0]);plan.subs.push(null);plan.pins.push(false);
+    }else addSunday();
+  }
+  SUNDAY_EXTRA=[];
   RECENT=plan.days.map(m=>m.id).concat(RECENT.filter(id=>!plan.days.some(m=>m.id===id))).slice(0,12);
   try{localStorage.setItem("recent_meals",JSON.stringify(RECENT));}catch(e){}
   savePlan();
@@ -1174,12 +1388,19 @@ function generate(storeKey){
 }
 
 function swapMeal(idx){
+  if(plan.pins&&plan.pins[idx]){toast("That meal's pinned — unpin it first.");return;}
   const current=plan.days.map(m=>m.id);
+  if(idx===6){ // Sunday slot swaps within the roast-dinner shortlist
+    const cands=shuffle(SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!current.includes(m.id)));
+    if(cands.length){plan.days[6]=cands[0];plan.subs[6]=null;savePlan();render();}
+    else toast("No other Sunday roast available this week.");
+    return;
+  }
   const candidates=shuffle(baseMeals().filter(m=>!current.includes(m.id)));
   for(const cand of candidates){
-    const trial=plan.days.slice();trial[idx]=cand;
+    const trial=plan.days.slice(0,6);trial[idx]=cand;
     if(!validSet(trial))continue;
-    plan.days=trial;
+    plan.days[idx]=cand;
     if(plan.subs)plan.subs[idx]=null;
     savePlan();
     render();
@@ -1190,10 +1411,35 @@ function swapMeal(idx){
 
 function lunchFor(idx){
   const m=plan.days[idx];
-  const next=DAYS[idx+1]||"Sun";
+  const next=DAYS[(idx+1)%7];
   return m.reheat
     ? {day:next,txt:"Leftover "+m.name.toLowerCase()+" for lunch"}
     : {day:next,txt:"Sandwiches / ham & cheese wraps (covered in basics)"};
+}
+
+/* Calendar export: one all-day event per tea, starting the upcoming Monday */
+function downloadIcs(){
+  if(!plan){toast("Generate a week first.");return;}
+  const start=new Date();
+  start.setDate(start.getDate()+((1-start.getDay()+7)%7)); // upcoming Monday (today if Monday)
+  const fmt=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+  let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Highe Meal Planner//EN\r\n";
+  plan.days.forEach((m,i)=>{
+    const d1=new Date(start);d1.setDate(d1.getDate()+i);
+    const d2=new Date(d1);d2.setDate(d2.getDate()+1);
+    const cur=plan.subs?plan.subs[i]:null;
+    ics+="BEGIN:VEVENT\r\nUID:"+m.id+"-"+fmt(d1)+"@highe-meal-planner\r\n"+
+      "DTSTART;VALUE=DATE:"+fmt(d1)+"\r\nDTEND;VALUE=DATE:"+fmt(d2)+"\r\n"+
+      "SUMMARY:🍽 Tea: "+m.name+(cur?" ("+PROT_LABEL[cur]+")":"")+"\r\n"+
+      "DESCRIPTION:"+m.cuisine+" · ~"+(KCAL[m.id]||500)+" kcal per adult"+(m.reheat?" · leftovers = next day's lunch":"")+"\r\n"+
+      "END:VEVENT\r\n";
+  });
+  ics+="END:VCALENDAR\r\n";
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
+  a.download="meal-week.ics";
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast("Calendar file downloaded — open it to add the week to your calendar.");
 }
 
 function render(){
@@ -1204,13 +1450,16 @@ function render(){
   document.getElementById("budgetBox").innerHTML=
     '<div class="total '+(total<=BUDGET?"ok":"over")+'">£'+total.toFixed(2)+'</div>'+
     '<div class="bar"><i class="'+(total<=BUDGET?"":"over")+'" style="width:'+pct+'%"></i></div>'+
-    '<div style="font-size:.75rem;color:var(--muted)">of £'+BUDGET.toFixed(2)+' budget · '+HH().label+(treats?' · 🍰':'')+
+    '<div style="font-size:.75rem;color:var(--muted)">of £'+BUDGET.toFixed(2)+' budget · '+HH().label+(treats?' · 🍰':'')+(sundayMode?' · 🍗':'')+
     ' · avg '+Math.round(plan.days.reduce((s,m)=>s+(KCAL[m.id]||500),0)/plan.days.length)+' kcal/tea</div>';
 
   let html='<h2>This week’s teas</h2><div class="week">';
   plan.days.forEach((m,i)=>{
     const pk=protOf(m), cur=plan.subs?plan.subs[i]:null;
-    html+='<div class="day"><button class="swap" onclick="swapMeal('+i+')">↻ swap</button>'+
+    const pinned=!!(plan.pins&&plan.pins[i]);
+    html+='<div class="day'+(pinned?' pinned':'')+'">'+
+      '<button class="pinbtn'+(pinned?' on':'')+'" title="Pin this meal — it survives regenerates" onclick="togglePin('+i+')">📌</button>'+
+      (pinned?'':'<button class="swap" onclick="swapMeal('+i+')">↻ swap</button>')+
       '<div class="dow">'+DAYS[i]+'</div><h3>'+m.name+'</h3>'+
       '<div class="meta">'+
       '<span class="pill cuisine">'+m.cuisine+'</span>'+
@@ -1244,7 +1493,7 @@ function render(){
   });
 
   const st=STORES[store];
-  html+='<div class="listhead"><h2 style="margin:0"><span class="storelogo">'+LOGOS[store]+'</span>Shopping list — '+st.name+' walk-through order</h2>'+
+  html+='<div class="listhead"><h2 style="margin:0"><span class="storelogo">'+(REAL_LOGOS[store]?logoHtml(store,st.name):LOGOS[store])+'</span>Shopping list — '+st.name+' walk-through order</h2>'+
     '<button class="btn-ghost copybtn" onclick="copyList()">📋 Copy list</button>'+
     '<button class="btn-ghost copybtn" onclick="shareList()">📤 Share</button></div>'+
     '<p class="hint">Jars, sauces and spices last months — hit <b>skip</b> on anything already in the cupboard and the total updates (remembered week to week). Copy/Share sends unskipped items one per line. On iPhone, Reminders pastes it all as one reminder — run a "Shopping to Reminders" Shortcut (Get Clipboard → Split Text by new lines → Repeat → Add New Reminder) to file each item separately; on a Mac, pasting splits automatically.</p>'+
@@ -1260,9 +1509,11 @@ function render(){
       html+='<li class="'+(l.skipped?'skipped':'')+(ticked?' done':'')+'">'+
         '<input type="checkbox" id="'+id+'" '+(l.skipped?'disabled':'')+(ticked?' checked':'')+
         ' onchange="tickItem(\''+l.k+'\',this.checked);this.closest(\'li\').classList.toggle(\'done\',this.checked)">'+
-        '<label for="'+id+'">'+l.name+(l.packs>1?' ×'+l.packs:'')+(l.long&&!l.skipped?' <em class="cupb">cupboard staple</em>':'')+(l.treat?' <em class="treatb">sweet treat</em>':'')+'</label>'+
-        '<span class="price">'+(l.skipped?'skipped':'£'+l.cost.toFixed(2))+'</span>'+
-        '<button class="skipbtn" onclick="toggleSkip(\''+l.k+'\')">'+(l.skipped?'add back':'skip')+'</button></li>';
+        '<label for="'+id+'">'+l.name+(l.packs>1?' ×'+l.packs:'')+(l.long&&!l.skipped?' <em class="cupb">cupboard staple</em>':'')+(l.treat?' <em class="treatb">sweet treat</em>':'')+(l.fridge?' <em class="fridgeb">🧊 using up</em>':'')+'</label>'+
+        '<span class="price">'+(l.fridge?'in fridge':(l.skipped?'skipped':'£'+l.cost.toFixed(2)))+'</span>'+
+        (l.fridge
+          ?'<button class="skipbtn" onclick="toggleFridge(\''+l.k+'\')">buy it</button>'
+          :'<button class="skipbtn" onclick="toggleSkip(\''+l.k+'\')">'+(l.skipped?'add back':'skip')+'</button>')+'</li>';
     });
     html+='</ul></section>';
   });
@@ -1286,14 +1537,19 @@ function render(){
 
 /* inject button logos, build controls + restore last plan on load */
 (function(){
-  document.querySelectorAll("[data-logo]").forEach(el=>{el.innerHTML=LOGOS[el.getAttribute("data-logo")]||"";});
+  document.querySelectorAll("[data-logo]").forEach(el=>{
+    const k=el.getAttribute("data-logo");
+    el.innerHTML=REAL_LOGOS[k]?logoHtml(k,STORES[k]?STORES[k].name:k):(LOGOS[k]||"");
+  });
+  applyTheme();
   buildControls();
   try{
     const saved=JSON.parse(localStorage.getItem("mealplan")||"null");
-    if(saved&&saved.length===6){
+    if(saved&&saved.length>=6&&saved.length<=7){
       const days=saved.map(x=>MEALS.find(m=>m.id===(typeof x==="string"?x:x.id))).filter(Boolean);
       const subs=saved.map(x=>(typeof x==="object"&&x&&x.sub)?x.sub:null);
-      if(days.length===6){plan={days,subs};render();}
+      const pins=saved.map(x=>!!(typeof x==="object"&&x&&x.pin));
+      if(days.length===saved.length){plan={days,subs,pins};render();}
     }
   }catch(e){}
 })();
