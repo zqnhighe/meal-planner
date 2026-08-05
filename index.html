@@ -121,6 +121,8 @@
   .pill.fresh{background:var(--amber-pale);color:var(--amber)}
   .pill.cuisine{background:#eef1f9;color:#3d4c7a}
   .pill.kcal{background:#fdeee5;color:#c05621}
+  .pill.time{background:#eef4f9;color:#3a6b8f}
+  .prepline{background:var(--green-pale);border-radius:8px;padding:8px 12px;font-size:.84rem;font-weight:600;color:var(--green-dark)}
   .sumkcal{font-size:.75rem;font-weight:700;color:#c05621;background:#fdeee5;border-radius:20px;padding:3px 10px;margin-left:auto;white-space:nowrap}
   summary .sumkcal{margin-right:8px}
   .kcalnote{font-size:.8rem;color:var(--muted)}
@@ -251,6 +253,8 @@
   html.dark .bar{background:#26332c}
   html.dark .pill.cuisine{background:#232c42;color:#a8b8e8}
   html.dark .pill.kcal,html.dark .sumkcal{background:#3a2618;color:#e8a06a}
+  html.dark .pill.time{background:#16293a;color:#7ab8e8}
+  html.dark .prepline{background:var(--green-pale);color:#8fd4ae}
   html.dark .pill.fresh{background:var(--amber-pale);color:#e0aa50}
   html.dark .cupb{background:var(--amber-pale);color:#e0aa50}
   html.dark .treatb{background:#3a1f31;color:#e08ec0}
@@ -332,7 +336,7 @@
   <div id="toast"></div>
 
   <div id="pricePanel"></div>
-  <p class="note">Prices calibrated against a real Aldi till receipt (Huddersfield, 2 Aug 2026) where items matched; the rest are mid-2026 own-brand estimates. Morrisons ~+8%, Tesco ~+10%, Sainsbury's ~+15% and M&amp;S ~+35% on a like-for-like own-brand basket; the budget targets stay the same, so dearer stores may show over. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£45 / £50 / £60 / £90, +£10 with sweet treats on); a full-price basket can run over — skipping cupboard items you already own is what brings the real spend under, exactly as at the till. Quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders are typical for each chain (Lidl starts at the bakery, most others at produce) — individual stores vary an aisle or two. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included). Logos are the supermarkets' own marks (via Wikimedia Commons), used here to identify stores in a personal tool — trademarks belong to their owners; simplified fallback marks display offline.</p>
+  <p class="note">Prices calibrated against a real Aldi till receipt (Huddersfield, 2 Aug 2026) where items matched; the rest are mid-2026 own-brand estimates. Morrisons ~+8%, Tesco ~+10%, Sainsbury's ~+15% and M&amp;S ~+35% on a like-for-like own-brand basket; the budget targets stay the same, so dearer stores may show over. Assumes oil, salt, pepper, dried oregano and plain flour at home. Budgets flex with household size (£45 / £50 / £60 / £90, +£10 with sweet treats on); a full-price basket can run over — skipping cupboard items you already own is what brings the real spend under, exactly as at the till. Quantities assume you'll stretch a pack ~25% with smaller portions before buying another. Walk-through orders are typical for each chain (Lidl starts at the bakery, most others at produce) — individual stores vary an aisle or two. Oven temperatures are conventional — knock ~20°C off for a fan oven; times assume you preheat while prepping. Rice/pasta leftovers: cool within an hour, fridge, eat next day, reheat piping hot. Calories are estimates per adult serving as the recipes are written (sides included). Logos are the supermarkets' own marks (via Wikimedia Commons), used here to identify stores in a personal tool — trademarks belong to their owners; simplified fallback marks display offline.</p>
 </div>
 
 <script>
@@ -872,7 +876,28 @@ const MEALS = [
  {id:"dirtyrice",name:"Cajun-style dirty rice",cuisine:"Cajun",tag:"pork",reheat:false,
   ing:[["porkMince",1],["cajun",0.3],["basmati",0.4],["peppers",0.3],["celery",0.4],["onion",0.3],["springOnions",1]],
   method:"Brown the pork with the 'holy trinity' (onion, celery, pepper) and Cajun seasoning; fold through cooked rice and fry until it catches a little. One pan, huge flavour.",
-  tnote:"Season his portion before the Cajun goes heavy — a light dusting only."}
+  tnote:"Season his portion before the Cajun goes heavy — a light dusting only."},
+ /* ---- proper salad mains ---- */
+ {id:"caesarsalad",plain:true,name:"Chicken caesar-ish salad",cuisine:"American",tag:"chicken",reheat:false,
+  ing:[["chickenBreast",0.5],["lettuce",1],["loaf",0.3],["eggs",0.3],["cheddar",0.2],["greekYog",0.3],["garlic",0.2],["lemon",0.2]],
+  method:"Preheat the oven to 200°C. Tear 3 slices of bread into rough chunks, toss in oil and bake 8–10 min until golden — shake the tray halfway. Meanwhile butterfly the chicken breasts, season, and pan-fry 5–6 min a side until cooked through (no pink, juices clear); rest 3 min before slicing. Soft-boil 2 eggs (6½ min from boiling, straight into cold water). Dressing: 3 tbsp yoghurt, 1 small crushed garlic clove, squeeze of lemon, big pinch of grated cheese, splash of water to loosen. Toss torn lettuce with most of the dressing, top with warm chicken, halved eggs, croutons and the rest of the cheese.",
+  tnote:"His version: chicken strips, croutons and egg on the side as a picky plate — dip pot of dressing."},
+ {id:"greeksalad",name:"Greek salad with warm chicken & pitta",cuisine:"Greek",tag:"chicken",reheat:false,
+  ing:[["chickenThigh",0.5],["tomatoes",1],["cucumber",0.5],["feta",1],["lettuce",0.5],["pitta",1],["onion",0.2],["lemon",0.2]],
+  method:"Get a griddle or frying pan properly hot (2 min on high). Slice thigh fillets into strips, toss in oil, oregano and lemon, and cook 8–10 min, turning until charred at the edges and cooked through. Warm the pittas in the same pan for the last minute a side. Chop tomatoes and cucumber chunky, sliver a little red onion thin, tear the lettuce; dress with oil and lemon, crumble the whole block of feta over, top with the hot chicken. Pitta for scooping.",
+  tnote:"Build him a mini plate: chicken bits, cucumber, tomato, pitta fingers — feta's salty so a little goes far."},
+ {id:"cobbsalad",plain:true,name:"Chopped cobb-style salad",cuisine:"American",tag:"chicken",reheat:false,
+  ing:[["chickenBreast",0.4],["bacon",0.5],["eggs",0.5],["lettuce",1],["tomatoes",0.5],["sweetcornTin",1],["greekYog",0.3]],
+  method:"No oven needed. Boil 3 eggs (8 min for just-set yolks, then cold water). Crisp the lardons in a dry pan 5–6 min, lift out, then cook diced chicken in the bacon fat 6–8 min until cooked through. Chop everything small and even — that's what makes a cobb: lettuce base, then neat rows of chicken, bacon, quartered eggs, tomato and drained sweetcorn. Dressing: yoghurt let down with a splash of milk, pinch of pepper. Bring it to the table looking organised, then let everyone ruin it.",
+  tnote:"Rows of toddler-safe finger food, conveniently pre-chopped. He'll go for the corn and bacon first."},
+ {id:"halloumicouscous",name:"Warm halloumi & couscous salad",cuisine:"Mediterranean",tag:"veggie",reheat:false,
+  ing:[["halloumi",1],["couscous",0.5],["cucumber",0.5],["tomatoes",0.5],["spinach",0.5],["lemon",0.3],["honey",0.1]],
+  method:"Kettle on first: put 250g couscous in a bowl with a pinch of salt and a glug of oil, just cover with boiling water, plate on top, leave 5 min then fork it fluffy. Slice the halloumi into 8 and dry-fry in a hot pan 2 min a side until deep golden — no oil needed, it releases its own. Off the heat, drizzle the slices with 1 tsp honey and a squeeze of lemon so it goes sticky. Fold chopped cucumber, tomato and spinach through the couscous with more lemon; lay the halloumi on top.",
+  tnote:"Squeaky cheese is usually a hit — one slice for him, plenty of couscous."},
+ {id:"grainbowl",name:"Roast veg & feta couscous bowls",cuisine:"Mediterranean",tag:"veggie",reheat:true,
+  ing:[["sweetPotato",0.7],["courgette",0.5],["peppers",0.7],["couscous",0.5],["feta",1],["spinach",0.5],["lemon",0.2]],
+  method:"Preheat the oven to 200°C while you chop. Sweet potato in 2cm chunks, courgette and peppers a bit bigger; toss in oil, salt and pepper on one large tray (don't crowd it — two trays beats one soggy one). Roast 25–30 min, turning once at 15, until the edges catch. Couscous per the halloumi salad method (boiling water, cover, 5 min). Fold spinach through the hot couscous so it wilts, pile the veg on, crumble feta over, finish with lemon. The leftovers are tomorrow's lunch, deliberately.",
+  tnote:"Roast sweet potato is toddler gold. Keep his feta light."}
 ];
 
 /* ---------- GENERATOR ---------- */
@@ -1161,7 +1186,25 @@ const KCAL={bulgogi:560,shawarma:520,turkeychilli:480,satay:620,tagine:540,thaig
   pestopasta:590,sausagepasta:630,pizzanight:540,sloppyjoes:600,sausagedogs:620,chickenricebake:560,
   smashburgers:650,bbqmeatballs:600,kievs:620,porkroast:580,chickennoodlesoup:380,
   biryani:590,dhal:520,enchiladas:610,tandooripitta:520,gyudon:590,coconoodles:560,falafel:520,
-  peanutstew:560,banhmi:590,spanishtortilla:450,halloumiburger:620,singaporenoodles:520,dirtyrice:570};
+  peanutstew:560,banhmi:590,spanishtortilla:450,halloumiburger:620,singaporenoodles:520,dirtyrice:570,
+  caesarsalad:480,greeksalad:520,cobbsalad:540,halloumicouscous:560,grainbowl:510};
+
+/* Rough start-to-plate time in minutes (incl. prep and oven) */
+const TIME={bulgogi:30,shawarma:35,turkeychilli:35,satay:30,tagine:40,thaigreen:30,prawnstir:20,gyros:35,
+  meatballs:40,cajuntray:45,spanishrice:35,keema:35,vietpork:25,hoisin:25,burrito:30,chickpeacurry:30,
+  lentilragu:35,piri:35,tikka:40,jerkchicken:35,sweetsour:30,stuffedpeppers:45,turkishflat:30,halloumitray:40,
+  souvlaki:30,katsu:40,beanchilli:40,friedrice:25,spagbol:45,cottagepie:60,chilli:45,paprikash:35,tacos:25,
+  porkstirfry:20,chickenbake:40,sausagecass:40,fajitatray:35,nasigoreng:25,padthai:25,chowmein:25,
+  turkeyburgers:35,quesadillas:25,porkgoulash:45,koshari:35,shakshuka:30,pineapplepork:25,minestrone:35,
+  stroganoff:30,tortillasoup:30,bangbang:30,sausmash:35,roastchicken:95,toadhole:45,chickenpie:50,hamneggs:45,
+  goujons:40,carbonara:25,milanese:35,cheatslasagne:55,gnocchibake:30,maccheese:35,meatloaf:45,bbqchicken:45,
+  leekpotatosoup:35,gammon:40,chickencasserole:45,beefstew:120,colcannon:35,leekbaconpasta:25,jackets:80,
+  omelette:40,cornedbeefhash:30,quiche:40,frenchbreadpizza:20,tortelloni:15,risotto:35,pestopasta:25,
+  sausagepasta:30,pizzanight:20,sloppyjoes:35,sausagedogs:40,chickenricebake:45,smashburgers:30,bbqmeatballs:35,
+  kievs:45,porkroast:45,chickennoodlesoup:25,biryani:40,dhal:35,enchiladas:40,tandooripitta:30,gyudon:25,
+  coconoodles:25,falafel:35,peanutstew:35,banhmi:25,spanishtortilla:35,halloumiburger:25,singaporenoodles:20,
+  dirtyrice:25,caesarsalad:25,greeksalad:20,cobbsalad:25,halloumicouscous:20,grainbowl:40};
+function ovenTemp(m){const x=m.method.match(/(\d{3})°C/);return x?x[1]:null;}
 
 /* Protein substitutes — for when the shop's shelf lets you down.
    f adjusts pack quantity (e.g. 1 bag of prawns ≈ 0.4 of a 1kg chicken pack). */
@@ -1520,6 +1563,7 @@ function render(){
       '<div class="meta">'+
       '<span class="pill cuisine">'+m.cuisine+'</span>'+
       '<span class="pill kcal">🔥 '+(KCAL[m.id]||500)+' kcal</span>'+
+      '<span class="pill time">⏱ '+(TIME[m.id]||30)+' min</span>'+
       (m.reheat?'<span class="pill lunch">→ '+ (DAYS[i+1]||"Sun") +' lunch</span>':'<span class="pill fresh">eat fresh</span>')+
       '</div>'+
       (pk?'<div class="prot">🔁 <select class="protsel" onchange="setSub('+i+',this.value)">'+
@@ -1540,7 +1584,10 @@ function render(){
     const cur=plan.subs?plan.subs[i]:null;
     const em=effMeal(m,cur);
     const ingNames=em.ing.map(([k])=>ING[k].n.replace(/\s*\(.*?\)/,"")).join(", ");
+    const temp=ovenTemp(m);
     html+='<details><summary><span>'+DAYS[i]+' — '+m.name+'</span><span class="sumkcal">'+(KCAL[m.id]||500)+' kcal</span></summary><div class="recipe-body">'+
+      '<p class="prepline">⏱ ~'+(TIME[m.id]||30)+' min start to plate · '+
+      (temp?'🔥 preheat the oven to '+temp+'°C before you start':'🍳 hob/grill only — no oven to preheat')+'</p>'+
       '<p><b>You’ll use:</b> '+ingNames+'</p><p>'+m.method+'</p>'+
       (cur?'<p><b>🔁 Protein swap:</b> made with '+PROT_LABEL[cur]+' instead of '+PROT_LABEL[protOf(m)]+' — same method, similar calories.</p>':'')+
       '<p class="kcalnote">~'+(KCAL[m.id]||500)+' kcal per adult serving (sides included) · child portion ~'+Math.round((KCAL[m.id]||500)*0.6)+' kcal</p>'+
