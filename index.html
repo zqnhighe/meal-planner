@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Meal Planner">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23155c39'/><text x='50' y='68' font-size='52' text-anchor='middle'>🛒</text></svg>">
-<title>Highe Family Meal Planner — Weekly Shop</title>
+<title>Meal Planner — Weekly Shop</title>
 <style>
   :root{
     --green:#1f7a4d; --green-dark:#155c39; --green-deep:#0d3d25; --green-pale:#e8f5ee;
@@ -235,7 +235,22 @@
   .sect .budget{margin:12px 2px 0;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
   .actrow .actbtn{padding:15px 10px;font-size:.95rem;width:100%}
   header .themebtn{position:absolute;top:14px;right:14px;z-index:3;background:rgba(255,255,255,.15);
-    border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(4px);box-shadow:none}
+    border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(4px);box-shadow:none;color:#fff}
+  /* ===== HEADER REDESIGN ===== */
+  header{padding:clamp(22px,4vw,30px) clamp(20px,4vw,28px)}
+  .hrow{display:flex;align-items:center;gap:15px;position:relative;z-index:1;padding-right:52px}
+  .appicon{width:56px;height:56px;border-radius:17px;background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.32);display:flex;align-items:center;justify-content:center;
+    font-size:1.8rem;flex:none;backdrop-filter:blur(4px);box-shadow:0 4px 14px rgba(0,0,0,.14)}
+  .htext h1{margin:0;font-size:clamp(1.35rem,4vw,1.9rem);letter-spacing:-.025em;text-shadow:0 1px 3px rgba(0,0,0,.18)}
+  .htext p{margin:3px 0 0;color:rgba(255,255,255,.85);font-size:.92rem;max-width:520px}
+  .statline{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:18px;padding-top:14px;
+    border-top:1px solid rgba(255,255,255,.22);font-size:.8rem;font-weight:650;
+    color:rgba(255,255,255,.92);position:relative;z-index:1;letter-spacing:.01em}
+  @media (max-width:640px){
+    .appicon{width:46px;height:46px;border-radius:14px;font-size:1.4rem}
+    .statline{gap:5px 14px;font-size:.74rem}
+  }
   @media (max-width:640px){
     .g3{grid-template-columns:repeat(2,1fr)}
     .g2 .segbtn,.tile{padding:13px 8px;font-size:.82rem}
@@ -278,13 +293,18 @@
 <div class="wrap">
   <header>
     <button class="btn-ghost themebtn" id="themeBtn" title="Toggle light/dark" onclick="toggleTheme()">🌗</button>
-    <h1><span class="cart">🛒</span>Highe Family Meal Planner</h1>
-    <p>Healthy teatimes, leftover lunches and a shopping list in store order — Aldi, Lidl, Morrisons, Sainsbury's or M&amp;S.</p>
-    <div class="stats">
-      <span class="chip">🍛 100 meals</span>
-      <span class="chip">🌍 29 cuisines</span>
-      <span class="chip">🥪 4 leftover lunches</span>
-      <span class="chip">👦 kid-approved</span>
+    <div class="hrow">
+      <div class="appicon">🍽️</div>
+      <div class="htext">
+        <h1>Meal Planner</h1>
+        <p>Family teas, leftover lunches and a shopping list in store order — on budget.</p>
+      </div>
+    </div>
+    <div class="statline">
+      <span>🍛 105 meals</span>
+      <span>🌍 29 cuisines</span>
+      <span>🥪 4 leftover lunches</span>
+      <span>👦 kid-approved</span>
     </div>
   </header>
 
@@ -1523,7 +1543,7 @@ function downloadIcs(){
   const start=new Date();
   start.setDate(start.getDate()+((1-start.getDay()+7)%7)); // upcoming Monday (today if Monday)
   const fmt=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
-  let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Highe Meal Planner//EN\r\n";
+  let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Meal Planner//EN\r\n";
   plan.days.forEach((m,i)=>{
     const d1=new Date(start);d1.setDate(d1.getDate()+i);
     const d2=new Date(d1);d2.setDate(d2.getDate()+1);
