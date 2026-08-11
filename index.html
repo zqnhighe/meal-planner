@@ -657,7 +657,7 @@ const MEALS = [
   tnote:"Mince + noodles = his two favourite food groups in one bowl."},
  {id:"turkeyburgers",plain:true,name:"Turkey burgers, wedges & corn",cuisine:"American",tag:"turkey",reheat:false,
   ing:[["turkeyMince",1],["rolls",1],["breadcrumbs",0.2],["eggs",0.2],["lettuce",0.5],["tomatoes",0.5],["potatoes",0.4],["sweetcornTin",1]],
-  method:"Mix mince, 2 tbsp breadcrumbs and 1 egg; shape 5 patties (one small). Pan-fry or bake ~15 min until cooked through. Serve in rolls with salad, oven wedges and corn.",
+  method:"Preheat the oven to 200°C. Wedges: scrub 3–4 potatoes (skins on), cut each lengthways into 8, toss with 1 tbsp oil and a pinch of salt, single layer on a tray, roast 30–35 min turning halfway. Burgers: mix the mince, 2 tbsp breadcrumbs and 1 beaten egg; shape into 5 flat patties (one mini). Pan-fry over medium heat 5–6 min a side — or add to the oven tray for the last 15 min — until cooked right through with no pink. Split and toast the rolls, build with lettuce and tomato; warmed corn alongside.",
   tnote:"His own mini burger. Leaner than beef and no one will notice."},
  {id:"quesadillas",name:"Chicken & sweetcorn quesadillas",cuisine:"Tex-Mex",tag:"chicken",reheat:false,
   ing:[["wraps",1],["chickenBreast",0.4],["cheddar",0.3],["peppers",1.05],["sweetcornTin",1],["springOnions",1],["greekYog",0.3]],
@@ -689,7 +689,7 @@ const MEALS = [
   tnote:"Creamy mushroom mince — mild and spoonable."},
  {id:"tortillasoup",name:"Mexican chicken tortilla soup",cuisine:"Mexican",tag:"chicken",reheat:true,
   ing:[["chickenBreast",0.4],["chopToms",1],["blackBeans",1],["sweetcornTin",1],["onion",0.3],["garlic",0.2],["cumin",0.2],["paprika",0.1],["stock",0.2],["wraps",0.5],["lime",0.2]],
-  method:"Soften onion and garlic with cumin and paprika; add tomatoes, 600ml stock, diced chicken, beans and corn. Simmer 15 min. Top with crispy tortilla strips (slice a wrap, 5 min in the oven) and lime.",
+  method:"Soften the onion and garlic in a little oil with the cumin and paprika, 5 min. Add the tomatoes, 600ml stock, diced chicken, drained beans and corn; simmer 15 min until the chicken is cooked through. Meanwhile preheat the oven to 200°C, slice a wrap into thin strips, toss with a teaspoon of oil and bake 5–6 min until crisp. Serve the soup topped with the crispy strips and a squeeze of lime.",
   tnote:"Serve his less brothy with extra beans and corn fished out; tortilla strips for dunking."},
  {id:"bangbang",name:"Bang bang chicken rice bowls",cuisine:"Sichuan-style",tag:"chicken",reheat:true,
   ing:[["chickenBreast",0.5],["basmati",0.35],["sweetChilli",0.4],["peanutButter",0.3],["soy",0.2],["cucumber",0.5],["carrots",0.3],["lettuce",0.5],["springOnions",1]],
@@ -761,12 +761,13 @@ const MEALS = [
   method:"Brown thighs, add leeks and carrots, then 500ml stock and baby-cut potatoes. Lid on, simmer 30 min; peas at the end. One pot, deeply gentle flavours.",
   tnote:"Soft veg and tender chicken in mild broth — spoon food at its best."},
  {id:"beefstew",plain:true,name:"Proper beef stew & mash",cuisine:"British",tag:"beef",reheat:true,
+  prep:"⏱ ~2 hrs, mostly hands-off · 🍳 lowest hob heat — or a 160°C oven for 3 hrs",
   ing:[["beefDiced",1],["onion",0.4],["carrots",0.5],["potatoes",0.6],["stock",0.3],["peas",0.2],["gravy",0.2]],
-  method:"Brown the beef hard, add onions and carrots, stock to cover, then low and slow — 1h45 on the hob or 3h in a low oven until it falls apart. Thicken with gravy granules; mash to serve. Better the next day, which is handy for lunches.",
+  method:"Toss the beef in seasoned flour. Brown it hard in batches in a little oil — don't crowd the pan; the dark crust is the flavour. Add chopped onions and thick carrot rounds for 5 min, then stock to barely cover. Lid on, lowest hob heat, 1h45–2h until it falls apart (or a 160°C oven for 3h if you prefer). Thicken with gravy granules at the end. Mash: peel and quarter the potatoes, boil 15–18 min until a knife slides in, drain well, mash with butter and a splash of milk. Even better made the day before.",
   tnote:"Melt-in-the-mouth beef and mash — grandad's benchmark dish."},
  {id:"colcannon",plain:true,name:"Sausages & colcannon mash",cuisine:"Irish",tag:"pork",reheat:false,
   ing:[["sausages",1],["potatoes",0.6],["cabbage",0.5],["springOnions",1],["gravy",0.2]],
-  method:"Roast the sausages. Mash potatoes with butter, fold through shredded buttered cabbage and spring onions (that's the colcannon). Onion gravy over everything.",
+  method:"Preheat the oven to 200°C and roast the sausages on a tray for 25 min, turning once. Colcannon: peel and quarter the potatoes, boil 15–18 min and drain well. While they cook, shred the cabbage and soften in a knob of butter with a splash of water, 5 min. Mash the potatoes with butter and milk, then fold through the cabbage and sliced spring onions. Onion gravy: slow-fry a sliced onion 10 min until golden, stir into made-up gravy granules. Pour over everything.",
   tnote:"Mash with hidden greens — serve his with plenty of gravy."},
  {id:"leekbaconpasta",plain:true,name:"Creamy leek & bacon pasta",cuisine:"British",tag:"pork",reheat:true,
   ing:[["bacon",1],["leeks",0.5],["creamCheese",1],["wwPenne",0.75],["peas",0.2]],
@@ -778,7 +779,7 @@ const MEALS = [
   tnote:"Scoop his into a bowl and mix — jacket potato risotto, effectively."},
  {id:"omelette",plain:true,name:"Ham & cheese omelette, chips & peas",cuisine:"British",tag:"pork",reheat:false,
   ing:[["eggs",1],["ham",0.5],["cheddar",0.2],["potatoes",0.5],["peas",0.3]],
-  method:"Chips in the oven first (35 min). Three-egg omelettes per adult, folded over ham and cheese; a one-egg version for the little one. Peas on the side.",
+  method:"Preheat the oven to 200°C. Chips: scrub 3–4 potatoes (peel if you prefer), cut into 1.5cm-thick chips, rinse the starch off, dry on a tea towel, toss with 1 tbsp oil and salt, single layer on a tray, 30–35 min turning halfway until golden. Peas on to boil for the last 5 min. Omelettes: 3 beaten eggs per adult with a pinch of salt; melt a little butter in a small pan over medium heat, pour in, drag the setting edges inward, lay ham and cheese over one half while the top is still slightly wet, fold and slide out. A one-egg version, cooked right through, for the little one.",
   tnote:"Eggy cheese pancake, effectively. Cooked through, not runny, for him."},
  {id:"cornedbeefhash",plain:true,name:"Corned beef hash",cuisine:"British",tag:"beef",reheat:true,
   ing:[["cornedBeef",1],["potatoes",0.6],["onion",0.4],["peas",0.3],["eggs",0.3]],
@@ -790,7 +791,7 @@ const MEALS = [
   tnote:"Egg and bacon cake — cut him a soldier-sized slice."},
  {id:"frenchbreadpizza",plain:true,name:"French bread pizzas",cuisine:"American",tag:"pork",reheat:false,
   ing:[["baguette",1],["passata",0.5],["mozzarella",2],["ham",0.5],["peppers",0.45]],
-  method:"Bake the part-bake baguettes, halve lengthways, spread with passata, top with ham, mozzarella and whatever's about; back in for 8–10 min until molten. Retro and perfect.",
+  method:"Preheat the oven to 200°C. Bake the part-baked baguettes 8–10 min per the packet, then halve lengthways. Spread each cut face with passata, season, top with torn ham, mozzarella and anything else that needs using; back on the tray for 8–10 min until the cheese is molten and the edges crisp. Give them 2 min to cool before small people bite in.",
   tnote:"Everyone builds their own half — his with extra cheese, obviously."},
  {id:"tortelloni",plain:true,name:"Tortelloni with ham, peas & butter",cuisine:"Italian",tag:"pork",reheat:false,
   ing:[["tortelloni",2],["peas",0.3],["ham",0.5],["cheddar",0.2],["butter",0.1]],
@@ -814,11 +815,11 @@ const MEALS = [
   tnote:"He decorates his own. Expect a corn-only pizza and respect it."},
  {id:"sloppyjoes",plain:true,name:"Sloppy joes & wedges",cuisine:"American",tag:"beef",reheat:true,
   ing:[["mince5",1],["onion",0.3],["peppers",0.45],["puree",0.3],["bbq",0.3],["rolls",1],["potatoes",0.4]],
-  method:"Brown mince with onion and pepper, stir in purée, a good squeeze of BBQ sauce and a splash of water; simmer 15 min until gloopy. Pile into toasted rolls, wedges alongside. Napkins mandatory.",
+  method:"Preheat the oven to 200°C for the wedges: scrub 2–3 potatoes, cut lengthways into 8, toss in oil and salt, roast 30–35 min turning once. Meanwhile brown the mince with the chopped onion and pepper, 8 min. Stir in the purée, a good squeeze of BBQ sauce and a splash of water; simmer 15 min until thick and gloopy. Toast the rolls cut-side down in a dry pan and pile the mince in. Napkins mandatory.",
   tnote:"Messy is the point. The mince reheats for pasta the next day if you'd rather."},
  {id:"sausagedogs",plain:true,name:"Sausage dogs, wedges & corn",cuisine:"American",tag:"pork",reheat:false,
   ing:[["sausages",1],["rolls",1],["onion",0.3],["potatoes",0.5],["sweetcornTin",1]],
-  method:"Roast sausages and wedges together; slow-fry onions until sweet and golden. Sausages into rolls, onions on top, corn on the side. Fakeaway hot dog night.",
+  method:"Preheat the oven to 200°C — sausages and wedges share it. Wedges (scrubbed potatoes cut into 8, oiled and salted) on one tray, 30–35 min; sausages on another, 25 min, turning once. Slow-fry the sliced onions in a little oil over low heat 10–12 min until sweet and golden — don't rush them. Warm the rolls in the oven for the last 2 min, load with sausages and onions; corn alongside.",
   tnote:"His sausage sliced INTO the roll, not whole — choking-safe hot dog."},
  {id:"chickenricebake",plain:true,name:"Creamy chicken & rice bake",cuisine:"American",tag:"chicken",reheat:false,
   ing:[["chickenBreast",0.4],["basmati",0.4],["creamCheese",0.5],["stock",0.3],["peas",0.3],["onion",0.3],["cheddar",0.1]],
@@ -826,7 +827,7 @@ const MEALS = [
   tnote:"Creamy rice with chicken — mild as it gets. Eat fresh (rice dish)."},
  {id:"smashburgers",plain:true,name:"Smash burgers & wedges",cuisine:"American",tag:"beef",reheat:false,
   ing:[["mince5",1],["rolls",1],["cheddar",0.2],["lettuce",0.5],["tomatoes",0.3],["potatoes",0.5]],
-  method:"Roll mince into balls, smash flat in a screaming-hot pan, 2 min a side with cheese melted on. Toasted rolls, lettuce, tomato, wedges. Friday night sorted.",
+  method:"Wedges first: preheat the oven to 200°C, scrub 2–3 potatoes, cut lengthways into 8, toss in oil and salt, roast 30–35 min. Divide the mince into 5 loose balls (one small) — season the outsides only. Get a dry frying pan screaming hot, drop the balls in and squash flat with a spatula; 2 min until crusty, flip, cheese on top, 1–2 min more. Toast the rolls in the burger pan and build with lettuce and tomato.",
   tnote:"A mini smash patty in half a roll for him — the flat shape is toddler-jaw-friendly."},
  {id:"bbqmeatballs",plain:true,name:"BBQ meatballs, mash & corn",cuisine:"American",tag:"beef",reheat:true,
   ing:[["mince5",1],["breadcrumbs",0.3],["eggs",0.2],["bbq",0.4],["potatoes",0.5],["sweetcornTin",1],["peas",0.2]],
@@ -838,7 +839,7 @@ const MEALS = [
   tnote:"A crumbed chicken goujon-with-benefits — go light on garlic for his."},
  {id:"porkroast",plain:true,name:"Mini pork roast dinner",cuisine:"British",tag:"pork",reheat:true,
   ing:[["porkLoin",1],["potatoes",0.6],["carrots",0.4],["broccoli",1],["gravy",0.3],["apples",0.2]],
-  method:"Roast the loin steaks over the roasties for the last 20 min. Grate an apple into a pan with a splash of water for 5-minute apple sauce. Carrots, broccoli, gravy — a midweek Sunday dinner.",
+  method:"Preheat the oven to 200°C. Roasties: peel and halve the potatoes, boil 8 min, drain and shake the pan hard to rough the edges, then into a hot oiled tray for 35–40 min, turning once. Lay the oiled, seasoned pork loin steaks over the tray for the final 18–20 min until cooked through. Apple sauce: grate an apple into a small pan with a splash of water, simmer 5 min. Carrots and broccoli steamed or boiled; gravy to finish.",
   tnote:"Roast dinner scale model. Apple sauce is basically pudding with permission."},
  {id:"chickennoodlesoup",plain:true,name:"Chicken noodle soup",cuisine:"American",tag:"chicken",reheat:true,
   ing:[["chickenBreast",0.3],["eggNoodles",0.4],["carrots",0.3],["celery",0.5],["onion",0.3],["stock",0.4],["peas",0.2]],
@@ -859,7 +860,7 @@ const MEALS = [
   tnote:"Saucy cheese-blanketed wraps — mild seasoning on his end of the dish."},
  {id:"tandooripitta",name:"Tandoori-style chicken pittas",cuisine:"Indian",tag:"chicken",reheat:false,
   ing:[["chickenThigh",0.6],["tikkaPaste",0.5],["greekYog",0.5],["pitta",1],["cucumber",0.5],["lettuce",0.5],["tomatoes",0.3]],
-  method:"Marinate thigh strips in 1 tbsp paste + yoghurt, grill or roast hot until charred at the edges. Stuff into warm pittas with salad and minty-ish yoghurt.",
+  method:"Marinate the thigh strips in 1 tbsp tikka paste + 3 tbsp yoghurt (20 min if you can). Grill on high 8–10 min turning once — or roast at 220°C for 15 min — until charred at the edges and cooked through. Warm the pittas under the grill for the last minute. Stuff with lettuce, cucumber, tomato and a spoonful of the remaining yoghurt.",
   tnote:"Marinate a couple of strips in yoghurt only for a milder version."},
  {id:"gyudon",name:"Japanese-style beef & egg rice bowls",cuisine:"Japanese",tag:"beef",reheat:false,
   ing:[["mince5",1],["soy",0.3],["honey",0.15],["ginger",0.3],["onion",0.4],["basmati",0.4],["eggs",0.3],["springOnions",1]],
@@ -879,7 +880,7 @@ const MEALS = [
   tnote:"Peanut butter stew — say those words and watch resistance evaporate."},
  {id:"banhmi",name:"Banh mi-style pork baguettes",cuisine:"Vietnamese",tag:"pork",reheat:false,
   ing:[["porkMince",1],["baguette",1],["cucumber",0.5],["carrots",0.3],["sweetChilli",0.3],["soy",0.2],["lime",0.2]],
-  method:"Fry pork mince hard, glaze with soy + sweet chilli + lime. Bake the baguettes, split and stuff with the pork, quick-pickled carrot ribbons (splash of vinegar, pinch of sugar) and cucumber.",
+  method:"Preheat the oven to 200°C and bake the part-baked baguettes 8–10 min. Quick pickle first: peel the carrots into ribbons, toss with a splash of vinegar and a pinch of sugar, set aside. Fry the pork mince hard 8–10 min until browned and crispy in places; glaze with 2 tbsp soy, 2 tbsp sweet chilli and the lime juice. Split the warm baguettes and stuff with pork, drained pickled carrot and cucumber.",
   tnote:"Warm baguette with sweet mince — skip the pickled bits on his."},
  {id:"spanishtortilla",name:"Spanish tortilla & salad",cuisine:"Spanish",tag:"veggie",reheat:true,
   ing:[["eggs",1],["potatoes",0.5],["onion",0.4],["peppers",0.45],["lettuce",0.5],["tomatoes",0.3]],
@@ -887,7 +888,7 @@ const MEALS = [
   tnote:"Potato omelette cake — soft, mild, hand-holdable in wedges."},
  {id:"halloumiburger",name:"Halloumi burgers & wedges",cuisine:"Greek",tag:"veggie",reheat:false,
   ing:[["halloumi",1],["rolls",1],["lettuce",0.5],["tomatoes",0.3],["sweetChilli",0.3],["potatoes",0.5]],
-  method:"Thick slabs of halloumi, dry-fried until golden and squeaky. Into toasted rolls with salad and a ribbon of sweet chilli; wedges on the side.",
+  method:"Preheat the oven to 200°C for the wedges: scrub 2–3 potatoes, cut lengthways into 8, toss in oil and salt, roast 30–35 min turning once. Slice the halloumi block into 6 thick slabs and dry-fry in a hot pan 2 min a side until deep golden. Toast the rolls and build with lettuce, tomato, halloumi and a ribbon of sweet chilli.",
   tnote:"Salty cheese in a bun — one slab is plenty for him."},
  {id:"singaporenoodles",name:"Singapore-style noodles",cuisine:"Singaporean",tag:"chicken",reheat:false,
   ing:[["riceNoodles",1],["curryPowder",0.2],["chickenBreast",0.3],["peppers",0.45],["peas",0.2],["springOnions",1],["soy",0.2],["eggs",0.2]],
@@ -1600,15 +1601,25 @@ function render(){
   html+='</div>';
 
   html+='<h2>Recipes</h2>'+
-    '<p class="hint">Methods are written for 2 adults + 1 child — the shopping list quantities scale automatically for <b>'+HH().label+'</b>.'+(HH().scale>1?' Scale pan quantities up to match what you buy.':'')+'</p>';
+    '<p class="hint">Methods are written for 2 adults + 1 child — the shopping list quantities scale automatically for <b>'+HH().label+'</b>.'+(HH().scale>1?' Scale pan quantities up to match what you buy.':'')+'</p>'+
+    '<details class="basics"><summary><span>👨‍🍳 Kitchen basics — chips, mash, rice and friends</span></summary><div class="recipe-body">'+
+    '<p><b>Chunky chips / wedges:</b> scrub the potatoes (peel only if you want), cut into 1.5cm chips or 8 wedges each, rinse the starch off, dry on a tea towel, toss with 1 tbsp oil and salt, single layer on a tray, 200°C for 30–35 min, turning halfway.</p>'+
+    '<p><b>Roasties:</b> peel and halve, boil 8 min, drain and shake the pan hard to rough the edges, into a hot oiled tray at 200°C for 35–40 min, turning once.</p>'+
+    '<p><b>Mash:</b> peel and quarter, boil 15–18 min until a knife slides in easily, drain and let them steam-dry a minute, mash with a knob of butter and a splash of milk.</p>'+
+    '<p><b>Fluffy rice:</b> rinse until the water runs clear-ish, 1 part rice to 1.5 parts water, bring to the boil, lid on, lowest heat 12 min, then rest 5 min off the heat — no peeking.</p>'+
+    '<p><b>Couscous:</b> equal volume boiling water, pinch of salt, glug of oil, cover with a plate for 5 min, fork it fluffy.</p>'+
+    '<p><b>Croutons:</b> torn bread tossed in oil, 200°C for 8–10 min, shake halfway.</p>'+
+    '<p><b>Onion gravy:</b> slice an onion, fry low and slow in a little oil or butter 10–12 min until golden and sweet, stir into gravy granules made up per the tub.</p>'+
+    '<p><b>Boiled eggs:</b> into boiling water — 6½ min soft, 8 min just-set, 10 min hard. Straight into cold water to stop them.</p>'+
+    '</div></details>';
   plan.days.forEach((m,i)=>{
     const cur=plan.subs?plan.subs[i]:null;
     const em=effMeal(m,cur);
     const ingNames=em.ing.map(([k])=>ING[k].n.replace(/\s*\(.*?\)/,"")).join(", ");
     const temp=ovenTemp(m);
     html+='<details><summary><span>'+DAYS[i]+' — '+m.name+'</span><span class="sumkcal">'+(KCAL[m.id]||500)+' kcal</span></summary><div class="recipe-body">'+
-      '<p class="prepline">⏱ ~'+(TIME[m.id]||30)+' min start to plate · '+
-      (temp?'🔥 preheat the oven to '+temp+'°C before you start':'🍳 hob/grill only — no oven to preheat')+'</p>'+
+      '<p class="prepline">'+(m.prep?m.prep:('⏱ ~'+(TIME[m.id]||30)+' min start to plate · '+
+      (temp?'🔥 preheat the oven to '+temp+'°C before you start':'🍳 hob/grill only — no oven to preheat')))+'</p>'+
       '<p><b>You’ll use:</b> '+ingNames+'</p><p>'+m.method+'</p>'+
       (cur?'<p><b>🔁 Protein swap:</b> made with '+PROT_LABEL[cur]+' instead of '+PROT_LABEL[protOf(m)]+' — same method, similar calories.</p>':'')+
       '<p class="kcalnote">~'+(KCAL[m.id]||500)+' kcal per adult serving (sides included) · child portion ~'+Math.round((KCAL[m.id]||500)*0.6)+' kcal</p>'+
