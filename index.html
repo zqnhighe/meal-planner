@@ -53,6 +53,8 @@
   .treats.on{background:linear-gradient(120deg,#8e3fa8,#d4549b);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(180,60,150,.4)}
   .treats.on .plus{background:rgba(255,255,255,.25);color:#fff}
   .plainlbl.on{background:linear-gradient(120deg,#5b4a3f,#8a6f5c);box-shadow:0 3px 12px rgba(90,74,63,.4)}
+  .veglbl.on{background:linear-gradient(120deg,#2c7a2c,#4aa64a);box-shadow:0 3px 12px rgba(60,150,60,.4)}
+  .g2>.tile:last-child:nth-child(odd){grid-column:span 2}
   .sunlbl.on{background:linear-gradient(120deg,#a4531b,#d98324);box-shadow:0 3px 12px rgba(200,120,40,.4)}
   .pinbtn{position:absolute;top:10px;right:74px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:.75rem;padding:4px 8px;cursor:pointer;filter:grayscale(1);opacity:.6}
   .pinbtn.on{filter:none;opacity:1;background:var(--amber-pale);border-color:var(--amber)}
@@ -301,7 +303,7 @@
       </div>
     </div>
     <div class="statline">
-      <span>🍛 105 meals</span>
+      <span>🍛 126 meals</span>
       <span>🌍 29 cuisines</span>
       <span>🥪 4 leftover lunches</span>
       <span>👦 kid-approved</span>
@@ -327,6 +329,10 @@
       <label class="treats tile sunlbl" id="sunLbl" title="Adds a 7th roast-dinner slot on Sunday (+£12 budget)">
         <input type="checkbox" id="sunChk" onchange="setSunday(this.checked)">
         🍗 Sunday lunch <span class="plus">+£12</span>
+      </label>
+      <label class="treats tile veglbl" id="vegLbl" title="Vegetarian week — only meat-free meals">
+        <input type="checkbox" id="vegChk" onchange="setVeggie(this.checked)">
+        🥦 Vegetarian
       </label>
       <button class="treats tile fridgetile" id="fridgeTile" onclick="toggleFridgePanel()">
         🧊 Use up the fridge <span class="plus" id="fridgeCount">0</span>
@@ -410,6 +416,7 @@ const ING = {
   puffPastry:{n:"Ready-rolled puff pastry",p:0.99,s:"dairy"},
   creamCheese:{n:"Soft cheese tub",p:0.85,s:"dairy"},
   tortelloni:{n:"Fresh filled tortelloni",p:1.49,s:"dairy"},
+  tofu:{n:"Firm tofu 396g",p:1.19,s:"dairy"},
   chorizo:{n:"Chorizo ring 225g",p:1.59,s:"meat"},
   ham:{n:"Ham trimmings 400g",p:2.49,s:"meat"},
   // dairy
@@ -482,7 +489,9 @@ const ING = {
   icecream:{n:"Vanilla ice cream tub",p:1.99,s:"frozen",treat:true},
   // frozen
   peas:{n:"Frozen garden peas 900g",p:1.15,s:"frozen"},
-  prawns:{n:"Frozen cooked prawns 225g",p:2.79,s:"frozen"}
+  prawns:{n:"Frozen cooked prawns 225g",p:2.79,s:"frozen"},
+  meatFreeMince:{n:"Meat-free mince 500g",p:1.79,s:"frozen"},
+  veggieSausages:{n:"Meat-free sausages 8-pack",p:1.59,s:"frozen"}
 };
 
 /* ---------- FIXED WEEKLY BASICS (lunches, breakfasts, toddler snacks) ---------- */
@@ -918,7 +927,92 @@ const MEALS = [
  {id:"grainbowl",name:"Roast veg & feta couscous bowls",cuisine:"Mediterranean",tag:"veggie",reheat:true,
   ing:[["sweetPotato",0.7],["courgette",0.5],["peppers",1.05],["couscous",0.5],["feta",1],["spinach",0.5],["lemon",0.2]],
   method:"Preheat the oven to 200°C while you chop. Sweet potato in 2cm chunks, courgette and peppers a bit bigger; toss in oil, salt and pepper on one large tray (don't crowd it — two trays beats one soggy one). Roast 25–30 min, turning once at 15, until the edges catch. Couscous per Kitchen basics (boiling water, cover 5 min, fork fluffy). Fold spinach through the hot couscous so it wilts, pile the veg on, crumble feta over, finish with lemon. The leftovers are tomorrow's lunch, deliberately.",
-  tnote:"Roast sweet potato is toddler gold. Keep his feta light."}
+  tnote:"Roast sweet potato is toddler gold. Keep his feta light."},
+ /* ---- the vegetarian expansion ---- */
+ {id:"veggiebol",plain:true,name:"Veggie spag bol",cuisine:"Italian",tag:"veggie",reheat:true,
+  ing:[["meatFreeMince",1],["onion",0.3],["carrots",0.3],["celery",0.5],["mushrooms",1],["garlic",0.2],["chopToms",1],["puree",0.3],["stock",0.1],["wwSpag",0.75]],
+  method:"Finely chop the onion, celery and mushrooms; grate the carrot. Soften the lot in a little oil over medium heat, 8–10 min, until the mushroom water has cooked off. Add the crushed garlic for 1 min, then the meat-free mince straight from frozen with 2 tbsp purée, the tomatoes, a crumbled stock cube and half a tin of water. Simmer 15 min — meat-free mince needs less time than beef, it just wants to soak up flavour. Spaghetti per the packet; loosen the sauce with a splash of pasta water.",
+  tnote:"House favourite, no cow required — most kids honestly can't tell."},
+ {id:"veggiechilli",name:"Meat-free chilli con carne",cuisine:"Mexican",tag:"veggie",reheat:true,
+  ing:[["meatFreeMince",1],["onion",0.3],["garlic",0.2],["peppers",0.45],["kidneyBeans",1],["chopToms",1],["cumin",0.2],["paprika",0.1],["brownRice",0.35]],
+  method:"Chop the onion and pepper, crush the garlic. Soften the onion 5 min, add the pepper for 3, then the garlic, 1 tsp cumin and ½ tsp smoked paprika for 1. Tip in the meat-free mince (straight from frozen is fine), the tomatoes, drained kidney beans and half a tin of water. Simmer 15–20 min until thick and rich — the smoky spices do the heavy lifting. Brown rice per Kitchen basics, started first as it takes ~25 min.",
+  tnote:"Same smoky-mild rule as the beef version — heat at the table, not in the pan."},
+ {id:"veggiecottage",plain:true,name:"Veggie cottage pie",cuisine:"British",tag:"veggie",reheat:true,
+  ing:[["meatFreeMince",1],["onion",0.3],["carrots",0.5],["celery",0.5],["peas",0.3],["stock",0.2],["puree",0.3],["potatoes",0.5],["cheddar",0.1]],
+  method:"Peel and quarter the potatoes plus 2 carrots; boil 15–18 min for the mash. Soften the chopped onion, remaining diced carrot and celery, 8 min. Add the meat-free mince, 2 tbsp purée, a crumbled stock cube and 300ml water; simmer 12 min and stir in the peas. Preheat the oven to 200°C. Mash with butter, spread over the mince in a dish, fork the top rough, scatter cheddar, bake 25 min until golden.",
+  tnote:"Soft, scoopable, identical ritual to the beef one — gravy optional."},
+ {id:"veggiesausmash",plain:true,name:"Veggie bangers & mash",cuisine:"British",tag:"veggie",reheat:false,
+  ing:[["veggieSausages",1],["potatoes",0.5],["onion",0.4],["gravy",0.3],["peas",0.3],["carrots",0.3]],
+  method:"Preheat the oven to 200°C and cook the meat-free sausages per the packet — usually 15–18 min from frozen, turning once; they brown faster than pork so keep an eye late on. Mash per Kitchen basics (peel, quarter, boil 15–18 min, butter and milk). Onion gravy: slice the onion, fry low and slow in butter 10–12 min until golden, stir into made-up gravy granules. Peas and carrot rounds boiled in the last 5 min.",
+  tnote:"Slice his sausage lengthways then across, same as always. Gravy sells it."},
+ {id:"veggietoad",plain:true,name:"Veggie toad in the hole",cuisine:"British",tag:"veggie",reheat:false,
+  ing:[["veggieSausages",1],["eggs",0.5],["onion",0.3],["gravy",0.3],["peas",0.3],["carrots",0.3]],
+  method:"Preheat the oven to 220°C. Batter first: whisk 100g flour, 2 eggs, 150ml milk and a pinch of salt; rest 10 min. Give the meat-free sausages a 10-min head start in a metal tin with 2 tbsp oil until the fat is properly smoking — that heat is what makes the batter rise. Pour the batter around them fast, straight back in, 25 min, door shut throughout. Onion gravy per Kitchen basics; peas and carrots in the final 5.",
+  tnote:"Puffy batter soldiers with sausage inside — indistinguishable joy."},
+ {id:"veggiesausagepasta",plain:true,name:"Meat-free sausage rigatoni",cuisine:"Italian",tag:"veggie",reheat:true,
+  ing:[["veggieSausages",1],["passata",1],["onion",0.3],["garlic",0.2],["wwPenne",0.75],["cheddar",0.1]],
+  method:"Cook the meat-free sausages per the packet (about 15 min at 200°C or 10 in a pan), then slice into thick coins. Meanwhile soften the chopped onion in a little oil, 6–8 min; add the garlic for 1, then the passata and a splash of water, simmering 10 min. Penne per the packet, 2 min short; toss through the sauce with the sausage coins and a splash of pasta water for the last 2 min. Cheddar grated over.",
+  tnote:"Sausage pasta remains the two great food groups united, whatever the sausage is made of."},
+ {id:"capresepenne",plain:true,name:"Caprese penne",cuisine:"Italian",tag:"veggie",reheat:false,
+  ing:[["wwPenne",0.75],["tomatoes",1],["mozzarella",2],["garlic",0.3],["passata",0.5],["spinach",0.5]],
+  method:"Penne on per the packet; keep a mug of pasta water. Halve the fresh tomatoes and fry cut-side down in olive oil over medium-high, 4–5 min, until they blister and collapse; add the crushed garlic for 1 min, then the passata and a splash of pasta water, simmering 5 min into a rough, fresh sauce. Toss the drained pasta and spinach through until the leaves wilt. Off the heat, tear the mozzarella over and stir once — you want pockets of melt, not soup. Eat straight away.",
+  tnote:"Melty cheese pockets are the treasure hunt. His portion cooled a touch — they hold heat."},
+ {id:"eggcurry",name:"Egg curry & rice",cuisine:"Indian",tag:"veggie",reheat:false,
+  ing:[["eggs",1],["onion",0.4],["garlic",0.3],["ginger",0.3],["curryPowder",0.3],["chopToms",1],["coconutMilk",1],["spinach",0.5],["basmati",0.35]],
+  method:"Boil 5–6 eggs (8 min, then cold water) and peel. Meanwhile soften the chopped onion in a little oil, 6–8 min; add the garlic, grated ginger and 1½ tbsp mild curry powder for 1 min. Tip in the tomatoes and coconut milk; simmer 15 min until thickened. Wilt in the spinach, then halve the eggs and sit them in the sauce, spooning it over, 2 min to warm through. Rice per Kitchen basics. Cheap, gentle and quietly brilliant.",
+  tnote:"Egg halves in mild creamy sauce — his yolks cooked firm, which they are."},
+ {id:"halloumicurry",name:"Halloumi & spinach curry",cuisine:"Indian",tag:"veggie",reheat:false,
+  ing:[["halloumi",1],["onion",0.4],["garlic",0.3],["ginger",0.3],["tikkaPaste",0.5],["chopToms",1],["greekYog",0.4],["spinach",1],["basmati",0.35]],
+  method:"Rice per Kitchen basics first. Slice the halloumi into 8 and dry-fry in a hot pan 2 min a side until golden; set aside. In the same pan soften the chopped onion, 6–8 min; add the garlic, grated ginger and 1 tbsp tikka paste for 1 min, then the tomatoes and a splash of water. Simmer 10 min, wilt in the whole bag of spinach, and stir in the yoghurt off the heat. Nestle the halloumi back in to warm through, 1 min — no longer or it squeaks.",
+  tnote:"Paneer's Aldi cousin. Salty cheese means one slab is plenty for him."},
+ {id:"vegbiryani",name:"Veggie oven biryani",cuisine:"Indian",tag:"veggie",reheat:false,
+  ing:[["basmati",0.45],["curryPowder",0.3],["onion",0.5],["peppers",0.45],["carrots",0.3],["peas",0.3],["greekYog",0.3]],
+  method:"Preheat the oven to 180°C. Slice the onions and fry in a lidded, ovenproof pan until golden, 8–10 min — set a third aside for the top. Add diced pepper and carrot for 3 min, then 1½ tbsp curry powder for 1. Stir in the rinsed rice to coat, pour over 550ml hot water, season, lid on, bake 25 min. Fork the peas through (residual heat cooks them), rest 5 min, crown with the reserved onions and serve with cooling yoghurt. Eat fresh — rice dish.",
+  tnote:"Golden rice with bits to excavate. Yoghurt on the side for dipping duty."},
+ {id:"tofunoodles",name:"Sweet chilli tofu noodles",cuisine:"Chinese",tag:"veggie",reheat:false,
+  ing:[["tofu",1],["eggNoodles",0.7],["sweetChilli",0.4],["soy",0.3],["broccoli",1],["carrots",0.3],["garlic",0.2],["ginger",0.2],["springOnions",1]],
+  method:"Press the tofu 10 min between kitchen roll under a heavy pan — dry tofu crisps, wet tofu steams. Cube it, toss in 1 tbsp cornflour if you have it, and fry in a hot wok with oil, 6–8 min, turning until golden all over; set aside. Noodles per the packet. Stir-fry small broccoli florets and carrot batons 4 min; add garlic and grated ginger for 30 seconds. Noodles and tofu back in with 2 tbsp sweet chilli and 1 tbsp soy; toss until sticky. Spring onions over. Eat fresh.",
+  tnote:"Crispy golden cubes in sticky sauce — call them nuggets and watch them go."},
+ {id:"vegfriedrice",name:"Veggie egg fried rice",cuisine:"Chinese",tag:"veggie",reheat:false,
+  ing:[["basmati",0.4],["eggs",0.5],["peas",0.3],["soy",0.3],["springOnions",1],["garlic",0.2],["ginger",0.2],["broccoli",1],["sweetcornTin",1]],
+  method:"Cold rice essential — cook per Kitchen basics ahead and cool, or use yesterday's. Cut the broccoli small and stir-fry in a very hot wok with a little oil, 3 min. Add the crushed garlic and grated ginger for 30 seconds, push everything aside and scramble 3 beaten eggs in the gap. Rice in, breaking it up; add the peas, drained sweetcorn and 2 tbsp soy, frying hard 3–4 min until everything jumps and the rice catches a little. Spring onions through. Eat fresh.",
+  tnote:"Egg, peas and corn — three of his major food groups in one bowl."},
+ {id:"mushroomstrog",plain:true,name:"Mushroom stroganoff",cuisine:"Russian",tag:"veggie",reheat:true,
+  ing:[["mushrooms",2],["onion",0.4],["garlic",0.3],["paprika",0.2],["creamCheese",1],["puree",0.2],["stock",0.2],["basmati",0.35]],
+  method:"Rice per Kitchen basics. Slice both packs of mushrooms thick — they shrink by half. Soften the chopped onion in butter, 6 min; add the mushrooms and cook over high heat 8–10 min until their water is gone and they're browning. Garlic and 1 tsp paprika for 1 min, then 1 tbsp purée and 200ml stock; simmer 5 min. Stir in the soft cheese until it melts into a silky sauce. Season generously — mushrooms drink pepper.",
+  tnote:"Creamy mushroom rice — mild, savoury and grandad-compatible."},
+ {id:"vegenchiladas",name:"Three-bean enchiladas",cuisine:"Mexican",tag:"veggie",reheat:true,
+  ing:[["wraps",1],["blackBeans",1],["kidneyBeans",1],["sweetcornTin",1],["fajita",0.4],["passata",1],["cheddar",0.3],["onion",0.3],["greekYog",0.3]],
+  method:"Preheat the oven to 200°C. Soften the chopped onion, 5 min; add both tins of drained beans, the sweetcorn, fajita seasoning and a good splash of water. Simmer 5 min, mashing about a third of the beans against the pan so the filling holds together. Spoon along the wraps, roll, and lay seam-down in a baking dish. Passata over, cheddar scattered, 20 min until bubbling. Yoghurt on top to serve.",
+  tnote:"Saucy bean burritos under a cheese blanket. Mash his beans a bit more if he's suspicious."},
+ {id:"vegfajitas",name:"Halloumi fajita traybake",cuisine:"Tex-Mex",tag:"veggie",reheat:false,
+  ing:[["halloumi",1],["peppers",1.05],["onion",0.4],["fajita",0.5],["wraps",1],["greekYog",0.3],["lettuce",0.5]],
+  method:"Preheat the oven to 200°C. Slice the peppers into batons and the onion into thin wedges; toss with 1 tbsp oil and most of the fajita seasoning on a large tray and roast 15 min. Slice the halloumi into chunky fingers, toss with the rest of the seasoning, and add to the tray for a further 10 min until golden at the edges. Warm the wraps in the oven for the last 2 min. Build at the table with lettuce and yoghurt. Eat fresh.",
+  tnote:"Squeaky cheese chips in a wrap — dust his lightly, the seasoning has a little warmth."},
+ {id:"veggoulash",name:"Mushroom & bean goulash",cuisine:"Hungarian",tag:"veggie",reheat:true,
+  ing:[["mushrooms",2],["cannellini",1],["onion",0.4],["garlic",0.2],["paprika",0.4],["peppers",0.45],["chopToms",1],["potatoes",0.5],["greekYog",0.3]],
+  method:"Peel and chunk the potatoes; boil 15–18 min. Slice the mushrooms thick and brown them in batches over high heat, 8 min total; set aside. Soften the sliced onion and pepper, 8 min; add the garlic and 1½ tbsp paprika for 1 min off the boil. Return the mushrooms with the tomatoes, drained cannellini beans and half a tin of water; simmer 15 min until rich. Yoghurt swirled through off the heat, potatoes alongside.",
+  tnote:"Rich, smoky and completely mild — mash his potatoes straight into the sauce."},
+ {id:"vegtagine",name:"Chickpea & sweet potato tagine",cuisine:"Moroccan",tag:"veggie",reheat:true,
+  ing:[["chickpeas",2],["sweetPotato",0.7],["onion",0.3],["garlic",0.2],["chopToms",1],["cumin",0.2],["paprika",0.1],["honey",0.1],["couscous",0.5],["lemon",0.2]],
+  method:"Peel the sweet potatoes into 2–3cm chunks. Soften the chopped onion in a little oil, 5 min; add the garlic, 1 tsp cumin and ½ tsp paprika for 1 min. Add the sweet potato, both tins of drained chickpeas, the tomatoes, 1 tsp honey and half a tin of water. Lid half-on, simmer 25 min until the sweet potato is tender and the sauce jammy. Lemon squeezed in at the end; couscous per Kitchen basics in the last 10 min.",
+  tnote:"Sweet, soft and spoonable — the tagine most likely to get a toddler encore."},
+ {id:"vegpaella",name:"Veggie paella-style rice",cuisine:"Spanish",tag:"veggie",reheat:false,
+  ing:[["arborio",0.5],["onion",0.3],["garlic",0.2],["peppers",0.45],["paprika",0.2],["chopToms",1],["peas",0.3],["stock",0.3],["lemon",0.2],["greenBeans",1]],
+  method:"Soften the chopped onion and pepper in a wide, lidded pan with a good glug of oil, 6–8 min. Add the garlic and 1 tsp smoked paprika for 1 min, then stir in the rice to coat every grain. Tomatoes and 600ml hot stock in; arrange the trimmed green beans on top, lid on, lowest heat 18 min without stirring. Peas on for the last 3, then rest 5 min off the heat. Lemon wedges over — and the crusty bottom layer is the prize, not a mistake. Eat fresh.",
+  tnote:"Golden rice with green things to pick at. The crispy pan layer is the parental perk."},
+ {id:"pestognocchi",plain:true,name:"Pesto gnocchi & green beans",cuisine:"Italian",tag:"veggie",reheat:false,
+  ing:[["gnocchi",1.5],["pesto",0.6],["greenBeans",1],["cheddar",0.2],["tomatoes",0.5]],
+  method:"Water on first — this is a 20-minute tea. Trim the green beans and halve them; boil 3 min, then add the gnocchi to the same pan for 2 more — they're done when they float. Drain, keeping a splash of the water. Back in the pan with half the jar of pesto and the splash of water, tossed until everything is green and glossy. Halved fresh tomatoes through at the end, cheddar grated over. Eat straight away — gnocchi turns bouncy as it cools.",
+  tnote:"Green pillows. If pesto's suspicious, a buttered-plain portion takes 10 seconds to split off."},
+ {id:"beanburgers",name:"Smoky bean burgers & wedges",cuisine:"American",tag:"veggie",reheat:false,
+  ing:[["kidneyBeans",1],["blackBeans",1],["breadcrumbs",0.4],["eggs",0.3],["cumin",0.2],["rolls",1],["lettuce",0.5],["tomatoes",0.3],["potatoes",0.5],["greekYog",0.2]],
+  method:"Preheat the oven to 200°C; wedges per Kitchen basics on one tray, 30–35 min. Drain both tins of beans really well and mash coarsely with 1 tsp cumin, 4 tbsp breadcrumbs, 1 beaten egg and a good pinch of salt. Shape into 4–5 patties, firm them in the fridge 10 min if there's time, then bake on an oiled tray for the last 20 min of the wedges, flipping halfway, until crusted. Toasted rolls, lettuce, tomato, a swipe of yoghurt.",
+  tnote:"A mini patty in half a roll — beans in burger form pass inspections that beans in a bowl fail."},
+ {id:"broccolipasta",plain:true,name:"Cheesy broccoli pasta bake",cuisine:"British",tag:"veggie",reheat:true,
+  ing:[["wwPenne",0.8],["broccoli",2],["cheddar",0.5],["butter",0.2],["breadcrumbs",0.2]],
+  method:"Preheat the oven to 200°C. Cook the penne 2 min short of the packet, dropping small broccoli florets in for the final 4 — slightly soft is right, it's going in a bake. White sauce per the mac & cheese method: 40g butter, 2 tbsp flour, ~500ml milk whisked in gradually, most of the cheddar melted through. Fold pasta and broccoli into the sauce, top with breadcrumbs and the last cheese, bake 20 min until golden and bubbling at the corners.",
+  tnote:"Broccoli hidden in plain sight under a duvet of cheese. Works every time."}
 ];
 
 /* ---------- GENERATOR ---------- */
@@ -926,6 +1020,8 @@ const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
 /* Roast-dinner candidates for the optional Sunday slot */
 const SUNDAY_IDS = ["roastchicken","porkroast","beefstew","chickenpie","toadhole","gammon"];
+const SUNDAY_VEG_IDS = ["veggietoad","veggiecottage","veggiesausmash","mushroomstrog"];
+function sundayIds(){return veggieMode?SUNDAY_VEG_IDS:SUNDAY_IDS;}
 
 /* Perishables offered in the "use up the fridge" panel */
 const FRIDGE_ITEMS = ["mince5","turkeyMince","porkMince","chickenBreast","chickenThigh","sausages","bacon","gammon",
@@ -953,7 +1049,7 @@ const KID_FACTOR = [0, 1, 1.7, 2.4];  // snack scaling by number of kids
 const KID_ITEMS = new Set(["kidsYog","crisps","breadsticks","raisins"]);
 const TREATS = ["chocDigestives","jaffa","cakeBars","sweets","chocolate","painAuChoc","icecream"];  // £9.63 — custard dropped when jaffa's real price came in
 
-let hh = "2a1c", treats = false, plainMode = false, sundayMode = false;
+let hh = "2a1c", treats = false, plainMode = false, sundayMode = false, veggieMode = false;
 let FRIDGE = new Set();
 try{
   hh = localStorage.getItem("hh")||"2a1c";
@@ -961,8 +1057,13 @@ try{
   treats = localStorage.getItem("treats")==="1";
   plainMode = localStorage.getItem("plain")==="1";
   sundayMode = localStorage.getItem("sunday")==="1";
+  veggieMode = localStorage.getItem("veggie")==="1";
   FRIDGE = new Set(JSON.parse(localStorage.getItem("fridge")||"[]"));
 }catch(e){}
+function setVeggie(on){
+  veggieMode=!!on;try{localStorage.setItem("veggie",veggieMode?"1":"0");}catch(e){}
+  buildControls();
+}
 /* Theme: follows the system by default; the toggle overrides and remembers */
 let theme="auto";
 try{theme=localStorage.getItem("theme")||"auto";}catch(e){}
@@ -999,8 +1100,8 @@ function toggleFridge(k){
 }
 function addSunday(){
   const used=plan.days.map(m=>m.id);
-  let cands=SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!used.includes(m.id)&&!RECENT.slice(0,6).includes(m.id));
-  if(!cands.length)cands=SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!used.includes(m.id));
+  let cands=sundayIds().map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!used.includes(m.id)&&!RECENT.slice(0,6).includes(m.id));
+  if(!cands.length)cands=sundayIds().map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!used.includes(m.id));
   const pick=shuffle(cands)[0];
   if(pick){plan.days.push(pick);plan.subs.push(null);if(plan.pins)plan.pins.push(false);}
 }
@@ -1018,7 +1119,12 @@ function togglePin(i){
   plan.pins[i]=!plan.pins[i];
   savePlan();render();
 }
-function baseMeals(){return plainMode?MEALS.filter(m=>m.plain):MEALS;}
+function baseMeals(){
+  let list=MEALS;
+  if(plainMode)list=list.filter(m=>m.plain);
+  if(veggieMode)list=list.filter(m=>m.tag==="veggie");
+  return list;
+}
 function setPlain(on){
   plainMode=!!on;try{localStorage.setItem("plain",plainMode?"1":"0");}catch(e){}
   buildControls();
@@ -1048,6 +1154,9 @@ function buildControls(){
   const plbl=document.getElementById("plainLbl"),pchk=document.getElementById("plainChk");
   if(plbl)plbl.classList.toggle("on",plainMode);
   if(pchk)pchk.checked=plainMode;
+  const vlbl=document.getElementById("vegLbl"),vchk=document.getElementById("vegChk");
+  if(vlbl)vlbl.classList.toggle("on",veggieMode);
+  if(vchk)vchk.checked=veggieMode;
   const slbl=document.getElementById("sunLbl"),schk=document.getElementById("sunChk");
   if(slbl)slbl.classList.toggle("on",sundayMode);
   if(schk)schk.checked=sundayMode;
@@ -1209,7 +1318,11 @@ const KCAL={bulgogi:560,shawarma:520,turkeychilli:480,satay:620,tagine:540,thaig
   smashburgers:650,bbqmeatballs:600,kievs:620,porkroast:580,chickennoodlesoup:380,
   biryani:590,dhal:520,enchiladas:610,tandooripitta:520,gyudon:590,coconoodles:560,falafel:520,
   peanutstew:560,banhmi:590,spanishtortilla:450,halloumiburger:620,singaporenoodles:520,dirtyrice:570,
-  caesarsalad:480,greeksalad:520,cobbsalad:540,halloumicouscous:560,grainbowl:510};
+  caesarsalad:480,greeksalad:520,cobbsalad:540,halloumicouscous:560,grainbowl:510,
+  veggiebol:520,veggiechilli:480,veggiecottage:500,veggiesausmash:560,veggietoad:540,veggiesausagepasta:570,
+  capresepenne:540,eggcurry:520,halloumicurry:580,vegbiryani:490,tofunoodles:480,vegfriedrice:470,
+  mushroomstrog:480,vegenchiladas:560,vegfajitas:540,veggoulash:450,vegtagine:500,vegpaella:470,
+  pestognocchi:550,beanburgers:520,broccolipasta:560};
 
 /* Rough start-to-plate time in minutes (incl. prep and oven) */
 const TIME={bulgogi:30,shawarma:35,turkeychilli:35,satay:30,tagine:40,thaigreen:30,prawnstir:20,gyros:35,
@@ -1225,15 +1338,21 @@ const TIME={bulgogi:30,shawarma:35,turkeychilli:35,satay:30,tagine:40,thaigreen:
   sausagepasta:30,pizzanight:20,sloppyjoes:35,sausagedogs:40,chickenricebake:45,smashburgers:40,bbqmeatballs:35,
   kievs:45,porkroast:45,chickennoodlesoup:25,biryani:40,dhal:35,enchiladas:40,tandooripitta:30,gyudon:25,
   coconoodles:25,falafel:35,peanutstew:35,banhmi:25,spanishtortilla:35,halloumiburger:40,singaporenoodles:20,
-  dirtyrice:25,caesarsalad:25,greeksalad:20,cobbsalad:25,halloumicouscous:20,grainbowl:40};
+  dirtyrice:25,caesarsalad:25,greeksalad:20,cobbsalad:25,halloumicouscous:20,grainbowl:40,
+  veggiebol:40,veggiechilli:40,veggiecottage:60,veggiesausmash:35,veggietoad:45,veggiesausagepasta:30,
+  capresepenne:25,eggcurry:30,halloumicurry:35,vegbiryani:40,tofunoodles:30,vegfriedrice:25,
+  mushroomstrog:30,vegenchiladas:40,vegfajitas:35,veggoulash:40,vegtagine:40,vegpaella:35,
+  pestognocchi:20,beanburgers:40,broccolipasta:35};
 function ovenTemp(m){const x=m.method.match(/(\d{3})°C/);return x?x[1]:null;}
 
 /* Protein substitutes — for when the shop's shelf lets you down.
    f adjusts pack quantity (e.g. 1 bag of prawns ≈ 0.4 of a 1kg chicken pack). */
 const SUBS={
-  mince5:[{k:"turkeyMince",f:1},{k:"porkMince",f:1}],
-  turkeyMince:[{k:"mince5",f:1},{k:"porkMince",f:1}],
-  porkMince:[{k:"mince5",f:1},{k:"turkeyMince",f:1}],
+  mince5:[{k:"turkeyMince",f:1},{k:"porkMince",f:1},{k:"meatFreeMince",f:1}],
+  turkeyMince:[{k:"mince5",f:1},{k:"porkMince",f:1},{k:"meatFreeMince",f:1}],
+  porkMince:[{k:"mince5",f:1},{k:"turkeyMince",f:1},{k:"meatFreeMince",f:1}],
+  meatFreeMince:[{k:"mince5",f:1},{k:"turkeyMince",f:1}],
+  veggieSausages:[{k:"sausages",f:1}],
   chickenBreast:[{k:"chickenThigh",f:1}],
   chickenThigh:[{k:"chickenBreast",f:1}],
   porkLoin:[{k:"chickenThigh",f:0.7},{k:"chickenBreast",f:0.6}],
@@ -1242,7 +1361,7 @@ const SUBS={
 };
 const PROT_LABEL={mince5:"5% beef mince",turkeyMince:"turkey mince",porkMince:"pork mince",
   chickenBreast:"chicken breast",chickenThigh:"chicken thighs",porkLoin:"pork loin steaks",
-  sausages:"sausages",prawns:"prawns"};
+  sausages:"sausages",prawns:"prawns",meatFreeMince:"meat-free mince",veggieSausages:"meat-free sausages"};
 
 function protOf(m){const hit=m.ing.map(x=>x[0]).find(k=>SUBS[k]);return hit||null;}
 function effMeal(m,subKey){
@@ -1326,24 +1445,26 @@ function validSet(meals){
     if(m.tag==="beef")beefMince++;
   }
   if(reheat<4)return false;
+  for(const c in cuiCount)if(cuiCount[c]>2)return false;
+  if(veggieMode)return true;                             // veggie week: tag/protein rules don't apply
   if(beefMince<1)return false;
   if((tagCount.prawn||0)>1)return false;
   if((tagCount.veggie||0)>2||(tagCount.veggie||0)<1)return false;
   if((tagCount.chicken||0)>3)return false;
   for(const t of ["beef","turkey","pork"])if((tagCount[t]||0)>2)return false;
   if((tagCount.beef||0)+(tagCount.pork||0)>3)return false;
-  for(const c in cuiCount)if(cuiCount[c]>2)return false;
   return true;
 }
 
 function partialOk(trial){
   const tags={},cuis={};let re=0;
   trial.forEach(x=>{tags[x.tag]=(tags[x.tag]||0)+1;cuis[x.cuisine]=(cuis[x.cuisine]||0)+1;if(x.reheat)re++;});
+  for(const c in cuis)if(cuis[c]>2)return false;
+  if(re+(6-trial.length)<4)return false;                 // must still be able to hit 4 reheatables
+  if(veggieMode)return true;                             // veggie week: tag/protein rules don't apply
   if((tags.prawn||0)>1||(tags.veggie||0)>2||(tags.chicken||0)>3)return false;
   if((tags.beef||0)>2||(tags.turkey||0)>2||(tags.pork||0)>2)return false;
   if((tags.beef||0)+(tags.pork||0)>3)return false;       // nutrition: max 3 red-meat nights
-  for(const c in cuis)if(cuis[c]>2)return false;
-  if(re+(6-trial.length)<4)return false;                 // must still be able to hit 4 reheatables
   if(trial.length===6&&(tags.beef||0)===0)return false;  // need one beef-mince meal
   if(trial.length===6&&(tags.veggie||0)<1)return false;  // nutrition: at least one veggie night
   return true;
@@ -1382,9 +1503,10 @@ function pickSet(locked){
   locked=(locked||[]).slice(0,5);
   const BASE=baseMeals();
   const notLocked=m=>!locked.some(l=>l.id===m.id);
+  const needBeef=!veggieMode;  // veggie weeks have no beef rule, so don't widen the pool hunting for it
   let pool=BASE.filter(m=>!RECENT.includes(m.id)&&notLocked(m));
-  if(pool.length<20||![...pool,...locked].some(m=>m.tag==="beef"))pool=BASE.filter(m=>!RECENT.slice(0,6).includes(m.id)&&notLocked(m));
-  if(![...pool,...locked].some(m=>m.tag==="beef"))pool=BASE.filter(notLocked);
+  if(pool.length<20||(needBeef&&![...pool,...locked].some(m=>m.tag==="beef")))pool=BASE.filter(m=>!RECENT.slice(0,6).includes(m.id)&&notLocked(m));
+  if(needBeef&&![...pool,...locked].some(m=>m.tag==="beef"))pool=BASE.filter(notLocked);
   const BUDGET=currentBudget();
   // fridge bias: meals that use up ticked fridge items get first refusal
   const fridgey=pool.filter(m=>m.ing.some(([k])=>FRIDGE.has(k)));
@@ -1467,8 +1589,8 @@ function generate(storeKey){
   // pre-pick the Sunday roast so its cost is optimised against, not bolted on after
   SUNDAY_EXTRA=[];
   if(sundayMode){
-    let sc=SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!locked.some(l=>l.id===m.id)&&!RECENT.slice(0,6).includes(m.id));
-    if(!sc.length)sc=SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!locked.some(l=>l.id===m.id));
+    let sc=sundayIds().map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!locked.some(l=>l.id===m.id)&&!RECENT.slice(0,6).includes(m.id));
+    if(!sc.length)sc=sundayIds().map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!locked.some(l=>l.id===m.id));
     const s=shuffle(sc)[0];if(s)SUNDAY_EXTRA=[s];
   }
   const best=pickSet(locked);
@@ -1512,7 +1634,7 @@ function swapMeal(idx){
   if(plan.pins&&plan.pins[idx]){toast("That meal's pinned — unpin it first.");return;}
   const current=plan.days.map(m=>m.id);
   if(idx===6){ // Sunday slot swaps within the roast-dinner shortlist
-    const cands=shuffle(SUNDAY_IDS.map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!current.includes(m.id)));
+    const cands=shuffle(sundayIds().map(id=>MEALS.find(m=>m.id===id)).filter(m=>m&&!current.includes(m.id)));
     if(cands.length){plan.days[6]=cands[0];plan.subs[6]=null;savePlan();render();}
     else toast("No other Sunday roast available this week.");
     return;
